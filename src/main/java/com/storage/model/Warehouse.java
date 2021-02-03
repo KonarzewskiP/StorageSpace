@@ -1,12 +1,10 @@
 package com.storage.model;
 
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
+import lombok.*;
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Entity
 @Data
@@ -19,16 +17,20 @@ public class Warehouse {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
-    @Column(nullable = false)
+    private String name;
     private String city;
-
-    @Column(nullable = false)
     private String street;
-
-    @Column(nullable = false)
     private String postCode;
 
-    @Column(nullable = false)
-    private String email;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Director director;
+
+    @OneToMany(
+            cascade = {CascadeType.ALL},
+            fetch = FetchType.EAGER
+    )
+    private List<StorageRoom> storageRooms = new ArrayList<>();
+
 }
