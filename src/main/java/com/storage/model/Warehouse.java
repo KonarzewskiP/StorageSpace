@@ -1,5 +1,6 @@
 package com.storage.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -22,15 +23,16 @@ public class Warehouse {
     private String street;
     private String postCode;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Director director;
 
+
     @OneToMany(
-            cascade = {CascadeType.ALL},
-            fetch = FetchType.EAGER
+            cascade = {CascadeType.ALL}
     )
+    @JsonIgnore
     private List<StorageRoom> storageRooms = new ArrayList<>();
 
 }

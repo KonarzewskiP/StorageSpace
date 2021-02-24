@@ -18,6 +18,6 @@ public class WarehouseDto {
     private String city;
     private String street;
     private String postCode;
-    private Director director;
+//    private Director director;
 
 }

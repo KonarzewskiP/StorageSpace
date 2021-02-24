@@ -1,5 +1,8 @@
-package com.storage.model;
+package com.storage.model.mapper;
 
+import com.storage.model.Director;
+import com.storage.model.StorageRoom;
+import com.storage.model.Warehouse;
 import com.storage.model.dto.DirectorDto;
 import com.storage.model.dto.StorageRoomDto;
 import com.storage.model.dto.WarehouseDto;
@@ -12,8 +15,7 @@ public interface ModelMapper {
                 .firstName(director.getFirstName())
                 .lastName(director.getLastName())
                 .gender(director.getGender())
-                .isValid(director.getIsValid())
-                .warehouses(director.getWarehouses())
+//                .warehouses(director.getWarehouses())
                 .build();
     }
 
@@ -23,8 +25,7 @@ public interface ModelMapper {
                 .firstName(directorDto.getFirstName())
                 .lastName(directorDto.getLastName())
                 .gender(directorDto.getGender())
-                .isValid(directorDto.getIsValid())
-                .warehouses(directorDto.getWarehouses())
+//                .warehouses(directorDto.getWarehouses())
                 .build();
     }
 
@@ -35,7 +36,7 @@ public interface ModelMapper {
                 .city(warehouse.getCity())
                 .street(warehouse.getStreet())
                 .postCode(warehouse.getPostCode())
-                .director(warehouse.getDirector())
+//                .director(warehouse.getDirector())
                 .build();
     }
 
@@ -46,7 +47,7 @@ public interface ModelMapper {
                 .city(warehouseDto.getCity())
                 .street(warehouseDto.getStreet())
                 .postCode(warehouseDto.getPostCode())
-                .director(warehouseDto.getDirector())
+//                .director(warehouseDto.getDirector())
                 .build();
     }
 

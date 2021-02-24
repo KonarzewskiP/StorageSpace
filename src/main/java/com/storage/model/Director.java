@@ -1,7 +1,9 @@
 package com.storage.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.storage.model.enums.Gender;
 import lombok.*;
+import org.hibernate.annotations.Proxy;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -22,7 +24,6 @@ public class Director {
     private String lastName;
     @Enumerated(EnumType.STRING)
     private Gender gender;
-    private Boolean isValid;
 
     @OneToMany(
             cascade = {CascadeType.ALL},
