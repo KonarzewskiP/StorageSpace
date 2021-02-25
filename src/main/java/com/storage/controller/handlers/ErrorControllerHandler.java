@@ -1,6 +1,7 @@
 package com.storage.controller.handlers;
 
 import com.storage.exception.DirectorServiceException;
+import com.storage.exception.WarehouseServiceException;
 import com.storage.model.CustomErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -14,10 +15,17 @@ import java.time.LocalDateTime;
 @RestControllerAdvice
 public class ErrorControllerHandler {
 
-
     @ExceptionHandler(value = DirectorServiceException.class)
     public ResponseEntity<CustomErrorResponse> handleValidationException(DirectorServiceException e) {
-        log.info("Enter ErrorControllerHandler -> handleValidationException() with: " + e);
+        log.info("Enter ErrorControllerHandler -> handleValidationException() DirectorServiceException with: " + e);
+        return new ResponseEntity<>(
+                createCustomErrorResponse(e, HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value()),
+                HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = WarehouseServiceException.class)
+    public ResponseEntity<CustomErrorResponse> handleValidationException(WarehouseServiceException e) {
+        log.info("Enter ErrorControllerHandler -> handleValidationException() WarehouseServiceException with: " + e);
         return new ResponseEntity<>(
                 createCustomErrorResponse(e, HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value()),
                 HttpStatus.BAD_REQUEST);

@@ -7,12 +7,15 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.util.Objects.nonNull;
+
 @Slf4j
 public class DirectorDtoValidator implements Validator<DirectorDto> {
 
     @Override
     public Map<String, String> validate(DirectorDto director) {
         Map<String, String> errors = new HashMap<>();
+
         if (!isFirstNameValid(director)) {
             errors.put("FirstName", "Can not be empty.");
         }
@@ -25,23 +28,22 @@ public class DirectorDtoValidator implements Validator<DirectorDto> {
         if (!isLastNameStartsFromUppercase(director)) {
             errors.put("LastName", "Should start from uppercase");
         }
-
         return errors;
     }
 
     private boolean isFirstNameValid(DirectorDto directorDto) {
-        return directorDto.getFirstName() != null && !directorDto.getFirstName().isBlank();
+        return nonNull(directorDto.getFirstName()) && !directorDto.getFirstName().isBlank();
     }
 
     private boolean isLastNameValid(DirectorDto directorDto) {
-        return directorDto.getLastName() != null && !directorDto.getLastName().isBlank();
+        return nonNull(directorDto.getLastName()) && !directorDto.getLastName().isBlank();
     }
 
     private boolean isFirstNameStartsFromUppercase(DirectorDto directorDto) {
-        return directorDto.getFirstName().matches("([A-Z][a-z]+)");
+        return nonNull(directorDto.getFirstName()) && directorDto.getFirstName().matches("([A-Z][a-z]+)");
     }
 
     private boolean isLastNameStartsFromUppercase(DirectorDto directorDto) {
-        return directorDto.getLastName().matches("([A-Z][a-z]+)");
+        return nonNull(directorDto.getLastName()) && directorDto.getLastName().matches("([A-Z][a-z]+)");
     }
 }
