@@ -1,6 +1,7 @@
 package com.storage.controller.handlers;
 
 import com.storage.exception.DirectorServiceException;
+import com.storage.exception.ResourceNotFoundException;
 import com.storage.exception.WarehouseServiceException;
 import com.storage.model.CustomErrorResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +31,17 @@ public class ErrorControllerHandler {
                 createCustomErrorResponse(e, HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value()),
                 HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(value = ResourceNotFoundException.class)
+    public ResponseEntity<CustomErrorResponse> handleNotFoundException(ResourceNotFoundException e) {
+        log.info("Enter ErrorControllerHandler -> handleNotFoundException() ResourceNotFoundException with: " + e);
+
+        return new ResponseEntity<>(
+                createCustomErrorResponse(e, HttpStatus.NOT_FOUND.getReasonPhrase(), HttpStatus.NOT_FOUND.value()),
+                HttpStatus.NOT_FOUND);
+
+    }
+
 
     private CustomErrorResponse createCustomErrorResponse(Exception e, String errorCode, Integer status) {
         return CustomErrorResponse.builder()

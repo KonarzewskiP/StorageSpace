@@ -1,5 +1,6 @@
 package com.storage.service;
 
+import com.storage.exception.ResourceNotFoundException;
 import com.storage.exception.WarehouseServiceException;
 import com.storage.model.Director;
 import com.storage.model.mapper.ModelMapper;
@@ -16,6 +17,9 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static com.storage.constants.AppConstants.ID;
+import static com.storage.constants.AppConstants.WAREHOUSE;
 
 @Slf4j
 @Service
@@ -46,13 +50,9 @@ public class WarehouseService {
 
     public WarehouseDto getOneWarehouseById(Long id) {
         log.info("Enter WarehouseService -> addWarehouse() with id: " + id);
-        try {
-            Optional.ofNullable(id).orElseThrow(() -> new IllegalArgumentException("Id is null"));
-            Warehouse warehouse = warehouseRepository.findById(id).orElseThrow(IllegalArgumentException::new);
-            return ModelMapper.fromWarehouseToWarehouseDto(warehouse);
-        } catch (Exception e) {
-            throw new IllegalStateException("Fail to get warehouse by id: " + id);
-        }
+        Warehouse warehouse = warehouseRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(WAREHOUSE, ID, id));
+        return ModelMapper.fromWarehouseToWarehouseDto(warehouse);
+
     }
 
     public WarehouseDto updateWarehouseDirector(DirectorDto directorDto, Long id) {

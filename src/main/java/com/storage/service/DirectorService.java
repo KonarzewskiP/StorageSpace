@@ -1,6 +1,7 @@
 package com.storage.service;
 
 import com.storage.exception.DirectorServiceException;
+import com.storage.exception.ResourceNotFoundException;
 import com.storage.model.Director;
 import com.storage.model.mapper.ModelMapper;
 import com.storage.model.dto.DirectorDto;
@@ -12,6 +13,8 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.stream.Collectors;
+
+import static com.storage.constants.AppConstants.*;
 
 @Slf4j
 @Service
@@ -42,8 +45,7 @@ public class DirectorService {
     public DirectorDto getOneDirectorById(Long id) {
         log.info("Enter DirectorRepository -> getOneDirectorById() with: " + id);
         Director director =
-                directorRepository.findById(id).orElseThrow(() -> new IllegalStateException("Failed to get Director with id: " + id));
-        log.info("Director: " + director);
+                directorRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(DIRECTOR, ID, id));
         return ModelMapper.fromDirectorToDirectorDto(director);
     }
 }
