@@ -1,6 +1,5 @@
 package com.storage.validator;
 
-import com.storage.model.dto.DirectorDto;
 import com.storage.model.dto.WarehouseDto;
 import com.storage.validator.base.Validator;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +15,7 @@ public class WarehouseDtoValidator implements Validator<WarehouseDto> {
     @Override
     public Map<String, String> validate(WarehouseDto warehouse) {
         Map<String, String> errors = new HashMap<>();
+
         if (!isNameValid(warehouse)) {
             errors.put("Name", "Can not be empty.");
         }
@@ -26,7 +26,7 @@ public class WarehouseDtoValidator implements Validator<WarehouseDto> {
             errors.put("Street", "Can not be empty.");
         }
         if (!isPostcodeValid(warehouse)) {
-            errors.put("Postcode", "Can not be empty");
+            errors.put("Postcode","Can not be empty");
         }
         if (!isPostcodeFormatValid(warehouse)) {
             errors.put("Postcode", "Value has incorrect format");

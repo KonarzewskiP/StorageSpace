@@ -18,8 +18,7 @@ import javax.transaction.Transactional;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.storage.constants.AppConstants.ID;
-import static com.storage.constants.AppConstants.WAREHOUSE;
+import static com.storage.constants.AppConstants.*;
 
 @Slf4j
 @Service
@@ -56,13 +55,14 @@ public class WarehouseService {
     }
 
     public WarehouseDto updateWarehouseDirector(DirectorDto directorDto, Long id) {
-        Warehouse warehouse = warehouseRepository.findById(id).orElseThrow(() -> new IllegalStateException("Fail to get warehouse by id: " + id));
-        Director director = directorRepository.findById(directorDto.getId()).orElseThrow(() -> new IllegalStateException("Fail to get director by id: " + directorDto.getId()));
+        Warehouse warehouse =
+                warehouseRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(WAREHOUSE, ID, id));
+        Director director =
+                directorRepository.findById(directorDto.getId()).orElseThrow(() -> new ResourceNotFoundException(DIRECTOR, ID, id));
         log.info("Enter WarehouseService -> updateWarehouseDirector() with warehouse: " + warehouse);
         log.info("Enter WarehouseService -> updateWarehouseDirector() with director: " + director);
         director.getWarehouses().add(warehouse);
         warehouse.setDirector(director);
         return ModelMapper.fromWarehouseToWarehouseDto(warehouse);
-
     }
 }
