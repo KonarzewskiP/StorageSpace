@@ -2,14 +2,12 @@ package com.storage.validator;
 
 import com.storage.model.dto.DirectorDto;
 import com.storage.validator.base.Validator;
-import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static java.util.Objects.isNull;
 
-@Slf4j
 public class DirectorDtoValidator implements Validator<DirectorDto> {
 
     @Override
@@ -29,13 +27,13 @@ public class DirectorDtoValidator implements Validator<DirectorDto> {
             return errors;
         }
 
-        if (!isFirstNameValid(director)) {
+        if (!isFirstNameEmpty(director)) {
             errors.put("FirstName", "Can not be empty");
         } else if (!isFirstNameStartsFromUppercase(director)) {
             errors.put("FirstName", "Should start from uppercase");
         }
 
-        if (!isLastNameValid(director)) {
+        if (!isLastNameEmpty(director)) {
             errors.put("LastName", "Can not be empty");
         } else if (!isLastNameStartsFromUppercase(director)) {
             errors.put("LastName", "Should start from uppercase");
@@ -44,11 +42,11 @@ public class DirectorDtoValidator implements Validator<DirectorDto> {
         return errors;
     }
 
-    private boolean isFirstNameValid(DirectorDto directorDto) {
+    private boolean isFirstNameEmpty(DirectorDto directorDto) {
         return !directorDto.getFirstName().isBlank();
     }
 
-    private boolean isLastNameValid(DirectorDto directorDto) {
+    private boolean isLastNameEmpty(DirectorDto directorDto) {
         return !directorDto.getLastName().isBlank();
     }
 

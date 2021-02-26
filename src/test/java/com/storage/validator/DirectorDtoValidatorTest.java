@@ -73,7 +73,7 @@ public class DirectorDtoValidatorTest {
     }
 
     @Test
-    @DisplayName("should return Error when firstName is empty")
+    @DisplayName("should return error when firstName is empty")
     void shouldReturnErrorWhenFirstNameIsEmpty() {
         //given
         var directorDto = createDirectorDto();
@@ -89,7 +89,7 @@ public class DirectorDtoValidatorTest {
     }
 
     @Test
-    @DisplayName("should return Error when first letter of firstName is lowercase")
+    @DisplayName("should return error when first letter of firstName is lowercase")
     void shouldReturnErrorWhenFirstLetterOfFirstNameIsLowercase() {
         //given
         var directorDto = createDirectorDto();
@@ -105,7 +105,7 @@ public class DirectorDtoValidatorTest {
     }
 
     @Test
-    @DisplayName("should return Error when lastName is empty")
+    @DisplayName("should return error when lastName is empty")
     void shouldReturnErrorWhenLastNameIsEmpty() {
         //given
         var directorDto = createDirectorDto();
@@ -121,7 +121,7 @@ public class DirectorDtoValidatorTest {
     }
 
     @Test
-    @DisplayName("should return Error when first letter of lastName is lowercase")
+    @DisplayName("should return error when first letter of lastName is lowercase")
     void shouldReturnErrorWhenFirstLetterOfLastNameIsLowercase() {
         //given
         var directorDto = createDirectorDto();
@@ -137,7 +137,7 @@ public class DirectorDtoValidatorTest {
     }
 
     @Test
-    @DisplayName("should return two Errors when firstName and LastName are invalid")
+    @DisplayName("should return two errors when firstName and LastName are invalid")
     void shouldReturnTwoErrorsWhenFirstNameAndLastNameAreInvalid() {
         //given
         var directorDto = createDirectorDto();
