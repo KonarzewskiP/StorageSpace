@@ -15,6 +15,8 @@ import javax.transaction.Transactional;
 import java.util.stream.Collectors;
 
 import static com.storage.constants.AppConstants.*;
+import static com.storage.model.mapper.ModelMapper.fromDirectorDtoToDirector;
+import static com.storage.model.mapper.ModelMapper.fromDirectorToDirectorDto;
 
 @Slf4j
 @Service
@@ -35,17 +37,15 @@ public class DirectorService {
                     .map(err -> err.getKey() + " -> " + err.getValue())
                     .collect(Collectors.joining(", ")));
         }
-        Director director = ModelMapper.fromDirectorDtoToDirector(directorDto);
-        log.info("Director: " + director);
-        directorRepository.save(director);
-        directorDto.setId(director.getId());
-        return directorDto;
+        Director director = fromDirectorDtoToDirector(directorDto);
+        var addedDirector = directorRepository.save(director);
+        return fromDirectorToDirectorDto(addedDirector);
     }
 
     public DirectorDto getOneDirectorById(Long id) {
         log.info("Enter DirectorRepository -> getOneDirectorById() with: " + id);
         Director director =
                 directorRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(DIRECTOR, ID, id));
-        return ModelMapper.fromDirectorToDirectorDto(director);
+        return fromDirectorToDirectorDto(director);
     }
 }

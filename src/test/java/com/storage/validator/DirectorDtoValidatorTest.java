@@ -73,6 +73,22 @@ public class DirectorDtoValidatorTest {
     }
 
     @Test
+    @DisplayName("should return error when gender is null")
+    void shouldReturnErrorWhenGenderIsNull() {
+        //given
+        var directorDto = createDirectorDto();
+        directorDto.setGender(null);
+        //when
+        var result = validator.validate(directorDto);
+        //then
+        assertAll(
+                () -> assertThat(result).containsKey("Gender"),
+                () -> assertThat(result).containsValue("Can not be null"),
+                () -> assertThat(result).hasSize(1)
+        );
+    }
+
+    @Test
     @DisplayName("should return error when firstName is empty")
     void shouldReturnErrorWhenFirstNameIsEmpty() {
         //given

@@ -26,6 +26,11 @@ public class DirectorDtoValidator implements Validator<DirectorDto> {
             errors.put("LastName", "Can not be null");
             return errors;
         }
+        if (isNull(director.getGender())) {
+            errors.put("Gender", "Can not be null");
+            return errors;
+        }
+
 
         if (!isFirstNameEmpty(director)) {
             errors.put("FirstName", "Can not be empty");
@@ -57,4 +62,5 @@ public class DirectorDtoValidator implements Validator<DirectorDto> {
     private boolean isLastNameStartsFromUppercase(DirectorDto directorDto) {
         return directorDto.getLastName().matches("([A-Z][a-z]+)");
     }
+
 }

@@ -9,7 +9,6 @@ public class AppConstants {
 
     public static final String ID = "id";
 
-    public static final String ELEMENT_NOT_FOUND_WITH_ID_MESSAGE = "Element not found ";
 
 
 }

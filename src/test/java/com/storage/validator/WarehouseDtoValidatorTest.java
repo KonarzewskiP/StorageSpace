@@ -189,8 +189,8 @@ class WarehouseDtoValidatorTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"SW12 0LT", "IG11 8BL", "SW11 3RX", "BR3 4AA", "E1W 2BX", "KT3 4PH", "EN1 1FT", "W5 1DN", "LU4 8DR",
-            "LS12 6HL", "B7 4LT", "OX4 2TZ"})
+    @ValueSource(strings = {"SW12 0LT", "IG11 8BL", "SW11 3RX", "BR3 4AA", "E1W 2BX", "KT3 4PH", "EN1 1FT", "W5 1DN",
+            "LU4 8DR","LS12 6HL", "B7 4LT", "OX4 2TZ"})
     @DisplayName("valid postcode should trigger no errors")
     void validPostcodeShouldTriggerNoErrors(String postcode) {
         var warehouseDto = createWarehouseDto();

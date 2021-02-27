@@ -20,10 +20,10 @@ public interface MockDataForTest {
 
     static DirectorDto createDirectorDto(){
         return DirectorDto.builder()
-                .id(1L)
-                .firstName("Veronica")
-                .lastName("Jobs")
-                .gender(Gender.FEMALE)
+                .id(10L)
+                .firstName("John")
+                .lastName("Orange")
+                .gender(Gender.MALE)
                 .build();
     }
 
