@@ -5,6 +5,7 @@ import com.storage.model.Warehouse;
 import com.storage.model.dto.UserDto;
 import com.storage.model.dto.WarehouseDto;
 import com.storage.model.enums.Gender;
+import com.storage.model.enums.Role;
 
 public interface MockDataForTest {
 
@@ -23,6 +24,8 @@ public interface MockDataForTest {
                 .id(10L)
                 .firstName("John")
                 .lastName("Orange")
+                .email("storageRooms@fakeEmail.com")
+                .role(Role.CUSTOMER)
                 .gender(Gender.MALE)
                 .build();
     }

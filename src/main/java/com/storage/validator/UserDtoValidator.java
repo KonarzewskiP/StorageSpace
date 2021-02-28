@@ -1,10 +1,13 @@
 package com.storage.validator;
 
 import com.storage.model.dto.UserDto;
+import com.storage.model.dto.WarehouseDto;
 import com.storage.validator.base.Validator;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static java.util.Objects.isNull;
 
@@ -26,6 +29,14 @@ public class UserDtoValidator implements Validator<UserDto> {
             errors.put("LastName", "Can not be null");
             return errors;
         }
+        if (isNull(user.getEmail())) {
+            errors.put("Email", "Can not be null");
+            return errors;
+        }
+        if (isNull(user.getRole())) {
+            errors.put("Role", "Can not be null");
+            return errors;
+        }
         if (isNull(user.getGender())) {
             errors.put("Gender", "Can not be null");
             return errors;
@@ -43,6 +54,12 @@ public class UserDtoValidator implements Validator<UserDto> {
         } else if (!isLastNameStartsFromUppercase(user)) {
             errors.put("LastName", "Should start from uppercase");
         }
+
+        if (!isEmailEmpty(user)) {
+            errors.put("Email", "Can not be empty");
+        } else if (!isEmailFormatValid(user)) {
+            errors.put("Email", "Value has incorrect format");
+        }
         return errors;
     }
 
@@ -54,12 +71,22 @@ public class UserDtoValidator implements Validator<UserDto> {
         return !userDto.getLastName().isBlank();
     }
 
+    private boolean isEmailEmpty(UserDto userDto) {
+        return !userDto.getEmail().isBlank();
+    }
+
     private boolean isFirstNameStartsFromUppercase(UserDto userDto) {
         return userDto.getFirstName().matches("([A-Z][a-z]+)");
     }
 
     private boolean isLastNameStartsFromUppercase(UserDto userDto) {
         return userDto.getLastName().matches("([A-Z][a-z]+)");
+    }
+
+    private boolean isEmailFormatValid(UserDto userDto) {
+        var pattern = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+        var matcher = pattern.matcher(userDto.getEmail());
+        return matcher.find();
     }
 
 }
