@@ -4,6 +4,7 @@ import com.storage.model.dto.StorageRoomDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import static com.storage.builders.MockDataForTest.START_DATE;
 import static com.storage.builders.MockDataForTest.createStorageRoomDto;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -70,4 +71,80 @@ public class StorageRoomDtoValidatorTest {
                 () -> assertThat(result).hasSize(1)
         );
     }
+
+    @Test
+    @DisplayName("should return error when storage is reserved and startDate is null")
+    void shouldReturnErrorWhenStorageIsReservedAndStartDateIsNull() {
+        //given
+        var storageRoomDto = createStorageRoomDto();
+        storageRoomDto.setReserved(true);
+        storageRoomDto.setStartDate(null);
+
+        //when
+        var result = validator.validate(storageRoomDto);
+        //then
+        assertAll(
+                () -> assertThat(result).containsKey("StartDate"),
+                () -> assertThat(result).containsValue("Can not be null"),
+                () -> assertThat(result).hasSize(1)
+        );
+    }
+
+    @Test
+    @DisplayName("should return error when storage is reserved and endDate is null")
+    void shouldReturnErrorWhenStorageIsReservedAndEndDateIsNull() {
+        //given
+        var storageRoomDto = createStorageRoomDto();
+        storageRoomDto.setReserved(true);
+        storageRoomDto.setStartDate(START_DATE);
+        storageRoomDto.setEndDate(null);
+
+        //when
+        var result = validator.validate(storageRoomDto);
+        //then
+        assertAll(
+                () -> assertThat(result).containsKey("EndDate"),
+                () -> assertThat(result).containsValue("Can not be null"),
+                () -> assertThat(result).hasSize(1)
+        );
+    }
+
+    @Test
+    @DisplayName("should return error when startDate and endDate is the same")
+    void shouldReturnErrorWhenStartDateAndEndDateIsTheSame() {
+        //given
+        var storageRoomDto = createStorageRoomDto();
+        storageRoomDto.setReserved(true);
+        storageRoomDto.setStartDate(START_DATE);
+        storageRoomDto.setEndDate(START_DATE);
+
+        //when
+        var result = validator.validate(storageRoomDto);
+        //then
+        assertAll(
+                () -> assertThat(result).containsKey("Invalid Date"),
+                () -> assertThat(result).containsValue("Start and end date is the same"),
+                () -> assertThat(result).hasSize(1)
+        );
+    }
+
+    @Test
+    @DisplayName("should return error when startDate is after endDate")
+    void shouldReturnErrorWhenStartDateIsAfterEndDate() {
+        //given
+        var storageRoomDto = createStorageRoomDto();
+        storageRoomDto.setReserved(true);
+        storageRoomDto.setStartDate(START_DATE.plusSeconds(10));
+        storageRoomDto.setEndDate(START_DATE);
+
+        //when
+        var result = validator.validate(storageRoomDto);
+        //then
+        assertAll(
+                () -> assertThat(result).containsKey("Invalid Date"),
+                () -> assertThat(result).containsValue("Start date must be before end date"),
+                () -> assertThat(result).hasSize(1)
+        );
+    }
+
 }
