@@ -1,15 +1,15 @@
 package com.storage.builders;
 
-import com.storage.model.Director;
+import com.storage.model.User;
 import com.storage.model.Warehouse;
-import com.storage.model.dto.DirectorDto;
+import com.storage.model.dto.UserDto;
 import com.storage.model.dto.WarehouseDto;
 import com.storage.model.enums.Gender;
 
 public interface MockDataForTest {
 
-    static Director createDirector(){
-        return Director.builder()
+    static User createUser(){
+        return User.builder()
                 .id(1L)
                 .firstName("Veronica")
                 .lastName("Jobs")
@@ -18,8 +18,8 @@ public interface MockDataForTest {
                 .build();
     }
 
-    static DirectorDto createDirectorDto(){
-        return DirectorDto.builder()
+    static UserDto createUserDto(){
+        return UserDto.builder()
                 .id(10L)
                 .firstName("John")
                 .lastName("Orange")

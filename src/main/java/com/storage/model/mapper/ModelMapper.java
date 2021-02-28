@@ -1,29 +1,29 @@
 package com.storage.model.mapper;
 
-import com.storage.model.Director;
+import com.storage.model.User;
 import com.storage.model.StorageRoom;
 import com.storage.model.Warehouse;
-import com.storage.model.dto.DirectorDto;
+import com.storage.model.dto.UserDto;
 import com.storage.model.dto.StorageRoomDto;
 import com.storage.model.dto.WarehouseDto;
 
 public interface ModelMapper {
 
-    static DirectorDto fromDirectorToDirectorDto(Director director) {
-        return director == null ? null : DirectorDto.builder()
-                .id(director.getId())
-                .firstName(director.getFirstName())
-                .lastName(director.getLastName())
-                .gender(director.getGender())
+    static UserDto fromUserToUserDto(User user) {
+        return user == null ? null : UserDto.builder()
+                .id(user.getId())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .gender(user.getGender())
                 .build();
     }
 
-    static Director fromDirectorDtoToDirector(DirectorDto directorDto) {
-        return directorDto == null ? null : Director.builder()
-                .id(directorDto.getId())
-                .firstName(directorDto.getFirstName())
-                .lastName(directorDto.getLastName())
-                .gender(directorDto.getGender())
+    static User fromUserDtoToUser(UserDto userDto) {
+        return userDto == null ? null : User.builder()
+                .id(userDto.getId())
+                .firstName(userDto.getFirstName())
+                .lastName(userDto.getLastName())
+                .gender(userDto.getGender())
                 .build();
     }
 
@@ -50,7 +50,7 @@ public interface ModelMapper {
     static StorageRoomDto fromStorageRoomToStorageRoomDto(StorageRoom storageRoom) {
         return storageRoom == null ? null : StorageRoomDto.builder()
                 .id(storageRoom.getId())
-                .sizeM2(storageRoom.getSizeM2())
+                .size(storageRoom.getSize())
                 .reserved(storageRoom.isReserved())
                 .startDate(storageRoom.getStartDate())
                 .endDate(storageRoom.getEndDate())
@@ -60,7 +60,7 @@ public interface ModelMapper {
     static StorageRoom fromStorageRoomDtoToStorageRoom(StorageRoomDto storageRoomDto) {
         return storageRoomDto == null ? null : StorageRoom.builder()
                 .id(storageRoomDto.getId())
-                .sizeM2(storageRoomDto.getSizeM2())
+                .size(storageRoomDto.getSize())
                 .reserved(storageRoomDto.isReserved())
                 .startDate(storageRoomDto.getStartDate())
                 .endDate(storageRoomDto.getEndDate())

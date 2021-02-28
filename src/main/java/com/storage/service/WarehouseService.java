@@ -2,12 +2,9 @@ package com.storage.service;
 
 import com.storage.exception.ResourceNotFoundException;
 import com.storage.exception.WarehouseServiceException;
-import com.storage.model.Director;
 import com.storage.model.mapper.ModelMapper;
-import com.storage.model.Warehouse;
-import com.storage.model.dto.DirectorDto;
 import com.storage.model.dto.WarehouseDto;
-import com.storage.repository.DirectorRepository;
+import com.storage.repository.UserRepository;
 import com.storage.repository.WarehouseRepository;
 import com.storage.validator.WarehouseDtoValidator;
 import lombok.AllArgsConstructor;
@@ -27,7 +24,7 @@ import static com.storage.model.mapper.ModelMapper.fromWarehouseToWarehouseDto;
 public class WarehouseService {
 
     private final WarehouseRepository warehouseRepository;
-    private final DirectorRepository directorRepository;
+    private final UserRepository userRepository;
 
     public WarehouseDto addWarehouse(WarehouseDto warehouseDto) {
         log.info("Enter WarehouseService -> addWarehouse() with: " + warehouseDto);

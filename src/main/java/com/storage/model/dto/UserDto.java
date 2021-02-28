@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class DirectorDto {
+public class UserDto {
 
         private Long id;
         private String firstName;

@@ -1,6 +1,6 @@
 package com.storage.controller.handlers;
 
-import com.storage.exception.DirectorServiceException;
+import com.storage.exception.UserServiceException;
 import com.storage.exception.ResourceNotFoundException;
 import com.storage.exception.WarehouseServiceException;
 import com.storage.model.CustomErrorResponse;
@@ -16,8 +16,8 @@ import java.time.LocalDateTime;
 @RestControllerAdvice
 public class ErrorControllerHandler {
 
-    @ExceptionHandler(value = DirectorServiceException.class)
-    public ResponseEntity<CustomErrorResponse> handleValidationException(DirectorServiceException e) {
+    @ExceptionHandler(value = UserServiceException.class)
+    public ResponseEntity<CustomErrorResponse> handleValidationException(UserServiceException e) {
         log.info("Enter ErrorControllerHandler -> handleValidationException() DirectorServiceException with: " + e);
         return new ResponseEntity<>(
                 createCustomErrorResponse(e, HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value()),

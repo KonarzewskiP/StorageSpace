@@ -1,5 +1,6 @@
 package com.storage.model.dto;
 
+import com.storage.model.enums.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,7 +15,7 @@ import java.time.LocalDateTime;
 public class StorageRoomDto {
 
     private Long id;
-    private double sizeM2;
+    private Size size;
     private boolean reserved;
     private LocalDateTime startDate;
     private LocalDateTime endDate;

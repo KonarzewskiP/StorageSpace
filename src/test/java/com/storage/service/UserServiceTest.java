@@ -1,11 +1,11 @@
 package com.storage.service;
 
-import com.storage.exception.DirectorServiceException;
+import com.storage.exception.UserServiceException;
 import com.storage.exception.ResourceNotFoundException;
-import com.storage.model.Director;
-import com.storage.model.dto.DirectorDto;
+import com.storage.model.User;
+import com.storage.model.dto.UserDto;
 import com.storage.model.enums.Gender;
-import com.storage.repository.DirectorRepository;
+import com.storage.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,7 +15,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Optional;
 
-import static com.storage.builders.MockDataForTest.createDirector;
+import static com.storage.builders.MockDataForTest.createUser;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -24,27 +24,27 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
-public class DirectorServiceTest {
+public class UserServiceTest {
 
     @InjectMocks
-    private DirectorService service;
+    private UserService service;
 
     @Mock
-    private DirectorRepository directorRepository;
+    private UserRepository userRepository;
 
     @Test
-    @DisplayName("should add director to repository")
-    void shouldAddDirectorToRepository() {
+    @DisplayName("should add user to repository")
+    void shouldAddUserToRepository() {
         //given
-        var director = createDirector();
-        when(directorRepository.save(any(Director.class))).thenReturn(director);
-        var testDirectorDto = DirectorDto.builder()
+        var user = createUser();
+        when(userRepository.save(any(User.class))).thenReturn(user);
+        var testUserDto = UserDto.builder()
                 .firstName("Frodo")
                 .lastName("Baggins")
                 .gender(Gender.MALE)
                 .build();
         //when
-        var result = service.addDirector(testDirectorDto);
+        var result = service.addUser(testUserDto);
         //then
         assertThat(result).isNotNull();
         assertThat(result.getId()).isEqualTo(1L);
@@ -54,60 +54,60 @@ public class DirectorServiceTest {
     }
 
     @Test
-    @DisplayName("should throw DirectorServiceException when DirectorDto is null")
-    void shouldThrowDirectorServiceExceptionWhenDirectorDtoIsNull() {
+    @DisplayName("should throw UserServiceException when UserDto is null")
+    void shouldThrowUserServiceExceptionWhenUserDtoIsNull() {
         //given
-        DirectorDto directorDto = null;
+        UserDto userDto = null;
         //when
-        Throwable thrown = catchThrowable(() -> service.addDirector(directorDto));
+        Throwable thrown = catchThrowable(() -> service.addUser(userDto));
         //then
         assertThat(thrown)
-                .isInstanceOf(DirectorServiceException.class)
-                .hasMessageContaining("Invalid DirectorDto!");
+                .isInstanceOf(UserServiceException.class)
+                .hasMessageContaining("Invalid UserDto!");
     }
 
     @Test
-    @DisplayName("should throw DirectorServiceException when DirectorDto is invalid")
-    void shouldThrowDirectorServiceExceptionWhenDirectorDtoIsInvalid() {
+    @DisplayName("should throw UserServiceException when UserDto is invalid")
+    void shouldThrowUserServiceExceptionWhenUserDtoIsInvalid() {
         //given
-        var directorDto = DirectorDto.builder()
+        var userDto = UserDto.builder()
                 .firstName("roger")
                 .lastName("")
                 .gender(Gender.MALE)
                 .build();
         //when
-        Throwable thrown = catchThrowable(() -> service.addDirector(directorDto));
+        Throwable thrown = catchThrowable(() -> service.addUser(userDto));
         //then
         assertThat(thrown)
-                .isInstanceOf(DirectorServiceException.class)
-                .hasMessageContaining("Invalid DirectorDto!")
+                .isInstanceOf(UserServiceException.class)
+                .hasMessageContaining("Invalid UserDto!")
                 .hasMessageContaining("Should start from uppercase")
                 .hasMessageContaining("Can not be empty");
     }
 
     @Test
-    @DisplayName("should find director by id")
-    void shouldFindDirectorById() {
+    @DisplayName("should find user by id")
+    void shouldFindUserById() {
         //given
-        var director = createDirector();
-        when(directorRepository.findById(anyLong())).thenReturn(Optional.of(director));
+        var user = createUser();
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
         //when
-        var result = service.getDirectorById(10L);
+        var result = service.getUserById(10L);
         //then
         assertThat(result.getId()).isEqualTo(1L);
     }
 
     @Test
-    @DisplayName("should throw ResourceNotFoundException when can not find director by id")
-    void shouldThrowResourceNotFoundExceptionWhenCanNotFindDirectorById() {
+    @DisplayName("should throw ResourceNotFoundException when can not find user by id")
+    void shouldThrowResourceNotFoundExceptionWhenCanNotFindUserById() {
         //given
         var id = 999L;
         //when
-        Throwable thrown = catchThrowable(() ->  service.getDirectorById(id));
+        Throwable thrown = catchThrowable(() ->  service.getUserById(id));
         //then
         assertThat(thrown)
                 .isInstanceOf(ResourceNotFoundException.class)
-                .hasMessageContaining("Director not found with id: 999");
+                .hasMessageContaining("User not found with id: 999");
     }
 
     @Test
@@ -116,10 +116,10 @@ public class DirectorServiceTest {
         //given
         Long id = null;
         //when
-        Throwable thrown = catchThrowable(() ->  service.getDirectorById(id));
+        Throwable thrown = catchThrowable(() ->  service.getUserById(id));
         //then
         assertThat(thrown)
                 .isInstanceOf(ResourceNotFoundException.class)
-                .hasMessageContaining("Director not found with id: null");
+                .hasMessageContaining("User not found with id: null");
     }
 }

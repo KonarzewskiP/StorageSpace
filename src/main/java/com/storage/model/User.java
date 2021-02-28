@@ -11,7 +11,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 @Table(name = "directors")
-public class Director {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
