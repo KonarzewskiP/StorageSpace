@@ -23,12 +23,6 @@ public class Warehouse {
     private String street;
     private String postCode;
 
-    @ManyToOne()
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private Director director;
-
-
     @OneToMany(
             cascade = {CascadeType.ALL}
     )

@@ -34,7 +34,6 @@ public interface MockDataForTest {
                 .city("London")
                 .street("289 Kennington Ln")
                 .postCode("SE11 5QY")
-                .director(createDirector())
                 .build();
     }
 

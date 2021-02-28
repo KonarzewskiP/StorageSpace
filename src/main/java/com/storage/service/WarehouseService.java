@@ -51,16 +51,4 @@ public class WarehouseService {
         var warehouse = warehouseRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(WAREHOUSE, ID, id));
         return fromWarehouseToWarehouseDto(warehouse);
     }
-
-    public WarehouseDto updateWarehouseDirector(DirectorDto directorDto, Long id) {
-        var warehouse =
-                warehouseRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(WAREHOUSE, ID, id));
-        var director =
-                directorRepository.findById(directorDto.getId()).orElseThrow(() -> new ResourceNotFoundException(DIRECTOR, ID, id));
-        log.info("Enter WarehouseService -> updateWarehouseDirector() with warehouse: " + warehouse);
-        log.info("Enter WarehouseService -> updateWarehouseDirector() with director: " + director);
-        director.getWarehouses().add(warehouse);
-        warehouse.setDirector(director);
-        return fromWarehouseToWarehouseDto(warehouse);
-    }
 }

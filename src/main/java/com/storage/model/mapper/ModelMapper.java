@@ -15,7 +15,6 @@ public interface ModelMapper {
                 .firstName(director.getFirstName())
                 .lastName(director.getLastName())
                 .gender(director.getGender())
-//                .warehouses(director.getWarehouses())
                 .build();
     }
 
@@ -25,7 +24,6 @@ public interface ModelMapper {
                 .firstName(directorDto.getFirstName())
                 .lastName(directorDto.getLastName())
                 .gender(directorDto.getGender())
-//                .warehouses(directorDto.getWarehouses())
                 .build();
     }
 
@@ -36,7 +34,6 @@ public interface ModelMapper {
                 .city(warehouse.getCity())
                 .street(warehouse.getStreet())
                 .postCode(warehouse.getPostCode())
-//                .director(warehouse.getDirector())
                 .build();
     }
 
@@ -47,7 +44,6 @@ public interface ModelMapper {
                 .city(warehouseDto.getCity())
                 .street(warehouseDto.getStreet())
                 .postCode(warehouseDto.getPostCode())
-//                .director(warehouseDto.getDirector())
                 .build();
     }
 

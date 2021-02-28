@@ -1,13 +1,9 @@
 package com.storage.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.storage.model.enums.Gender;
 import lombok.*;
-import org.hibernate.annotations.Proxy;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Data
@@ -24,14 +20,4 @@ public class Director {
     private String lastName;
     @Enumerated(EnumType.STRING)
     private Gender gender;
-
-    @OneToMany(
-            cascade = {CascadeType.ALL},
-            mappedBy = "director"
-    )
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
-    @JsonIgnore
-    private Set<Warehouse> warehouses = new HashSet<>();
-
 }
