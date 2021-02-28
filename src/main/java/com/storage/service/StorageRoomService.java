@@ -1,5 +1,7 @@
 package com.storage.service;
 
+import com.storage.constants.AppConstants;
+import com.storage.exception.ResourceNotFoundException;
 import com.storage.exception.StorageRoomException;
 import com.storage.model.dto.StorageRoomDto;
 import com.storage.model.mapper.ModelMapper;
@@ -12,6 +14,8 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.stream.Collectors;
 
+import static com.storage.constants.AppConstants.ID;
+import static com.storage.constants.AppConstants.STORAGE_ROOM;
 import static com.storage.model.mapper.ModelMapper.fromStorageRoomDtoToStorageRoom;
 import static com.storage.model.mapper.ModelMapper.fromStorageRoomToStorageRoomDto;
 
@@ -42,4 +46,38 @@ public class StorageRoomService {
         return fromStorageRoomToStorageRoomDto(addedStorageRoom);
     }
 
+    public StorageRoomDto findStorageRoomById(Long id) {
+        log.info("Enter StorageRoomService -> findStorageRoomById() with: " + id);
+        var storageRoom =
+                storageRoomRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(STORAGE_ROOM, ID, id));
+        return ModelMapper.fromStorageRoomToStorageRoomDto(storageRoom);
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
