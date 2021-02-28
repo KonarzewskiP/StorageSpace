@@ -16,7 +16,7 @@ public class StorageRoomDto {
 
     private Long id;
     private Size size;
-    private boolean reserved;
+    private Boolean reserved;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
 }

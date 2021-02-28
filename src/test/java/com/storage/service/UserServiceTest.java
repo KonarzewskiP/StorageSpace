@@ -16,6 +16,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.Optional;
 
 import static com.storage.builders.MockDataForTest.createUser;
+import static com.storage.builders.MockDataForTest.createUserDto;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -38,11 +39,7 @@ public class UserServiceTest {
         //given
         var user = createUser();
         when(userRepository.save(any(User.class))).thenReturn(user);
-        var testUserDto = UserDto.builder()
-                .firstName("Frodo")
-                .lastName("Baggins")
-                .gender(Gender.MALE)
-                .build();
+        var testUserDto = createUserDto();
         //when
         var result = service.addUser(testUserDto);
         //then
@@ -70,11 +67,9 @@ public class UserServiceTest {
     @DisplayName("should throw UserServiceException when UserDto is invalid")
     void shouldThrowUserServiceExceptionWhenUserDtoIsInvalid() {
         //given
-        var userDto = UserDto.builder()
-                .firstName("roger")
-                .lastName("")
-                .gender(Gender.MALE)
-                .build();
+        var userDto = createUserDto();
+        userDto.setFirstName("roger");
+        userDto.setLastName("");
         //when
         Throwable thrown = catchThrowable(() -> service.addUser(userDto));
         //then

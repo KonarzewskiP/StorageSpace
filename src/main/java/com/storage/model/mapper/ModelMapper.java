@@ -61,7 +61,7 @@ public interface ModelMapper {
         return storageRoomDto == null ? null : StorageRoom.builder()
                 .id(storageRoomDto.getId())
                 .size(storageRoomDto.getSize())
-                .reserved(storageRoomDto.isReserved())
+                .reserved(storageRoomDto.getReserved())
                 .startDate(storageRoomDto.getStartDate())
                 .endDate(storageRoomDto.getEndDate())
                 .build();
