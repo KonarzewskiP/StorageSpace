@@ -23,8 +23,8 @@ public class WarehouseController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<WarehouseDto> getOneWarehouseById(@PathVariable Long id) {
-        return ResponseEntity.ok(warehouseService.getOneWarehouseById(id));
+    public ResponseEntity<WarehouseDto> getWarehouseById(@PathVariable Long id) {
+        return ResponseEntity.ok(warehouseService.getWarehouseById(id));
     }
 
     @PutMapping("/{id}")

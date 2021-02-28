@@ -1,0 +1,128 @@
+package com.storage.service;
+
+import com.storage.exception.ResourceNotFoundException;
+import com.storage.exception.WarehouseServiceException;
+import com.storage.model.Warehouse;
+import com.storage.model.dto.WarehouseDto;
+import com.storage.repository.WarehouseRepository;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import java.util.Optional;
+
+import static com.storage.builders.MockDataForTest.createWarehouse;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.when;
+
+@ExtendWith(SpringExtension.class)
+public class WarehouseServiceTest {
+
+    @InjectMocks
+    private WarehouseService service;
+
+    @Mock
+    private WarehouseRepository warehouseRepository;
+
+    @Test
+    @DisplayName("should add warehouse to repository")
+    void shouldAddWarehouseToRepository() {
+        //given
+        var warehouse = createWarehouse();
+        when(warehouseRepository.save(any(Warehouse.class))).thenReturn(warehouse);
+        var testWarehouseDto = WarehouseDto.builder()
+                .name("Fake Name")
+                .city("London")
+                .street("Ashton Road")
+                .postCode("RM3 8NF")
+                .build();
+        //when
+        var result = service.addWarehouse(testWarehouseDto);
+        //then
+        assertThat(result).isNotNull();
+        assertThat(result.getId()).isEqualTo(2L);
+        assertThat(result.getName()).isEqualTo("Big Yellow");
+    }
+
+    @Test
+    @DisplayName("should throw WarehouseServiceException when warehouseDto is null")
+    void shouldThrowWarehouseServiceExceptionWhenWarehouseDtoIsNull() {
+        //given
+        WarehouseDto warehouseDto = null;
+        //when
+        Throwable thrown = catchThrowable(()-> service.addWarehouse(warehouseDto));
+        //then
+        assertThat(thrown)
+                .isInstanceOf(WarehouseServiceException.class)
+                .hasMessageContaining("Invalid WarehouseDto!");
+    }
+
+    @Test
+    @DisplayName("should throw WarehouseServiceException when warehouseDto is invalid")
+    void shouldThrowWarehouseServiceExceptionWhenWarehouseDtoIsInvalid() {
+        var warehouseDto = WarehouseDto.builder()
+                .name("")
+                .city("")
+                .street("")
+                .postCode("RM3 8NF1")
+                .build();
+        //when
+        Throwable thrown = catchThrowable(()-> service.addWarehouse(warehouseDto));
+        //then
+        assertThat(thrown)
+                .isInstanceOf(WarehouseServiceException.class)
+                .hasMessageContaining("Invalid WarehouseDto!")
+                .hasMessageContaining("Name")
+                .hasMessageContaining("City")
+                .hasMessageContaining("Street")
+                .hasMessageContaining("Postcode")
+                .hasMessageContaining("Can not be empty")
+                .hasMessageContaining("Value has incorrect format");
+    }
+
+    @Test
+    @DisplayName("should find warehouse by id")
+    void should() {
+        //given
+        var warehouse = createWarehouse();
+        when(warehouseRepository.findById(anyLong())).thenReturn(Optional.of(warehouse));
+        //when
+        var result = service.getWarehouseById(999L);
+        //then
+        assertThat(result.getId()).isEqualTo(2L);
+    }
+
+    @Test
+    @DisplayName("should throw ResourceNotFoundException when id is null")
+    void shouldThrowResourceNotFoundExceptionWhenIdIsNull() {
+        //given
+        Long id = null;
+        //when
+        Throwable thrown = catchThrowable(() -> service.getWarehouseById(id));
+        //then
+        assertThat(thrown)
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessageContaining("Warehouse not found with id: null");
+    }
+
+    @Test
+    @DisplayName("should throw ResourceNotFoundError when can not find warehouse by id")
+    void shouldThrowResourceNotFoundErrorWhenCanNotFindWarehouseById() {
+        //given
+        var id = 999L;
+        //when
+        Throwable thrown = catchThrowable(() -> service.getWarehouseById(id));
+        //then
+        assertThat(thrown)
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessageContaining("Warehouse not found with id: 999");
+    }
+
+}

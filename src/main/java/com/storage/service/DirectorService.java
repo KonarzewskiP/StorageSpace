@@ -28,23 +28,23 @@ public class DirectorService {
 
     public DirectorDto addDirector(DirectorDto directorDto) {
         log.info("Enter DirectorRepository -> addDirector() with: " + directorDto);
-        DirectorDtoValidator validator = new DirectorDtoValidator();
+        var validator = new DirectorDtoValidator();
         var errors = validator.validate(directorDto);
         if (!errors.isEmpty()) {
-            throw new DirectorServiceException("Invalid Director!, errors: " + errors
+            throw new DirectorServiceException("Invalid DirectorDto!, errors: " + errors
                     .entrySet()
                     .stream()
                     .map(err -> err.getKey() + " -> " + err.getValue())
                     .collect(Collectors.joining(", ")));
         }
-        Director director = fromDirectorDtoToDirector(directorDto);
+        var director = fromDirectorDtoToDirector(directorDto);
         var addedDirector = directorRepository.save(director);
         return fromDirectorToDirectorDto(addedDirector);
     }
 
-    public DirectorDto getOneDirectorById(Long id) {
+    public DirectorDto getDirectorById(Long id) {
         log.info("Enter DirectorRepository -> getOneDirectorById() with: " + id);
-        Director director =
+        var director =
                 directorRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(DIRECTOR, ID, id));
         return fromDirectorToDirectorDto(director);
     }

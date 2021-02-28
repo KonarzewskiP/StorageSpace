@@ -23,7 +23,7 @@ public class DirectorController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<DirectorDto> getOneDirectorById(@PathVariable Long id) {
-        return new ResponseEntity<>(directorService.getOneDirectorById(id), HttpStatus.OK);
+    public ResponseEntity<DirectorDto> getDirectorById(@PathVariable Long id) {
+        return new ResponseEntity<>(directorService.getDirectorById(id), HttpStatus.OK);
     }
 }

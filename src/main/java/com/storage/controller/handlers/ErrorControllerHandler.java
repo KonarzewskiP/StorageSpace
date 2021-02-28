@@ -39,7 +39,6 @@ public class ErrorControllerHandler {
         return new ResponseEntity<>(
                 createCustomErrorResponse(e, HttpStatus.NOT_FOUND.getReasonPhrase(), HttpStatus.NOT_FOUND.value()),
                 HttpStatus.NOT_FOUND);
-
     }
 
 

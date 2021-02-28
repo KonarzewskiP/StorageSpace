@@ -18,6 +18,7 @@ import javax.transaction.Transactional;
 import java.util.stream.Collectors;
 
 import static com.storage.constants.AppConstants.*;
+import static com.storage.model.mapper.ModelMapper.fromWarehouseToWarehouseDto;
 
 @Slf4j
 @Service
@@ -30,38 +31,36 @@ public class WarehouseService {
 
     public WarehouseDto addWarehouse(WarehouseDto warehouseDto) {
         log.info("Enter WarehouseService -> addWarehouse() with: " + warehouseDto);
-        WarehouseDtoValidator validator = new WarehouseDtoValidator();
+        var validator = new WarehouseDtoValidator();
         var errors = validator.validate(warehouseDto);
         if (!errors.isEmpty()) {
-            throw new WarehouseServiceException("Invalid Warehouse!, errors: " + errors
+            throw new WarehouseServiceException("Invalid WarehouseDto!, errors: " + errors
                     .entrySet()
                     .stream()
                     .map(err -> err.getKey() + " - " + err.getValue())
                     .collect(Collectors.joining(",")));
         }
-        Warehouse warehouse = ModelMapper.fromWarehouseDtoToWarehouse(warehouseDto);
+        var warehouse = ModelMapper.fromWarehouseDtoToWarehouse(warehouseDto);
         log.info("Warehouse: " + warehouse);
-        warehouseRepository.save(warehouse);
-        warehouseDto.setId(warehouse.getId());
-        return warehouseDto;
+        var addedWarehouse = warehouseRepository.save(warehouse);
+        return fromWarehouseToWarehouseDto(addedWarehouse);
     }
 
-    public WarehouseDto getOneWarehouseById(Long id) {
+    public WarehouseDto getWarehouseById(Long id) {
         log.info("Enter WarehouseService -> addWarehouse() with id: " + id);
-        Warehouse warehouse = warehouseRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(WAREHOUSE, ID, id));
-        return ModelMapper.fromWarehouseToWarehouseDto(warehouse);
-
+        var warehouse = warehouseRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(WAREHOUSE, ID, id));
+        return fromWarehouseToWarehouseDto(warehouse);
     }
 
     public WarehouseDto updateWarehouseDirector(DirectorDto directorDto, Long id) {
-        Warehouse warehouse =
+        var warehouse =
                 warehouseRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(WAREHOUSE, ID, id));
-        Director director =
+        var director =
                 directorRepository.findById(directorDto.getId()).orElseThrow(() -> new ResourceNotFoundException(DIRECTOR, ID, id));
         log.info("Enter WarehouseService -> updateWarehouseDirector() with warehouse: " + warehouse);
         log.info("Enter WarehouseService -> updateWarehouseDirector() with director: " + director);
         director.getWarehouses().add(warehouse);
         warehouse.setDirector(director);
-        return ModelMapper.fromWarehouseToWarehouseDto(warehouse);
+        return fromWarehouseToWarehouseDto(warehouse);
     }
 }

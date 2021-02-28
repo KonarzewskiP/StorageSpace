@@ -43,7 +43,6 @@ public class DirectorDtoValidator implements Validator<DirectorDto> {
         } else if (!isLastNameStartsFromUppercase(director)) {
             errors.put("LastName", "Should start from uppercase");
         }
-
         return errors;
     }
 
