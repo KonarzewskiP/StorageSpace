@@ -24,6 +24,7 @@ class WarehouseDtoValidatorTest {
         //when
         var result = validator.validate(warehouse);
         //then
+        assertThat(result).isNotNull();
         assertThat(result).hasSize(0);
     }
 
@@ -33,7 +34,7 @@ class WarehouseDtoValidatorTest {
         //given
         WarehouseDto warehouseDto = null;
         //when
-        Map<String, String> result = validator.validate(warehouseDto);
+        var result = validator.validate(warehouseDto);
         //then
         assertAll(
                 () -> assertThat(result).containsKey("WarehouseDto"),
@@ -49,7 +50,7 @@ class WarehouseDtoValidatorTest {
         var warehouseDto = createWarehouseDto();
         warehouseDto.setName(null);
         //when
-        Map<String, String> result = validator.validate(warehouseDto);
+        var result = validator.validate(warehouseDto);
         //then
         assertAll(
                 () -> assertThat(result).containsKey("Name"),
@@ -65,7 +66,7 @@ class WarehouseDtoValidatorTest {
         var warehouseDto = createWarehouseDto();
         warehouseDto.setCity(null);
         //when
-        Map<String, String> result = validator.validate(warehouseDto);
+        var result = validator.validate(warehouseDto);
         //then
         assertAll(
                 () -> assertThat(result).containsKey("City"),
@@ -81,7 +82,7 @@ class WarehouseDtoValidatorTest {
         var warehouseDto = createWarehouseDto();
         warehouseDto.setStreet(null);
         //when
-        Map<String, String> result = validator.validate(warehouseDto);
+        var result = validator.validate(warehouseDto);
         //then
         assertAll(
                 () -> assertThat(result).containsKey("Street"),
@@ -97,7 +98,7 @@ class WarehouseDtoValidatorTest {
         var warehouseDto = createWarehouseDto();
         warehouseDto.setPostCode(null);
         //when
-        Map<String, String> result = validator.validate(warehouseDto);
+        var result = validator.validate(warehouseDto);
         //then
         assertAll(
                 () -> assertThat(result).containsKey("Postcode"),
@@ -113,7 +114,7 @@ class WarehouseDtoValidatorTest {
         var warehouseDto = createWarehouseDto();
         warehouseDto.setName("");
         //when
-        Map<String, String> result = validator.validate(warehouseDto);
+        var result = validator.validate(warehouseDto);
         //then
         assertAll(
                 () -> assertThat(result).containsKey("Name"),
@@ -129,7 +130,7 @@ class WarehouseDtoValidatorTest {
         var warehouseDto = createWarehouseDto();
         warehouseDto.setCity("");
         //when
-        Map<String, String> result = validator.validate(warehouseDto);
+        var result = validator.validate(warehouseDto);
         //then
         assertAll(
                 () -> assertThat(result).containsKey("City"),
@@ -145,7 +146,7 @@ class WarehouseDtoValidatorTest {
         var warehouseDto = createWarehouseDto();
         warehouseDto.setStreet("");
         //when
-        Map<String, String> result = validator.validate(warehouseDto);
+        var result = validator.validate(warehouseDto);
         //then
         assertAll(
                 () -> assertThat(result).containsKey("Street"),
@@ -161,7 +162,7 @@ class WarehouseDtoValidatorTest {
         var warehouseDto = createWarehouseDto();
         warehouseDto.setPostCode("");
         //when
-        Map<String, String> result = validator.validate(warehouseDto);
+        var result = validator.validate(warehouseDto);
         //then
         assertAll(
                 () -> assertThat(result).containsKey("Postcode"),
@@ -179,7 +180,7 @@ class WarehouseDtoValidatorTest {
         var warehouseDto = createWarehouseDto();
         warehouseDto.setPostCode(postcode);
         //when
-        Map<String, String> result = validator.validate(warehouseDto);
+        var result = validator.validate(warehouseDto);
         //then
         assertAll(
                 () -> assertThat(result).containsKey("Postcode"),
@@ -196,7 +197,7 @@ class WarehouseDtoValidatorTest {
         var warehouseDto = createWarehouseDto();
         warehouseDto.setPostCode(postcode);
         //when
-        Map<String, String> result = validator.validate(warehouseDto);
+        var result = validator.validate(warehouseDto);
         //then
         assertThat(result).hasSize(0);
 

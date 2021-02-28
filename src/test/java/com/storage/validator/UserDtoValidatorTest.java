@@ -24,6 +24,7 @@ public class UserDtoValidatorTest {
         //when
         var result = validator.validate(userDto);
         //then
+        assertThat(result).isNotNull();
         assertThat(result).hasSize(0);
     }
 
@@ -34,7 +35,7 @@ public class UserDtoValidatorTest {
         //given
         UserDto userDto = null;
         //when
-        Map<String, String> result = validator.validate(userDto);
+        var result = validator.validate(userDto);
         //then
         assertAll(
                 () -> assertThat(result).containsKey("UserDto"),
