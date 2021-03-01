@@ -2,9 +2,13 @@ package com.storage.service;
 
 import com.storage.exception.ResourceNotFoundException;
 import com.storage.exception.WarehouseServiceException;
+import com.storage.model.StorageRoom;
+import com.storage.model.dto.StorageRoomDto;
 import com.storage.model.mapper.ModelMapper;
 import com.storage.model.dto.WarehouseDto;
+import com.storage.repository.StorageRoomRepository;
 import com.storage.repository.WarehouseRepository;
+import com.storage.utils.Util;
 import com.storage.validator.WarehouseDtoValidator;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +28,7 @@ import static com.storage.model.mapper.ModelMapper.fromWarehouseToWarehouseDto;
 public class WarehouseService {
 
     private final WarehouseRepository warehouseRepository;
+    private final StorageRoomRepository storageRoomRepository;
 
     public WarehouseDto addWarehouse(WarehouseDto warehouseDto) {
         log.info("Enter WarehouseService -> addWarehouse() with: " + warehouseDto);
@@ -37,6 +42,11 @@ public class WarehouseService {
                     .collect(Collectors.joining(",")));
         }
         var warehouse = ModelMapper.fromWarehouseDtoToWarehouse(warehouseDto);
+
+        var list = Util.createStorageRoomsList();
+        storageRoomRepository.saveAll(list);
+        warehouse.setStorageRooms(list);
+
         log.info("Warehouse: " + warehouse);
         var addedWarehouse = warehouseRepository.save(warehouse);
         return fromWarehouseToWarehouseDto(addedWarehouse);
@@ -51,5 +61,15 @@ public class WarehouseService {
     public List<WarehouseDto> getAllWarehouses() {
         log.info("Enter WarehouseService -> getAllWarehouses()");
         return ModelMapper.fromWarehouseListToWarehouseDtoList(warehouseRepository.findAll());
+    }
+
+    public List<StorageRoomDto> getNotReservedStorageRoomsByWarehouseId(Long id) {
+        log.info("Enter WarehouseService -> getAvailableStorageRoomsByWarehouseId() with id: " + id);
+        var warehouse = warehouseRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(WAREHOUSE, ID, id));
+        return warehouse.getStorageRooms()
+                .stream()
+                .filter(storage->!storage.isReserved())
+                .map(ModelMapper::fromStorageRoomToStorageRoomDto)
+                .collect(Collectors.toList());
     }
 }

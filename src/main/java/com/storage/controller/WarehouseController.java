@@ -1,5 +1,6 @@
 package com.storage.controller;
 
+import com.storage.model.dto.StorageRoomDto;
 import com.storage.model.dto.WarehouseDto;
 import com.storage.service.WarehouseService;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,12 @@ public class WarehouseController {
     public ResponseEntity<List<WarehouseDto>> getAllWarehouses() {
         log.info("Enter WarehouseController -> getAllWarehouses()");
         return new ResponseEntity<>(warehouseService.getAllWarehouses(), HttpStatus.OK);
+    }
+
+    @GetMapping("/available/{id}")
+    public ResponseEntity<List<StorageRoomDto>> getNotReservedStorageRoomsByWarehouseId(@PathVariable Long id) {
+        log.info("Enter WarehouseController -> getNotReservedStorageRoomsByWarehouseId() with: " + id);
+        return new ResponseEntity<>(warehouseService.getNotReservedStorageRoomsByWarehouseId(id), HttpStatus.OK);
     }
 
 }

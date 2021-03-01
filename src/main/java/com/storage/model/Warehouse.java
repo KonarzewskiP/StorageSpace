@@ -1,10 +1,12 @@
 package com.storage.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.storage.model.enums.Size;
 import lombok.*;
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 
 @Entity
@@ -26,7 +28,9 @@ public class Warehouse {
     @OneToMany(
             cascade = {CascadeType.ALL}
     )
+    @JoinColumn(name = "warehouse_id")
     @JsonIgnore
     private List<StorageRoom> storageRooms = new ArrayList<>();
+
 
 }
