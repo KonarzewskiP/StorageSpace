@@ -28,4 +28,5 @@ public class StorageRoomController {
         log.info("Enter StorageRoomController -> findStorageRoomById() with: " + id);
         return new ResponseEntity<>(storageRoomService.findStorageRoomById(id), HttpStatus.OK);
     }
+
 }
