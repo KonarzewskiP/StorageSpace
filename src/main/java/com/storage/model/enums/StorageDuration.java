@@ -1,5 +1,8 @@
 package com.storage.model.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum StorageDuration {
     LESS_THAN_2_WEEKS("Less than 2 weeks"),
     TWO_FOUR_WEEKS("2-4 weeks"),

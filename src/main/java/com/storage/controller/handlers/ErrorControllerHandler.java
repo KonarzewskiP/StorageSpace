@@ -1,5 +1,6 @@
 package com.storage.controller.handlers;
 
+import com.storage.exception.QuoteDetailsException;
 import com.storage.exception.UserServiceException;
 import com.storage.exception.ResourceNotFoundException;
 import com.storage.exception.WarehouseServiceException;
@@ -39,6 +40,15 @@ public class ErrorControllerHandler {
         return new ResponseEntity<>(
                 createCustomErrorResponse(e, HttpStatus.NOT_FOUND.getReasonPhrase(), HttpStatus.NOT_FOUND.value()),
                 HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(value = QuoteDetailsException.class)
+    public ResponseEntity<CustomErrorResponse> handleNotFoundException(QuoteDetailsException e) {
+        log.info("Enter ErrorControllerHandler -> handleNotFoundException() QuoteDetailsException with: " + e);
+
+        return new ResponseEntity<>(
+                createCustomErrorResponse(e, HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value()),
+                HttpStatus.BAD_REQUEST);
     }
 
 

@@ -1,5 +1,6 @@
 package com.storage.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.storage.model.enums.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,11 +17,13 @@ public class Quote {
     String firstName;
     String surname;
     String email;
-    String phoneNumber;
     String postcode;
+    String warehouseName;
+
 
     Size size;
     TypeOfAccount type;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     LocalDateTime startDate;
     StorageDuration duration;
     Boolean needMoreThanOneLocation;
@@ -32,7 +35,7 @@ public class Quote {
         return price.multiply(BigDecimal.valueOf(7)).multiply(BigDecimal.valueOf(0.67));
     }
 
-    public BigDecimal quote(StorageDuration duration, Size size) {
+    public BigDecimal quote() {
         BigDecimal price = BigDecimal.valueOf(size.getPrice());
 
         switch (duration) {

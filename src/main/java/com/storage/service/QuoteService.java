@@ -1,7 +1,11 @@
 package com.storage.service;
 
+import com.storage.exception.EmailException;
+import com.storage.exception.QuoteDetailsException;
 import com.storage.model.Quote;
 import com.storage.model.QuoteResponse;
+import com.storage.model.enums.DeliveryStatus;
+import com.storage.validator.QuoteValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.SimpleMailMessage;
@@ -9,6 +13,9 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
+import java.time.format.DateTimeFormatter;
+import java.util.stream.Collectors;
 
 /**
  * Class that provides methods for sending email with quotation
@@ -25,7 +32,8 @@ import javax.transaction.Transactional;
 public class QuoteService {
 
     private final JavaMailSender javaMailSender;
-    private final String EMAIL_FROM = "storagespacelondon@gmail.com";
+
+    private static final String SUBJECT = "Your storage space quotation";
 
     /**
      * Method that takes takes details from object Quote and send email
@@ -36,21 +44,60 @@ public class QuoteService {
      * @author Pawel Konarzewski
      * @since 02/03/2021
      */
-    public Quote sendQuote(Quote quote) {
+    public QuoteResponse sendQuote(Quote quote) {
         log.info("Enter QuoteService -> sendQuote() with: " + quote);
-
-        sendEmail(quote.getEmail(), "Test","StorageSpace");
-        return quote;
+        var validator = new QuoteValidator();
+        var errors = validator.validate(quote);
+        if (!errors.isEmpty()) {
+            throw new QuoteDetailsException("Invalid Quote! errors: " + errors
+                    .entrySet()
+                    .stream()
+                    .map(err -> err.getKey() + " - " + err.getValue())
+                    .collect(Collectors.joining(", ")));
+        }
+        return sendEmail(quote);
     }
 
-    private void sendEmail(String to, String body, String topic) {
-        log.info(String.format("Enter QuoteService -> sendEmail() with email: %s, subject: %s\n" +
-                "message: %s", to, topic, body));
+    private SimpleMailMessage createSimpleMailMessage(String recipientAddress, String message) {
+        log.info(String.format("Enter QuoteService -> sendEmail() with email: %s, message: %s", recipientAddress, message));
         var simpleMailMessage = new SimpleMailMessage();
-        simpleMailMessage.setFrom(EMAIL_FROM);
-        simpleMailMessage.setTo(to);
-        simpleMailMessage.setSubject(topic);
-        simpleMailMessage.setText(body);
-        javaMailSender.send(simpleMailMessage);
+        simpleMailMessage.setTo(recipientAddress);
+        simpleMailMessage.setSubject(SUBJECT);
+        simpleMailMessage.setText(message);
+        return simpleMailMessage;
     }
+
+    private String createMessage(Quote quote) {
+        String firstName = quote.getFirstName();
+        var dateFormatter = DateTimeFormatter.ofPattern("yyyy-MMMM-dd");
+        String date = quote.getStartDate().format(dateFormatter);
+        int size = quote.getSize().getSize();
+        String roomType = quote.getSize().getType();
+        String duration = quote.getDuration().getDuration();
+        String warehouseName = quote.getWarehouseName();
+        BigDecimal price = quote.quote();
+
+        return String.format("Hi %s, here is your price.\n\n" +
+                        "Move-in: %s\nAnticipated stay: %s\nRoom size: %s sq ft\nRoom type: %s\n\n%s:\n£%.2f per week.",
+                firstName, date, duration, size, roomType, warehouseName, price);
+    }
+
+    //TODO not finished. need to return error to front and back
+    private QuoteResponse sendEmail(Quote quote) {
+        log.info("Enter QuoteService -> sendEmail() with: " + quote);
+        var message = createMessage(quote);
+        var recipientAddress = quote.getEmail();
+        var quoteResponse =
+                QuoteResponse.builder().email(quote.getEmail()).build();
+        try {
+            javaMailSender.send(createSimpleMailMessage(recipientAddress, message));
+            quoteResponse.setStatus(DeliveryStatus.OK);
+        } catch (Exception e) {
+            quoteResponse.setStatus(DeliveryStatus.FAILED);
+            quoteResponse.setMessage("Failed to send email! error: " + e.getMessage());
+            throw new EmailException( e.getMessage());
+        }
+        return quoteResponse;
+    }
+
 }
