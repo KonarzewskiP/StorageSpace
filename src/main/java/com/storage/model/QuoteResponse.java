@@ -13,6 +13,5 @@ public class QuoteResponse {
 
      String email;
      DeliveryStatus status;
-     String message;
 }
 

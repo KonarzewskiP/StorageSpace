@@ -82,7 +82,6 @@ public class QuoteService {
                 firstName, date, duration, size, roomType, warehouseName, price);
     }
 
-    //TODO not finished. need to return error to front and back
     private QuoteResponse sendEmail(Quote quote) {
         log.info("Enter QuoteService -> sendEmail() with: " + quote);
         var message = createMessage(quote);
@@ -94,8 +93,7 @@ public class QuoteService {
             quoteResponse.setStatus(DeliveryStatus.OK);
         } catch (Exception e) {
             quoteResponse.setStatus(DeliveryStatus.FAILED);
-            quoteResponse.setMessage("Failed to send email! error: " + e.getMessage());
-            throw new EmailException( e.getMessage());
+            log.error("Invalid Email! errors: " + e.getMessage());
         }
         return quoteResponse;
     }

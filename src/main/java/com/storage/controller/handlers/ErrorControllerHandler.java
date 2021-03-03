@@ -1,9 +1,6 @@
 package com.storage.controller.handlers;
 
-import com.storage.exception.QuoteDetailsException;
-import com.storage.exception.UserServiceException;
-import com.storage.exception.ResourceNotFoundException;
-import com.storage.exception.WarehouseServiceException;
+import com.storage.exception.*;
 import com.storage.model.CustomErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -19,7 +16,7 @@ public class ErrorControllerHandler {
 
     @ExceptionHandler(value = UserServiceException.class)
     public ResponseEntity<CustomErrorResponse> handleValidationException(UserServiceException e) {
-        log.info("Enter ErrorControllerHandler -> handleValidationException() DirectorServiceException with: " + e);
+        log.error("Enter ErrorControllerHandler -> handleValidationException() DirectorServiceException with: " + e);
         return new ResponseEntity<>(
                 createCustomErrorResponse(e, HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value()),
                 HttpStatus.BAD_REQUEST);
@@ -27,7 +24,7 @@ public class ErrorControllerHandler {
 
     @ExceptionHandler(value = WarehouseServiceException.class)
     public ResponseEntity<CustomErrorResponse> handleValidationException(WarehouseServiceException e) {
-        log.info("Enter ErrorControllerHandler -> handleValidationException() WarehouseServiceException with: " + e);
+        log.error("Enter ErrorControllerHandler -> handleValidationException() WarehouseServiceException with: " + e);
         return new ResponseEntity<>(
                 createCustomErrorResponse(e, HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value()),
                 HttpStatus.BAD_REQUEST);
@@ -35,7 +32,7 @@ public class ErrorControllerHandler {
 
     @ExceptionHandler(value = ResourceNotFoundException.class)
     public ResponseEntity<CustomErrorResponse> handleNotFoundException(ResourceNotFoundException e) {
-        log.info("Enter ErrorControllerHandler -> handleNotFoundException() ResourceNotFoundException with: " + e);
+        log.error("Enter ErrorControllerHandler -> handleNotFoundException() ResourceNotFoundException with: " + e);
 
         return new ResponseEntity<>(
                 createCustomErrorResponse(e, HttpStatus.NOT_FOUND.getReasonPhrase(), HttpStatus.NOT_FOUND.value()),
@@ -44,8 +41,16 @@ public class ErrorControllerHandler {
 
     @ExceptionHandler(value = QuoteDetailsException.class)
     public ResponseEntity<CustomErrorResponse> handleNotFoundException(QuoteDetailsException e) {
-        log.info("Enter ErrorControllerHandler -> handleNotFoundException() QuoteDetailsException with: " + e);
+        log.error("Enter ErrorControllerHandler -> handleNotFoundException() QuoteDetailsException with: " + e);
 
+        return new ResponseEntity<>(
+                createCustomErrorResponse(e, HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value()),
+                HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = EmailException.class)
+    public ResponseEntity<CustomErrorResponse> handleNotFoundException(EmailException e) {
+        log.error("Enter ErrorControllerHandler -> handleNotFoundException() EmailException with: " + e);
         return new ResponseEntity<>(
                 createCustomErrorResponse(e, HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value()),
                 HttpStatus.BAD_REQUEST);
