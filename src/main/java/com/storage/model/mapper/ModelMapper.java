@@ -7,6 +7,9 @@ import com.storage.model.dto.UserDto;
 import com.storage.model.dto.StorageRoomDto;
 import com.storage.model.dto.WarehouseDto;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public interface ModelMapper {
 
     static UserDto fromUserToUserDto(User user) {
@@ -45,6 +48,13 @@ public interface ModelMapper {
                 .street(warehouseDto.getStreet())
                 .postCode(warehouseDto.getPostCode())
                 .build();
+    }
+
+    static List<WarehouseDto> fromWarehouseListToWarehouseDtoList(List<Warehouse> warehouses) {
+        return warehouses == null ? null : warehouses
+                .stream()
+                .map(ModelMapper::fromWarehouseToWarehouseDto)
+                .collect(Collectors.toList());
     }
 
     static StorageRoomDto fromStorageRoomToStorageRoomDto(StorageRoom storageRoom) {

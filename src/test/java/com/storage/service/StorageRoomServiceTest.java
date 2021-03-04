@@ -52,7 +52,7 @@ public class StorageRoomServiceTest {
         //given
         StorageRoomDto storageRoomDto = null;
         //when
-        Throwable thrown = catchThrowable(() -> service.addStorageRoom(storageRoomDto));
+        var thrown = catchThrowable(() -> service.addStorageRoom(storageRoomDto));
         //then
         assertThat(thrown)
                 .isInstanceOf(StorageRoomException.class)
@@ -66,7 +66,7 @@ public class StorageRoomServiceTest {
         var storageRoomDto = createStorageRoomDto();
         storageRoomDto.setReserved(null);
         //when
-        Throwable thrown = catchThrowable(() -> service.addStorageRoom(storageRoomDto));
+        var thrown = catchThrowable(() -> service.addStorageRoom(storageRoomDto));
         //then
         assertThat(thrown)
                 .isInstanceOf(StorageRoomException.class)
@@ -92,7 +92,7 @@ public class StorageRoomServiceTest {
         //given
         var id = 999L;
         //when
-        Throwable thrown = catchThrowable(() -> service.findStorageRoomById(id));
+        var thrown = catchThrowable(() -> service.findStorageRoomById(id));
         //then
         assertThat(thrown)
                 .isInstanceOf(ResourceNotFoundException.class)
@@ -105,7 +105,7 @@ public class StorageRoomServiceTest {
         //given
         Long id = null;
         //when
-        Throwable thrown = catchThrowable(() -> service.findStorageRoomById(id));
+        var thrown = catchThrowable(() -> service.findStorageRoomById(id));
         //then
         assertThat(thrown)
                 .isInstanceOf(ResourceNotFoundException.class)

@@ -17,6 +17,7 @@ public class StorageRoom {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @Enumerated(EnumType.STRING)
     private Size size;
     private boolean reserved;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
@@ -28,6 +29,4 @@ public class StorageRoom {
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Warehouse warehouse;
-
-
 }

@@ -58,7 +58,7 @@ public class UserDtoValidator implements Validator<UserDto> {
         if (!isEmailEmpty(user)) {
             errors.put("Email", "Can not be empty");
         } else if (!isEmailFormatValid(user)) {
-            errors.put("Email", "Value has incorrect format");
+            errors.put("Email", "Has incorrect format");
         }
         return errors;
     }

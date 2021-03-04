@@ -6,7 +6,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.Map;
 
 import static com.storage.builders.MockDataForTest.createUserDto;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -217,7 +216,7 @@ public class UserDtoValidatorTest {
         //then
         assertAll(
                 () -> assertThat(result).containsKey("Email"),
-                () -> assertThat(result).containsValue("Value has incorrect format"),
+                () -> assertThat(result).containsValue("Has incorrect format"),
                 () -> assertThat(result).hasSize(1)
         );
     }

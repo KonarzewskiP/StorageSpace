@@ -1,0 +1,100 @@
+package com.storage.service;
+
+import com.storage.exception.QuoteDetailsException;
+import com.storage.model.Quote;
+import com.storage.model.QuoteResponse;
+import com.storage.model.enums.DeliveryStatus;
+import com.storage.validator.QuoteValidator;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+import java.math.BigDecimal;
+import java.time.format.DateTimeFormatter;
+import java.util.stream.Collectors;
+
+/**
+ * Class that provides methods for sending email with quotation
+ * for guest users
+ *
+ * @author Pawel Konarzewski
+ * @since 02/03/2021
+ */
+
+@Slf4j
+@Service
+@Transactional
+@RequiredArgsConstructor
+public class QuoteService {
+
+    private final JavaMailSender javaMailSender;
+
+    private static final String SUBJECT = "Your storage space quotation";
+
+    /**
+     * Method that takes details from Quote object and send email
+     * with quotation to provided email address.
+     *
+     * @param quote
+     * @return <code>QuoteResponse</code> object
+     * @author Pawel Konarzewski
+     * @since 02/03/2021
+     */
+    public QuoteResponse sendQuote(Quote quote) {
+        log.info("Enter QuoteService -> sendQuote() with: " + quote);
+        var validator = new QuoteValidator();
+        var errors = validator.validate(quote);
+        if (!errors.isEmpty()) {
+            throw new QuoteDetailsException("Invalid Quote! errors: " + errors
+                    .entrySet()
+                    .stream()
+                    .map(err -> err.getKey() + " - " + err.getValue())
+                    .collect(Collectors.joining(", ")));
+        }
+        return sendEmail(quote);
+    }
+
+    private SimpleMailMessage createSimpleMailMessage(String recipientAddress, String message) {
+        log.info(String.format("Enter QuoteService -> sendEmail() with email: %s, message: %s", recipientAddress, message));
+        var simpleMailMessage = new SimpleMailMessage();
+        simpleMailMessage.setTo(recipientAddress);
+        simpleMailMessage.setSubject(SUBJECT);
+        simpleMailMessage.setText(message);
+        return simpleMailMessage;
+    }
+
+    private String createMessage(Quote quote) {
+        String firstName = quote.getFirstName();
+        var dateFormatter = DateTimeFormatter.ofPattern("yyyy-MMMM-dd");
+        String date = quote.getStartDate().format(dateFormatter);
+        int size = quote.getSize().getSize();
+        String roomType = quote.getSize().getType();
+        String duration = quote.getDuration().getDuration();
+        String warehouseName = quote.getWarehouseName();
+        BigDecimal price = quote.quote();
+
+        return String.format("Hi %s, here is your price.\n\n" +
+                        "Move-in: %s\nAnticipated stay: %s\nRoom size: %s sq ft\nRoom type: %s\n\n%s:\n£%.2f per week.",
+                firstName, date, duration, size, roomType, warehouseName, price);
+    }
+
+    private QuoteResponse sendEmail(Quote quote) {
+        log.info("Enter QuoteService -> sendEmail() with: " + quote);
+        var message = createMessage(quote);
+        var recipientAddress = quote.getEmail();
+        var quoteResponse =
+                QuoteResponse.builder().email(quote.getEmail()).build();
+        try {
+            javaMailSender.send(createSimpleMailMessage(recipientAddress, message));
+            quoteResponse.setStatus(DeliveryStatus.OK);
+        } catch (Exception e) {
+            quoteResponse.setStatus(DeliveryStatus.FAILED);
+            log.error("Invalid Email! errors: " + e.getMessage());
+        }
+        return quoteResponse;
+    }
+
+}

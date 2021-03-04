@@ -4,6 +4,7 @@ import com.storage.exception.ResourceNotFoundException;
 import com.storage.exception.WarehouseServiceException;
 import com.storage.model.Warehouse;
 import com.storage.model.dto.WarehouseDto;
+import com.storage.repository.StorageRoomRepository;
 import com.storage.repository.WarehouseRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,9 +15,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Optional;
 
-import static com.storage.builders.MockDataForTest.createWarehouse;
+import static com.storage.builders.MockDataForTest.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -30,6 +32,9 @@ public class WarehouseServiceTest {
 
     @Mock
     private WarehouseRepository warehouseRepository;
+
+    @Mock
+    private StorageRoomRepository storageRoomRepository;
 
     @Test
     @DisplayName("should add warehouse to repository")
@@ -46,9 +51,12 @@ public class WarehouseServiceTest {
         //when
         var result = service.addWarehouse(testWarehouseDto);
         //then
-        assertThat(result).isNotNull();
-        assertThat(result.getId()).isEqualTo(2L);
-        assertThat(result.getName()).isEqualTo("Big Yellow");
+        assertAll(
+                ()->assertThat(result.getId()).isEqualTo(2L),
+                ()->assertThat(result.getName()).isEqualTo("Big Yellow")
+        );
+
+
     }
 
     @Test
@@ -124,5 +132,33 @@ public class WarehouseServiceTest {
                 .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessageContaining("Warehouse not found with id: 999");
     }
+
+    @Test
+    @DisplayName("should return not reserved storage rooms from warehouse by id")
+    void shouldReturnNotReservedStorageRoomsFromWarehouseById() {
+        //given
+        var warehouse = createWarehouse();
+        when(warehouseRepository.findById(anyLong())).thenReturn(Optional.of(warehouse));
+        var id = 10L;
+        //when
+        var result = service.getNotReservedStorageRoomsByWarehouseId(id);
+        //then
+        assertThat(result).hasSize(12);
+    }
+
+    @Test
+    @DisplayName("should return ResourceNotFoundException when can not find warehouse by id passed to method")
+    void shouldReturnResourceNotFoundExceptionWhenCanNotFindWarehouseByIdPassedToMethod() {
+        //given
+        var id = 999L;
+        //when
+        Throwable thrown = catchThrowable(() -> service.getNotReservedStorageRoomsByWarehouseId(id));
+        //then
+        assertThat(thrown)
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessageContaining("Warehouse not found with id: 999");
+    }
+
+
 
 }
