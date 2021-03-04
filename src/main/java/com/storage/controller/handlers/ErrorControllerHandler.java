@@ -48,15 +48,6 @@ public class ErrorControllerHandler {
                 HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(value = EmailException.class)
-    public ResponseEntity<CustomErrorResponse> handleNotFoundException(EmailException e) {
-        log.error("Enter ErrorControllerHandler -> handleNotFoundException() EmailException with: " + e);
-        return new ResponseEntity<>(
-                createCustomErrorResponse(e, HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value()),
-                HttpStatus.BAD_REQUEST);
-    }
-
-
     private CustomErrorResponse createCustomErrorResponse(Exception e, String errorCode, Integer status) {
         return CustomErrorResponse.builder()
                 .errorCode(errorCode)

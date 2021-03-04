@@ -1,14 +1,13 @@
 package com.storage.builders;
 
+import com.storage.model.Quote;
 import com.storage.model.StorageRoom;
 import com.storage.model.User;
 import com.storage.model.Warehouse;
 import com.storage.model.dto.StorageRoomDto;
 import com.storage.model.dto.UserDto;
 import com.storage.model.dto.WarehouseDto;
-import com.storage.model.enums.Gender;
-import com.storage.model.enums.Role;
-import com.storage.model.enums.Size;
+import com.storage.model.enums.*;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -107,5 +106,19 @@ public interface MockDataForTest {
                         )
                 )
                 .collect(Collectors.toList());
+    }
+
+    static Quote createQuote(){
+        return Quote.builder()
+                .firstName("John")
+                .surname("Bravo")
+                .email("johnBravo@gmail.com")
+                .postcode("SE11 5QY")
+                .warehouseName("Big Yellow")
+                .size(Size.THREE_SINGLE_GARAGES)
+                .type(TypeOfAccount.HOME)
+                .startDate(LocalDateTime.now())
+                .duration(StorageDuration.EIGHT_TWELVE_WEEKS)
+                .build();
     }
 }

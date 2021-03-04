@@ -2,16 +2,18 @@ package com.storage.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.storage.model.enums.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Value;
+import lombok.*;
 
+import javax.persistence.Entity;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-@Value
 @AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Getter
+@Setter
 public class Quote {
 
     String firstName;
@@ -19,7 +21,6 @@ public class Quote {
     String email;
     String postcode;
     String warehouseName;
-
 
     Size size;
     TypeOfAccount type;
@@ -30,9 +31,8 @@ public class Quote {
     Set<ExtraServices> extraServices;
     Reason reason;
 
-
     private BigDecimal calculatePriceWithDiscount(BigDecimal price, double discount) {
-        return price.multiply(BigDecimal.valueOf(7)).multiply(BigDecimal.valueOf(0.67));
+        return price.multiply(BigDecimal.valueOf(7)).multiply(BigDecimal.valueOf(discount));
     }
 
     public BigDecimal quote() {

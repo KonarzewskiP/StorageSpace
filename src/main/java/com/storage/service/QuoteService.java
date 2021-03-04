@@ -1,6 +1,5 @@
 package com.storage.service;
 
-import com.storage.exception.EmailException;
 import com.storage.exception.QuoteDetailsException;
 import com.storage.model.Quote;
 import com.storage.model.QuoteResponse;

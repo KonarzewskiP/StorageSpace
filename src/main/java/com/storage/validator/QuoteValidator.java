@@ -1,7 +1,6 @@
 package com.storage.validator;
 
 import com.storage.model.Quote;
-import com.storage.model.dto.UserDto;
 import com.storage.validator.base.Validator;
 
 import java.util.HashMap;
