@@ -35,11 +35,11 @@ public class QuoteService {
     private static final String SUBJECT = "Your storage space quotation";
 
     /**
-     * Method that takes takes details from object Quote and send email
-     * with quotation to guest user.
+     * Method that takes details from Quote object and send email
+     * with quotation to provided email address.
      *
      * @param quote
-     * @return <code>Quote</code> object
+     * @return <code>QuoteResponse</code> object
      * @author Pawel Konarzewski
      * @since 02/03/2021
      */
