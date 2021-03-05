@@ -9,6 +9,8 @@ public class AppConstants {
     public static final String STORAGE_ROOM = "StorageRoom";
 
     public static final String ID = "id";
+    public static final String POSTCODE = "postcode";
+
 
 
 

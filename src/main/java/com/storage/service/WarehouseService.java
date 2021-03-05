@@ -68,8 +68,18 @@ public class WarehouseService {
         var warehouse = warehouseRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(WAREHOUSE, ID, id));
         return warehouse.getStorageRooms()
                 .stream()
-                .filter(storage->!storage.isReserved())
+                .filter(storage -> !storage.isReserved())
                 .map(ModelMapper::fromStorageRoomToStorageRoomDto)
                 .collect(Collectors.toList());
     }
+
+    public List<WarehouseDto> getNearestWarehouses(String postCode) {
+        log.info("Enter WarehouseService -> getNearestWarehouses() with: " + postCode);
+        var warehousesList = warehouseRepository.findAll();
+
+
+        return null;
+    }
+
+
 }
