@@ -1,6 +1,6 @@
-package com.storage.model;
+package com.storage.model.postcodes_api;
 
-import lombok.Data;
+import lombok.*;
 
 import java.util.List;
 
@@ -14,9 +14,19 @@ import java.util.List;
 
 
 @Data
-public class Result {
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class ResultSingleResponse {
 
     private String postcode;
     private double longitude;
     private double latitude;
+
+    public ResultSingleResponse(String postcode) {
+        this.postcode = postcode;
+    }
+
 }
