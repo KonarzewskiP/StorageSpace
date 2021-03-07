@@ -1,4 +1,4 @@
-package com.storage.model.postcodes_api;
+package com.storage.model.postcodes_api.request;
 
 import lombok.*;
 

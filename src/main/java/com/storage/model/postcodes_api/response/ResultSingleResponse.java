@@ -1,4 +1,4 @@
-package com.storage.model.postcodes_api;
+package com.storage.model.postcodes_api.response;
 
 import lombok.*;
 
@@ -22,8 +22,8 @@ import java.util.List;
 public class ResultSingleResponse {
 
     private String postcode;
-    private double longitude;
-    private double latitude;
+    private Double longitude;
+    private Double latitude;
 
     public ResultSingleResponse(String postcode) {
         this.postcode = postcode;

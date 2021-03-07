@@ -8,6 +8,7 @@ import com.storage.model.mapper.ModelMapper;
 import com.storage.model.dto.WarehouseDto;
 import com.storage.repository.StorageRoomRepository;
 import com.storage.repository.WarehouseRepository;
+import com.storage.service.postcodes_api.PostcodeService;
 import com.storage.utils.Util;
 import com.storage.validator.WarehouseDtoValidator;
 import lombok.AllArgsConstructor;
@@ -76,6 +77,8 @@ public class WarehouseService {
     public List<WarehouseDto> getNearestWarehouses(String postCode) {
         log.info("Enter WarehouseService -> getNearestWarehouses() with: " + postCode);
         var warehousesList = warehouseRepository.findAll();
+        var listWithPostcodes = PostcodeService.createPostcodeBulkRequest(List.of());
+//        var coordinatesOfWarehouses = PostcodeService.getLatAndLngForManyPostcodes(listWithPostcodes);
 
 
         return null;

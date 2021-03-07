@@ -1,4 +1,4 @@
-package com.storage.model.postcodes_api;
+package com.storage.model.postcodes_api.response;
 
 import com.google.gson.annotations.SerializedName;
 import lombok.AllArgsConstructor;
