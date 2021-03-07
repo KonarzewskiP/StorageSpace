@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.storage.model.postcodes_api.CustomDeserializer;
+import com.storage.model.postcodes_api.PostcodeResponseDeserializer;
 import com.storage.model.postcodes_api.PostcodeSingleResponse;
 import com.storage.model.postcodes_api.PostcodeBulkRequest;
 import com.storage.model.Warehouse;
@@ -59,18 +60,21 @@ public class PostcodeService {
      * @since 05/03/2021
      */
 
-    public static List<PostcodeSingleResponse> getLatAndLngForSinglePostcode(String postcode) throws URISyntaxException, InterruptedException {
+    public static PostcodeSingleResponse getLatAndLngForSinglePostcode(String postcode) throws URISyntaxException, InterruptedException {
         log.info("Enter getLatAndLngForSinglePostcode -> with: " + postcode);
         CountDownLatch countDownLatch = new CountDownLatch(1);
         final List<PostcodeSingleResponse> postcodeSingleResponse = new ArrayList<>();
 
         createGetResponse(postcode).thenAccept(response -> {
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+//            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            Gson gson = new GsonBuilder().registerTypeAdapter(PostcodeSingleResponse.class, new PostcodeResponseDeserializer()).setPrettyPrinting().create();
             log.info("Inside getLatAndLngForSinglePostcode -> with response: " + response.body());
+            System.out.println();
 
             postcodeSingleResponse.add(gson.fromJson(response.body(), PostcodeSingleResponse.class));
 
             log.info("createGetResponse -> with location: " + postcodeSingleResponse);
+            System.out.println();
             countDownLatch.countDown();
         });
 
@@ -78,7 +82,7 @@ public class PostcodeService {
 
         log.info(String.valueOf(postcodeSingleResponse));
 
-        return postcodeSingleResponse;
+        return postcodeSingleResponse.get(0);
     }
 
     private static CompletableFuture<HttpResponse<String>> createGetResponse(String postcode) throws URISyntaxException {
@@ -199,11 +203,11 @@ public class PostcodeService {
 
     public static void main(String[] args) throws URISyntaxException, InterruptedException {
 
-//        var location = getLatAndLngForSinglePostcode("SW96 AU");
-//        System.out.println(location);
-        var list = getLatAndLngForManyPostcodes("");
+        var location = getLatAndLngForSinglePostcode("SW96 AU");
+        System.out.println(location);
+//        var list = getLatAndLngForManyPostcodes("");
         System.out.println("-------------------------------------------------------------");
-        list.forEach(System.out::println);
+//        list.forEach(System.out::println);
 
     }
 

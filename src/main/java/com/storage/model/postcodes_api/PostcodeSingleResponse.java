@@ -22,7 +22,11 @@ import lombok.NoArgsConstructor;
 public class PostcodeSingleResponse {
 
     private String status;
-    @SerializedName("result")
-    private ResultSingleResponse resultSingleResponse;
+//    @SerializedName("result")
+//    private ResultSingleResponse resultSingleResponse;
+    private String postcode;
+    private double longitude;
+    private double latitude;
+
     private String error;
 }

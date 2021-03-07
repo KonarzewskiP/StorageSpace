@@ -1,19 +1,26 @@
 package com.storage.model.postcodes_api;
 
 import com.google.gson.*;
+import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+@Slf4j
 public class CustomDeserializer implements JsonDeserializer<ResultBulkResponse>  {
+
     @Override
     public ResultBulkResponse deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-        ResultBulkResponse postcodeResponse = new ArrayList<>();
+       log.info("Enter CustomDeserializer -> deserialize()");
+        ResultBulkResponse postcodeResponse = new ResultBulkResponse();
+        List<ResultSingleResponse> list = new ArrayList<>();
         JsonObject jsonObject = json.getAsJsonObject();
+
         System.out.println("--------------------------------- CustomDeserializer ----------------------------------");
-        System.out.println(jsonObject);
+
+        log.info("------------> JsonObject: " + jsonObject);
 
         Iterator<JsonElement> jsonIter = jsonObject.get("result").getAsJsonArray().iterator();
         System.out.println("--------------------------------- Iterator<JsonElement> ----------------------------------");
@@ -24,9 +31,11 @@ public class CustomDeserializer implements JsonDeserializer<ResultBulkResponse> 
                     .latitude(jElement.getAsJsonObject().get("latitude").getAsDouble())
                     .longitude(jElement.getAsJsonObject().get("longitude").getAsDouble())
                     .build();
-            System.out.println(temp);
-            postcodeResponse.add(PostcodeSingleResponse.builder().resultSingleResponse(temp).build());
+            log.info("------------> ResultSingleResponse: " + temp);
+            list.add(temp);
         }
+        log.info("------------> List<ResultSingleResponse> : ");
+        list.forEach(System.out::println);
         return postcodeResponse;
     }
 }
