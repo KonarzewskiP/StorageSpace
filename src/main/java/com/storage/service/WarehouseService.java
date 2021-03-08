@@ -77,9 +77,7 @@ public class WarehouseService {
     public List<WarehouseDto> getNearestWarehouses(String postCode) {
         log.info("Enter WarehouseService -> getNearestWarehouses() with: " + postCode);
         var warehousesList = warehouseRepository.findAll();
-        var listWithPostcodes = PostcodeService.createPostcodeBulkRequest(List.of());
 //        var coordinatesOfWarehouses = PostcodeService.getLatAndLngForManyPostcodes(listWithPostcodes);
-
 
         return null;
     }

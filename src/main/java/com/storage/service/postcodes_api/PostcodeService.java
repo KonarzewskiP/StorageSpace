@@ -4,11 +4,11 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.storage.model.postcodes_api.deserializer.PostcodeBulkResponseDeserializer;
 import com.storage.model.postcodes_api.deserializer.PostcodeResponseDeserializer;
-import com.storage.model.postcodes_api.request.PostcodeBulkRequest;
 import com.storage.model.postcodes_api.response.PostcodeBulkResponse;
 import com.storage.model.postcodes_api.response.PostcodeSingleResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+
 import java.net.ProxySelector;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 
-import static java.util.Objects.isNull;
 
 /**
  * Service Class that communicate with third party API and
@@ -53,14 +52,14 @@ public class PostcodeService {
      * @since 05/03/2021
      */
 
-    public static PostcodeSingleResponse getLatAndLngForSinglePostcode(String postcode){
+    public static PostcodeSingleResponse getLatAndLngForSinglePostcode(String postcode) {
         if (postcode == null) {
             throw new IllegalArgumentException("Postcodes is null");
         }
-        log.info("Enter getLatAndLngForSinglePostcode -> with: " + postcode);
+        log.info("Enter getLatAndLngForSinglePostcode -> with: {}", postcode);
         final List<PostcodeSingleResponse> postcodeSingleResponse = new ArrayList<>();
 
-        try{
+        try {
             CountDownLatch countDownLatch = new CountDownLatch(1);
             createGetResponse(postcode).thenAccept(response -> {
                 Gson gson = new GsonBuilder().registerTypeAdapter(PostcodeSingleResponse.class, new PostcodeResponseDeserializer()).setPrettyPrinting().create();
@@ -69,14 +68,14 @@ public class PostcodeService {
             });
             countDownLatch.await();
 
-        }catch(URISyntaxException | InterruptedException exc){
+        } catch (URISyntaxException | InterruptedException exc) {
             log.error(exc.getMessage());
         }
         return postcodeSingleResponse.get(0);
     }
 
     private static CompletableFuture<HttpResponse<String>> createGetResponse(String postcode) throws URISyntaxException {
-        log.info("Enter createGetResponse -> with: " + postcode);
+        log.info("Enter createGetResponse -> with: {}", postcode);
         return HttpClient.newBuilder()
                 .proxy(ProxySelector.getDefault())
                 .build()
@@ -107,12 +106,13 @@ public class PostcodeService {
      * @since 05/03/2021
      */
 
-    public static PostcodeBulkResponse getLatAndLngForManyPostcodes(PostcodeBulkRequest postcodes) {
+    public static PostcodeBulkResponse getLatAndLngForManyPostcodes(List<String> postcodes) {
         if (postcodes == null) {
             throw new IllegalArgumentException("PostcodeBulkRequest is null");
         }
         log.info("Enter getLatAndLngForManyPostcodes -> with: " + postcodes);
         final List<PostcodeBulkResponse> codesList = new ArrayList<>();
+        log.info("Creating jsonObject for bulk request");
 
         try {
             CountDownLatch countDownLatch = new CountDownLatch(1);
@@ -125,14 +125,14 @@ public class PostcodeService {
                 countDownLatch.countDown();
             });
             countDownLatch.await();
-        }catch(URISyntaxException | InterruptedException exc){
+        } catch (URISyntaxException | InterruptedException exc) {
             log.error(exc.getMessage());
         }
 
-        return  codesList.get(0);
+        return codesList.get(0);
     }
 
-    private static CompletableFuture<HttpResponse<String>> createPostResponse(PostcodeBulkRequest postcode) throws URISyntaxException {
+    private static CompletableFuture<HttpResponse<String>> createPostResponse(List<String> postcode) throws URISyntaxException {
         log.info("Enter createPostResponse -> with: " + postcode);
         return HttpClient.newBuilder()
                 .proxy(ProxySelector.getDefault())
@@ -140,41 +140,16 @@ public class PostcodeService {
                 .sendAsync(createPostRequest(postcode), HttpResponse.BodyHandlers.ofString());
     }
 
-    public static HttpRequest createPostRequest(PostcodeBulkRequest postcodes) throws URISyntaxException {
+    public static HttpRequest createPostRequest(List<String> postcodes) throws URISyntaxException {
         log.info("Enter createPostRequest -> with: " + postcodes);
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String json = gson.toJson(postcodes);
+        String json ="{\"postcodes\":".concat(gson.toJson(postcodes)).concat("}");
         return HttpRequest.newBuilder()
                 .uri(new URI(postcodeBaseCall))
                 .version(HttpClient.Version.HTTP_2)
                 .header("content-type", "application/json;charset=UTF-8")
                 .timeout(Duration.ofSeconds(10)) // HttpTimeoutException
                 .POST(HttpRequest.BodyPublishers.ofString(json))
-                .build();
-    }
-
-    /**
-     * The method that creates the PostcodeBulkRequest object necessary
-     * to send as a request to API to get bulk lookup of postcodes.
-     * <p>
-     * Params: postcodes - list containing postcodes from the UK
-     * Returns: PostcodeBulkRequest object with a list of postcodes.
-     *
-     * @author Pawel Konarzewski
-     * @since 07/03/2021
-     */
-
-    public static PostcodeBulkRequest createPostcodeBulkRequest(List<String> postcodes) {
-        if (isNull(postcodes)) {
-            throw new IllegalArgumentException("List<String> postcodes is null");
-        }
-
-        log.info("Enter createUrlToGetLocationOfWarehouses -> with: " + postcodes);
-        List<String> postcodesList = List.of("CR0 3EU33", "IG11 8BL", "SW113RX");
-
-        return PostcodeBulkRequest
-                .builder()
-                .postcodes(postcodes.size() == 0 ? postcodesList : postcodes)
                 .build();
     }
 
@@ -209,8 +184,8 @@ public class PostcodeService {
 
         var location = getLatAndLngForSinglePostcode("SW96 AU");
         System.out.println(location);
-        var objWithPostcodes = createPostcodeBulkRequest(List.of());
-        var coordinates = getLatAndLngForManyPostcodes(objWithPostcodes);
+        List<String> postcodesList = List.of("CR0 3EU33", "IG11 8BL", "SW113RX");
+        var coordinates = getLatAndLngForManyPostcodes(postcodesList);
         System.out.println("-------------------------------------------------------------");
 //        list.forEach(System.out::println);
         coordinates.getResult().forEach(System.out::println);

@@ -4,6 +4,8 @@ import com.google.gson.*;
 import com.storage.model.postcodes_api.response.PostcodeBulkResponse;
 import com.storage.model.postcodes_api.response.ResultSingleResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -43,7 +45,6 @@ public class PostcodeBulkResponseDeserializer implements JsonDeserializer<Postco
         for (JsonElement jObject : jsonObject.get("result").getAsJsonArray()) {
             JsonElement jElement = jObject.getAsJsonObject().get("result");
             ResultSingleResponse temp;
-
             if (jElement.isJsonNull()) {
                 temp = ResultSingleResponse.builder()
                         .postcode(jObject.getAsJsonObject().get("query").getAsString())
@@ -56,6 +57,7 @@ public class PostcodeBulkResponseDeserializer implements JsonDeserializer<Postco
                         .latitude(jElement.getAsJsonObject().get("latitude").getAsDouble())
                         .longitude(jElement.getAsJsonObject().get("longitude").getAsDouble())
                         .build();
+
             }
             list.add(temp);
         }
