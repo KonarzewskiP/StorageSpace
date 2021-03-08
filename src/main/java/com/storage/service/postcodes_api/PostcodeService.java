@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 
 import java.net.ProxySelector;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -70,13 +69,14 @@ public class PostcodeService {
             });
             countDownLatch.await();
 
-        } catch (URISyntaxException | InterruptedException exc) {
+        } catch (InterruptedException exc) {
+            Thread.currentThread().interrupt();
             log.error(exc.getMessage());
         }
         return postcodeSingleResponse.get(0);
     }
 
-    private static CompletableFuture<HttpResponse<String>> createGetResponse(String postcode) throws URISyntaxException {
+    private static CompletableFuture<HttpResponse<String>> createGetResponse(String postcode){
         log.info("Enter createGetResponse -> with: {}", postcode);
         return HttpClient.newBuilder()
                 .proxy(ProxySelector.getDefault())
@@ -84,12 +84,12 @@ public class PostcodeService {
                 .sendAsync(createGetRequest(postcode), HttpResponse.BodyHandlers.ofString());
     }
 
-    private static HttpRequest createGetRequest(String postcode) throws URISyntaxException {
+    private static HttpRequest createGetRequest(String postcode) {
         log.info("Enter createGetRequest -> with: " + postcode);
         String url = postcodeBaseCall + "/" + postcode.toUpperCase().replaceAll(" ", "");
         log.info((url));
         return HttpRequest.newBuilder()
-                .uri(new URI(url))
+                .uri(URI.create(url))
                 .version(HttpClient.Version.HTTP_2)
                 .timeout(Duration.ofSeconds(TIMEOUT_IN_SECONDS)) // HttpTimeoutException
                 .GET()
@@ -127,14 +127,15 @@ public class PostcodeService {
                 countDownLatch.countDown();
             });
             countDownLatch.await();
-        } catch (URISyntaxException | InterruptedException exc) {
+        } catch (InterruptedException exc) {
+            Thread.currentThread().interrupt();
             log.error(exc.getMessage());
         }
 
         return codesList.get(0);
     }
 
-    private static CompletableFuture<HttpResponse<String>> createPostResponse(List<String> postcode) throws URISyntaxException {
+    private static CompletableFuture<HttpResponse<String>> createPostResponse(List<String> postcode) {
         log.info("Enter createPostResponse -> with: " + postcode);
         return HttpClient.newBuilder()
                 .proxy(ProxySelector.getDefault())
@@ -142,7 +143,7 @@ public class PostcodeService {
                 .sendAsync(createPostRequest(postcode), HttpResponse.BodyHandlers.ofString());
     }
 
-    public static HttpRequest createPostRequest(List<String> postcodes) throws URISyntaxException {
+    public static HttpRequest createPostRequest(List<String> postcodes) {
         log.info("Enter createPostRequest -> with: " + postcodes);
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         Map<String, List<String>> map = new HashMap<>();
@@ -150,10 +151,10 @@ public class PostcodeService {
         String json = gson.toJson(map);
 
         return HttpRequest.newBuilder()
-                .uri(new URI(postcodeBaseCall))
+                .uri(URI.create(postcodeBaseCall))
                 .version(HttpClient.Version.HTTP_2)
                 .header("content-type", "application/json;charset=UTF-8")
-                .timeout(Duration.ofSeconds(10)) // HttpTimeoutException
+                .timeout(Duration.ofSeconds(TIMEOUT_IN_SECONDS)) // HttpTimeoutException
                 .POST(HttpRequest.BodyPublishers.ofString(json))
                 .build();
     }
@@ -187,8 +188,8 @@ public class PostcodeService {
 
     public static void main(String[] args) {
 
-        var location = getLatAndLngForSinglePostcode("SW96 AU");
-        System.out.println(location);
+//        var location = getLatAndLngForSinglePostcode("SW96 AU");
+//        System.out.println(location);
         List<String> postcodesList = List.of("CR0 3EU33", "IG11 8BL", "SW113RX");
         var coordinates = getLatAndLngForManyPostcodes(postcodesList);
         System.out.println("-------------------------------------------------------------");
