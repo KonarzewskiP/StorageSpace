@@ -14,8 +14,6 @@ import java.util.List;
 
 
 @Data
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -24,9 +22,4 @@ public class ResultSingleResponse {
     private String postcode;
     private Double longitude;
     private Double latitude;
-
-    public ResultSingleResponse(String postcode) {
-        this.postcode = postcode;
-    }
-
 }

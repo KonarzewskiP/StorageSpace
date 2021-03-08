@@ -52,7 +52,7 @@ public class WarehouseController {
      * @since 04/03/2021
      */
 
-    @GetMapping
+    @GetMapping("/nearest")
     public ResponseEntity<List<WarehouseDto>> getNearestWarehouses(@RequestParam String postCode) {
         log.info("Enter WarehouseController -> getNearestWarehouses() with: " + postCode);
         return new ResponseEntity<>(warehouseService.getNearestWarehouses(postCode), HttpStatus.OK);

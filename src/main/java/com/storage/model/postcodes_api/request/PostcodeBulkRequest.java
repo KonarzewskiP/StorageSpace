@@ -11,8 +11,7 @@ import java.util.List;
  * @author Pawel Konarzewski
  * @since 06/03/2021
  */
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
