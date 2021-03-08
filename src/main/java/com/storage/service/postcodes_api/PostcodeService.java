@@ -17,7 +17,9 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 
@@ -143,7 +145,10 @@ public class PostcodeService {
     public static HttpRequest createPostRequest(List<String> postcodes) throws URISyntaxException {
         log.info("Enter createPostRequest -> with: " + postcodes);
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String json ="{\"postcodes\":".concat(gson.toJson(postcodes)).concat("}");
+        Map<String, List<String>> map = new HashMap<>();
+        map.put("postcodes", postcodes);
+        String json = gson.toJson(map);
+
         return HttpRequest.newBuilder()
                 .uri(new URI(postcodeBaseCall))
                 .version(HttpClient.Version.HTTP_2)
