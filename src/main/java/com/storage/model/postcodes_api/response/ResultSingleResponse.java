@@ -2,8 +2,6 @@ package com.storage.model.postcodes_api.response;
 
 import lombok.*;
 
-import java.util.List;
-
 /**
  * This is a model class to hold precise location information.
  *

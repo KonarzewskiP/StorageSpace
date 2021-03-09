@@ -54,29 +54,29 @@ public class PostcodeService {
      */
 
     public static PostcodeSingleResponse getLatAndLngForSinglePostcode(String postcode) {
-        if (postcode == null) {
-            throw new IllegalArgumentException("Postcodes is null");
-        }
         log.info("Enter getLatAndLngForSinglePostcode -> with: {}", postcode);
         final List<PostcodeSingleResponse> postcodeSingleResponse = new ArrayList<>();
 
         try {
             CountDownLatch countDownLatch = new CountDownLatch(1);
             createGetResponse(postcode).thenAccept(response -> {
-                Gson gson = new GsonBuilder().registerTypeAdapter(PostcodeSingleResponse.class, new PostcodeResponseDeserializer()).setPrettyPrinting().create();
+                Gson gson = new GsonBuilder()
+                        .registerTypeAdapter(PostcodeSingleResponse.class, new PostcodeResponseDeserializer())
+                        .setPrettyPrinting()
+                        .create();
                 postcodeSingleResponse.add(gson.fromJson(response.body(), PostcodeSingleResponse.class));
                 countDownLatch.countDown();
             });
             countDownLatch.await();
-
         } catch (InterruptedException exc) {
+            log.error("Error while sending request. Thread execution was interrupted.");
             Thread.currentThread().interrupt();
-            log.error(exc.getMessage());
+            throw new RuntimeException(exc.getMessage());
         }
         return postcodeSingleResponse.get(0);
     }
 
-    private static CompletableFuture<HttpResponse<String>> createGetResponse(String postcode){
+    private static CompletableFuture<HttpResponse<String>> createGetResponse(String postcode) {
         log.info("Enter createGetResponse -> with: {}", postcode);
         return HttpClient.newBuilder()
                 .proxy(ProxySelector.getDefault())
@@ -87,7 +87,6 @@ public class PostcodeService {
     private static HttpRequest createGetRequest(String postcode) {
         log.info("Enter createGetRequest -> with: " + postcode);
         String url = postcodeBaseCall + "/" + postcode.toUpperCase().replaceAll(" ", "");
-        log.info((url));
         return HttpRequest.newBuilder()
                 .uri(URI.create(url))
                 .version(HttpClient.Version.HTTP_2)
@@ -109,12 +108,8 @@ public class PostcodeService {
      */
 
     public static PostcodeBulkResponse getLatAndLngForManyPostcodes(List<String> postcodes) {
-        if (postcodes == null) {
-            throw new IllegalArgumentException("PostcodeBulkRequest is null");
-        }
         log.info("Enter getLatAndLngForManyPostcodes -> with: " + postcodes);
         final List<PostcodeBulkResponse> codesList = new ArrayList<>();
-        log.info("Creating jsonObject for bulk request");
 
         try {
             CountDownLatch countDownLatch = new CountDownLatch(1);
@@ -128,23 +123,23 @@ public class PostcodeService {
             });
             countDownLatch.await();
         } catch (InterruptedException exc) {
+            log.error("Error while sending request. Thread execution was interrupted.");
             Thread.currentThread().interrupt();
-            log.error(exc.getMessage());
+            throw new RuntimeException(exc.getMessage());
         }
-
         return codesList.get(0);
     }
 
-    private static CompletableFuture<HttpResponse<String>> createPostResponse(List<String> postcode) {
-        log.info("Enter createPostResponse -> with: " + postcode);
+    private static CompletableFuture<HttpResponse<String>> createPostResponse(List<String> postcodes) {
+        log.info("Enter createPostResponse -> with: {}", postcodes);
         return HttpClient.newBuilder()
                 .proxy(ProxySelector.getDefault())
                 .build()
-                .sendAsync(createPostRequest(postcode), HttpResponse.BodyHandlers.ofString());
+                .sendAsync(createPostRequest(postcodes), HttpResponse.BodyHandlers.ofString());
     }
 
     public static HttpRequest createPostRequest(List<String> postcodes) {
-        log.info("Enter createPostRequest -> with: " + postcodes);
+        log.info("Enter createPostRequest -> with: {}", postcodes);
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         Map<String, List<String>> map = new HashMap<>();
         map.put("postcodes", postcodes);
@@ -157,32 +152,6 @@ public class PostcodeService {
                 .timeout(Duration.ofSeconds(TIMEOUT_IN_SECONDS)) // HttpTimeoutException
                 .POST(HttpRequest.BodyPublishers.ofString(json))
                 .build();
-    }
-
-    /**
-     * Calculates the distance in km between two points with
-     * latitude and longitude coordinates by
-     * using the haversine formula
-     * <p>
-     * Params: lat1 - latitude of first postcode
-     * lng1 - longitude of first postcode
-     * lat2 - latitude of second postcode
-     * lng2 - longitude of second postcode
-     * Returns: distance between two postcodes in km
-     *
-     * @since 05/03/2021
-     */
-
-    public static double calculateDistance(double lat1, double lng1, double lat2, double lng2) {
-        var earthRadius = 6371;
-        var dLat = Math.toRadians(lat2 - lat1);
-        var dLon = Math.toRadians(lng2 - lng1);
-        var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
-                        * Math.sin(dLon / 2) * Math.sin(dLon / 2);
-        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        var d = earthRadius * c;
-        return d;
     }
 
 

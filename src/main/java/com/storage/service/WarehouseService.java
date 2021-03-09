@@ -3,6 +3,7 @@ package com.storage.service;
 import com.storage.exception.ResourceNotFoundException;
 import com.storage.exception.WarehouseServiceException;
 import com.storage.model.StorageRoom;
+import com.storage.model.Warehouse;
 import com.storage.model.dto.StorageRoomDto;
 import com.storage.model.mapper.ModelMapper;
 import com.storage.model.dto.WarehouseDto;
@@ -77,6 +78,11 @@ public class WarehouseService {
     public List<WarehouseDto> getNearestWarehouses(String postCode) {
         log.info("Enter WarehouseService -> getNearestWarehouses() with: " + postCode);
         var warehousesList = warehouseRepository.findAll();
+        var listWarehousesPostcodes = warehousesList
+                .stream()
+                .map(Warehouse::getPostCode)
+                .collect(Collectors.toList());
+
 //        var coordinatesOfWarehouses = PostcodeService.getLatAndLngForManyPostcodes(listWithPostcodes);
 
         return null;
