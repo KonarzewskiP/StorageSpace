@@ -2,11 +2,11 @@ package com.storage.service;
 
 import com.storage.exception.ResourceNotFoundException;
 import com.storage.exception.WarehouseServiceException;
-import com.storage.model.StorageRoom;
 import com.storage.model.Warehouse;
 import com.storage.model.dto.StorageRoomDto;
 import com.storage.model.mapper.ModelMapper;
 import com.storage.model.dto.WarehouseDto;
+import com.storage.model.postcodes_api.response.ResultSingleResponse;
 import com.storage.repository.StorageRoomRepository;
 import com.storage.repository.WarehouseRepository;
 import com.storage.service.postcodes_api.PostcodeService;
@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.storage.constants.AppConstants.*;
@@ -31,6 +32,7 @@ public class WarehouseService {
 
     private final WarehouseRepository warehouseRepository;
     private final StorageRoomRepository storageRoomRepository;
+    private final PostcodeService postcodeService;
 
     public WarehouseDto addWarehouse(WarehouseDto warehouseDto) {
         log.info("Enter WarehouseService -> addWarehouse() with: " + warehouseDto);
@@ -82,9 +84,17 @@ public class WarehouseService {
                 .stream()
                 .map(Warehouse::getPostCode)
                 .collect(Collectors.toList());
+        var coordinatesForPostcode = postcodeService.getLatAndLngForSinglePostcode(postCode);
+        var coordinatesOfWarehouses = postcodeService.getLatAndLngForManyPostcodes(listWarehousesPostcodes);
 
-//        var coordinatesOfWarehouses = PostcodeService.getLatAndLngForManyPostcodes(listWithPostcodes);
+        log.info("----> Calculate distance for postcode {} with coordinates {}", postCode,coordinatesForPostcode);
+        Map<String, Double> map = coordinatesOfWarehouses.getResult().stream()
+                .collect(Collectors.toMap(ResultSingleResponse::getPostcode,
+                        storage -> Util.calculateDistance(storage.getLatitude(), storage.getLongitude(), coordinatesForPostcode.getLatitude(), coordinatesForPostcode.getLongitude())));
 
+        for (Map.Entry<String, Double> postcode : map.entrySet()){
+            System.out.println(postcode.getKey() + " - " + postcode.getValue());
+        }
         return null;
     }
 

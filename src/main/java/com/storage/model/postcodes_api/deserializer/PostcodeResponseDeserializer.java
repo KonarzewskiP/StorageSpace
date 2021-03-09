@@ -31,7 +31,7 @@ public class PostcodeResponseDeserializer implements JsonDeserializer<PostcodeSi
 
     @Override
     public PostcodeSingleResponse deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-        log.info("Enter CustomDeserializer -> deserialize():");
+        log.info("Enter PostcodeResponseDeserializer -> deserialize():");
         var response = new PostcodeSingleResponse();
         JsonObject jsonObject = json.getAsJsonObject();
 
