@@ -2,7 +2,7 @@
 
 Storage space is a fun project. The goal is to create a simple copy of Big Yellow Storage.
 
-The key features of the application will be:
+Features of the application at the moment:
 
 1. Find your nearest store in London
 2. Select specific storage for your needs
@@ -11,4 +11,18 @@ The key features of the application will be:
 5. Get confirmation email with details of reservation
 
 ## Technologies Used in the application:
-Java, Spring, Hibernate, Maven, MySQL, jUnit 5, Rest API, Mockito
+
+* Java
+* Spring
+* Hibernate
+* Maven
+* MySQL
+* jUnit 5   
+* Lombok  
+* Mockito
+
+## The future of the project
+* Creating a frontend 
+* Add missing tests
+* Build database diagram
+

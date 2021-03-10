@@ -31,7 +31,7 @@ public class PostcodeController {
      * Method that search for nearest Warehouses according to given postcode.
      *
      * @param postCode
-     * @return ResponseEntity with a <code>List<WarehouseDto></code>. Max 4 WarehouseDto objects in the list.
+     * @return ResponseEntity with a <code>List<WarehouseDto></code>.
      * @author Pawel Konarzewski
      * @since 04/03/2021
      */
