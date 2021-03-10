@@ -77,26 +77,5 @@ public class WarehouseService {
                 .collect(Collectors.toList());
     }
 
-    public List<WarehouseDto> getNearestWarehouses(String postCode) {
-        log.info("Enter WarehouseService -> getNearestWarehouses() with: " + postCode);
-        var warehousesList = warehouseRepository.findAll();
-        var listWarehousesPostcodes = warehousesList
-                .stream()
-                .map(Warehouse::getPostCode)
-                .collect(Collectors.toList());
-        var coordinatesForPostcode = postcodeService.getLatAndLngForSinglePostcode(postCode);
-        var coordinatesOfWarehouses = postcodeService.getLatAndLngForManyPostcodes(listWarehousesPostcodes);
-
-        log.info("----> Calculate distance for postcode {} with coordinates {}", postCode,coordinatesForPostcode);
-        Map<String, Double> map = coordinatesOfWarehouses.getResult().stream()
-                .collect(Collectors.toMap(ResultSingleResponse::getPostcode,
-                        storage -> Util.calculateDistance(storage.getLatitude(), storage.getLongitude(), coordinatesForPostcode.getLatitude(), coordinatesForPostcode.getLongitude())));
-
-        for (Map.Entry<String, Double> postcode : map.entrySet()){
-            System.out.println(postcode.getKey() + " - " + postcode.getValue());
-        }
-        return null;
-    }
-
 
 }

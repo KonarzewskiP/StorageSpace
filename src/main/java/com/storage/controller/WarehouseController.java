@@ -43,19 +43,6 @@ public class WarehouseController {
         return new ResponseEntity<>(warehouseService.getNotReservedStorageRoomsByWarehouseId(id), HttpStatus.OK);
     }
 
-    /**
-     * Method that search for nearest Warehouses according to given postcode.
-     *
-     * @param postCode
-     * @return ResponseEntity with a <code>List<WarehouseDto></code>. Max 4 WarehouseDto objects in the list.
-     * @author Pawel Konarzewski
-     * @since 04/03/2021
-     */
 
-    @GetMapping("/nearest")
-    public ResponseEntity<List<WarehouseDto>> getNearestWarehouses(@RequestParam String postCode) {
-        log.info("Enter WarehouseController -> getNearestWarehouses() with: " + postCode);
-        return new ResponseEntity<>(warehouseService.getNearestWarehouses(postCode), HttpStatus.OK);
-    }
 
 }

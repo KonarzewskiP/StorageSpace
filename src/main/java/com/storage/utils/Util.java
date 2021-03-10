@@ -2,6 +2,8 @@ package com.storage.utils;
 
 import com.storage.model.StorageRoom;
 import com.storage.model.enums.Size;
+import com.storage.model.postcodes_api.response.PostcodeSingleResponse;
+import com.storage.model.postcodes_api.response.ResultSingleResponse;
 
 import java.util.Arrays;
 import java.util.List;
@@ -30,8 +32,10 @@ public interface Util {
      *
      * @since 05/03/2021
      */
-
-    static double calculateDistance(double lat1, double lng1, double lat2, double lng2) {
+    static double calculateDistance(ResultSingleResponse postcode1, PostcodeSingleResponse postcode2){
+        return calculateDistance(postcode1.getLatitude(), postcode1.getLongitude(), postcode2.getLatitude(), postcode2.getLongitude());
+    }
+   private static double calculateDistance(double lat1, double lng1, double lat2, double lng2) {
         var earthRadius = 6371;
         var dLat = Math.toRadians(lat2 - lat1);
         var dLon = Math.toRadians(lng2 - lng1);
@@ -39,8 +43,7 @@ public interface Util {
                 Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
                         * Math.sin(dLon / 2) * Math.sin(dLon / 2);
         var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        var d = earthRadius * c;
-        return d;
+       return earthRadius * c;
     }
 
 
