@@ -24,5 +24,6 @@ Features of the application at the moment:
 ## The future of the project
 * Creating a frontend 
 * Add missing tests
+* Add Swagger
 * Build database diagram
 

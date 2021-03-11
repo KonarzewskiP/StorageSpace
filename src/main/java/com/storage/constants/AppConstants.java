@@ -12,7 +12,7 @@ public class AppConstants {
 
     public static final String ID = "id";
 
-
+    public static String POSTCODE_BASE_CALL = "https://api.postcodes.io/postcodes";
 
 
 }

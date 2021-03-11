@@ -54,7 +54,7 @@ public class PostcodeService {
 
     private static final long TIMEOUT_IN_SECONDS = 10L;
 
-    private static String postcodeBaseCall = "https://api.postcodes.io/postcodes";
+
 
     /**
      * The method that calls API and returns Boolean object.
@@ -84,8 +84,12 @@ public class PostcodeService {
             } else {
                 throw new ResourceNotFoundException(POSTCODE, POSTCODE, postcode);
             }
-        } catch (IOException | InterruptedException exc) {
+        } catch (IOException exc) {
+            log.error("Error while sending or receiving data.");
+            throw new RuntimeException(exc.getMessage());
+        } catch (InterruptedException exc){
             log.error("Error while sending request.");
+            Thread.currentThread().interrupt();
             throw new RuntimeException(exc.getMessage());
         }
 
@@ -101,7 +105,7 @@ public class PostcodeService {
 
     private HttpRequest createGetRequestForValidation(String postcode) {
         log.info("Enter PostcodeService -> createGetRequest() with: " + postcode);
-        String url = postcodeBaseCall + "/" + postcode.toUpperCase().replaceAll(" ", "").concat("/validate");
+        var url = POSTCODE_BASE_CALL + "/" + postcode.toUpperCase().replaceAll(" ", "").concat("/validate");
         return HttpRequest.newBuilder()
                 .uri(URI.create(url))
                 .version(HttpClient.Version.HTTP_2)
@@ -148,7 +152,7 @@ public class PostcodeService {
 
     private HttpRequest createGetRequest(String postcode) {
         log.info("Enter PostcodeService -> createGetRequest() with: " + postcode);
-        String url = postcodeBaseCall + "/" + postcode.toUpperCase().replaceAll(" ", "");
+        var url = POSTCODE_BASE_CALL + "/" + postcode.toUpperCase().replaceAll(" ", "");
         return HttpRequest.newBuilder()
                 .uri(URI.create(url))
                 .version(HttpClient.Version.HTTP_2)
@@ -178,7 +182,10 @@ public class PostcodeService {
                     .setPrettyPrinting()
                     .create();
             return gson.fromJson(response.body(), PostcodeBulkResponse.class);
-        } catch (IOException | InterruptedException exc) {
+        } catch (IOException exc) {
+            log.error("Error while sending or receiving data.");
+            throw new RuntimeException(exc.getMessage());
+        } catch (InterruptedException exc){
             log.error("Error while sending request.");
             Thread.currentThread().interrupt();
             throw new RuntimeException(exc.getMessage());
@@ -195,13 +202,12 @@ public class PostcodeService {
 
     public HttpRequest createPostRequest(List<String> postcodes) {
         log.info("Enter PostcodeService -> createPostRequest() with: {}", postcodes);
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        Map<String, List<String>> map = new HashMap<>();
-        map.put("postcodes", postcodes);
-        String json = gson.toJson(map);
+        var gson = new GsonBuilder().setPrettyPrinting().create();
+        var map = Map.of("postcodes", postcodes);
+        var json = gson.toJson(map);
 
         return HttpRequest.newBuilder()
-                .uri(URI.create(postcodeBaseCall))
+                .uri(URI.create(POSTCODE_BASE_CALL))
                 .version(HttpClient.Version.HTTP_2)
                 .header("content-type", "application/json;charset=UTF-8")
                 .timeout(Duration.ofSeconds(TIMEOUT_IN_SECONDS)) // HttpTimeoutException

@@ -12,6 +12,7 @@ import com.storage.model.enums.*;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
@@ -120,5 +121,9 @@ public interface MockDataForTest {
                 .startDate(LocalDateTime.now())
                 .duration(StorageDuration.EIGHT_TWELVE_WEEKS)
                 .build();
+    }
+
+    static Map<String,List<String>> createMapForBulkPostcodesRequest(){
+        return Map.of("postcodes", List.of("SE11 5QY","SW19 3BE","TW9 2JX"));
     }
 }
