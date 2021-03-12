@@ -1,11 +1,11 @@
 package com.storage.service;
 
-import com.storage.exception.UserServiceException;
-import com.storage.exception.ResourceNotFoundException;
-import com.storage.model.User;
-import com.storage.model.dto.UserDto;
-import com.storage.model.enums.Gender;
-import com.storage.repository.UserRepository;
+import com.storage.exceptions.UserServiceException;
+import com.storage.exceptions.ResourceNotFoundException;
+import com.storage.models.User;
+import com.storage.models.dto.UserDto;
+import com.storage.models.enums.Gender;
+import com.storage.repositories.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -1,9 +1,9 @@
 package com.storage.utils;
 
-import com.storage.model.StorageRoom;
-import com.storage.model.enums.Size;
-import com.storage.model.postcodes_api.response.PostcodeSingleResponse;
-import com.storage.model.postcodes_api.response.ResultSingleResponse;
+import com.storage.models.StorageRoom;
+import com.storage.models.enums.Size;
+import com.storage.models.postcodes_api.response.PostcodeSingleResponse;
+import com.storage.models.postcodes_api.response.ResultSingleResponse;
 
 import java.util.Arrays;
 import java.util.List;

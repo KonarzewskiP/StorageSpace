@@ -1,28 +1,25 @@
 package com.storage.service;
 
-import com.storage.exception.ResourceNotFoundException;
-import com.storage.exception.WarehouseServiceException;
-import com.storage.model.Warehouse;
-import com.storage.model.dto.StorageRoomDto;
-import com.storage.model.mapper.ModelMapper;
-import com.storage.model.dto.WarehouseDto;
-import com.storage.model.postcodes_api.response.ResultSingleResponse;
-import com.storage.repository.StorageRoomRepository;
-import com.storage.repository.WarehouseRepository;
+import com.storage.exceptions.ResourceNotFoundException;
+import com.storage.exceptions.WarehouseServiceException;
+import com.storage.models.dto.StorageRoomDto;
+import com.storage.models.mapper.ModelMapper;
+import com.storage.models.dto.WarehouseDto;
+import com.storage.repositories.StorageRoomRepository;
+import com.storage.repositories.WarehouseRepository;
 import com.storage.service.postcodes_api.PostcodeService;
 import com.storage.utils.Util;
-import com.storage.validator.WarehouseDtoValidator;
+import com.storage.validators.WarehouseDtoValidator;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.storage.constants.AppConstants.*;
-import static com.storage.model.mapper.ModelMapper.fromWarehouseToWarehouseDto;
+import static com.storage.models.mapper.ModelMapper.fromWarehouseToWarehouseDto;
 
 @Slf4j
 @Service
@@ -50,7 +47,7 @@ public class WarehouseService {
         var list = Util.createStorageRoomsList();
         storageRoomRepository.saveAll(list);
         warehouse.setStorageRooms(list);
-
+        warehouse.setPostCode(warehouse.getPostCode().toUpperCase());
         log.info("Warehouse: " + warehouse);
         var addedWarehouse = warehouseRepository.save(warehouse);
         return fromWarehouseToWarehouseDto(addedWarehouse);

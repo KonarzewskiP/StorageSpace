@@ -1,12 +1,11 @@
 package com.storage.service;
 
-import com.storage.constants.AppConstants;
-import com.storage.exception.ResourceNotFoundException;
-import com.storage.exception.StorageRoomException;
-import com.storage.model.dto.StorageRoomDto;
-import com.storage.model.mapper.ModelMapper;
-import com.storage.repository.StorageRoomRepository;
-import com.storage.validator.StorageRoomDtoValidator;
+import com.storage.exceptions.ResourceNotFoundException;
+import com.storage.exceptions.StorageRoomException;
+import com.storage.models.dto.StorageRoomDto;
+import com.storage.models.mapper.ModelMapper;
+import com.storage.repositories.StorageRoomRepository;
+import com.storage.validators.StorageRoomDtoValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,8 +15,8 @@ import java.util.stream.Collectors;
 
 import static com.storage.constants.AppConstants.ID;
 import static com.storage.constants.AppConstants.STORAGE_ROOM;
-import static com.storage.model.mapper.ModelMapper.fromStorageRoomDtoToStorageRoom;
-import static com.storage.model.mapper.ModelMapper.fromStorageRoomToStorageRoomDto;
+import static com.storage.models.mapper.ModelMapper.fromStorageRoomDtoToStorageRoom;
+import static com.storage.models.mapper.ModelMapper.fromStorageRoomToStorageRoomDto;
 
 @Slf4j
 @Service

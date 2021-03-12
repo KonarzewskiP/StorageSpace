@@ -1,11 +1,11 @@
 package com.storage.service;
 
-import com.storage.exception.ResourceNotFoundException;
-import com.storage.exception.WarehouseServiceException;
-import com.storage.model.Warehouse;
-import com.storage.model.dto.WarehouseDto;
-import com.storage.repository.StorageRoomRepository;
-import com.storage.repository.WarehouseRepository;
+import com.storage.exceptions.ResourceNotFoundException;
+import com.storage.exceptions.WarehouseServiceException;
+import com.storage.models.Warehouse;
+import com.storage.models.dto.WarehouseDto;
+import com.storage.repositories.StorageRoomRepository;
+import com.storage.repositories.WarehouseRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -92,7 +92,7 @@ public class WarehouseServiceTest {
                 .hasMessageContaining("Street")
                 .hasMessageContaining("Postcode")
                 .hasMessageContaining("Can not be empty")
-                .hasMessageContaining("Value has incorrect format");
+                .hasMessageContaining("Has incorrect format");
     }
 
     @Test

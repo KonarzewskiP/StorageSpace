@@ -1,13 +1,13 @@
 package com.storage.builders;
 
-import com.storage.model.Quote;
-import com.storage.model.StorageRoom;
-import com.storage.model.User;
-import com.storage.model.Warehouse;
-import com.storage.model.dto.StorageRoomDto;
-import com.storage.model.dto.UserDto;
-import com.storage.model.dto.WarehouseDto;
-import com.storage.model.enums.*;
+import com.storage.models.Quote;
+import com.storage.models.StorageRoom;
+import com.storage.models.User;
+import com.storage.models.Warehouse;
+import com.storage.models.dto.StorageRoomDto;
+import com.storage.models.dto.UserDto;
+import com.storage.models.dto.WarehouseDto;
+import com.storage.models.enums.*;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;

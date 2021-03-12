@@ -1,10 +1,10 @@
 package com.storage.service;
 
-import com.storage.exception.QuoteDetailsException;
-import com.storage.model.Quote;
-import com.storage.model.QuoteResponse;
-import com.storage.model.enums.DeliveryStatus;
-import com.storage.validator.QuoteValidator;
+import com.storage.exceptions.QuoteDetailsException;
+import com.storage.models.Quote;
+import com.storage.models.QuoteResponse;
+import com.storage.models.enums.DeliveryStatus;
+import com.storage.validators.QuoteValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.SimpleMailMessage;

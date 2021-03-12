@@ -1,11 +1,11 @@
 package com.storage.service;
 
 import com.storage.builders.MockDataForTest;
-import com.storage.exception.ResourceNotFoundException;
-import com.storage.exception.StorageRoomException;
-import com.storage.model.StorageRoom;
-import com.storage.model.dto.StorageRoomDto;
-import com.storage.repository.StorageRoomRepository;
+import com.storage.exceptions.ResourceNotFoundException;
+import com.storage.exceptions.StorageRoomException;
+import com.storage.models.StorageRoom;
+import com.storage.models.dto.StorageRoomDto;
+import com.storage.repositories.StorageRoomRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
