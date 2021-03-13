@@ -26,8 +26,26 @@ public class StorageRoomService {
 
     private final StorageRoomRepository storageRoomRepository;
 
-    public StorageRoomDto addStorageRoom(StorageRoomDto storageRoomDto) {
-        log.info("Enter StorageRoomService -> addStorageRoom() with: " + storageRoomDto);
+    public StorageRoomDto updateStorageRoom(StorageRoomDto storageRoomDto) {
+        log.info("Enter StorageRoomService -> updateStorageRoom() with: " + storageRoomDto);
+        isStorageRoomDtoValid(storageRoomDto);
+        var storageRoom =
+                storageRoomRepository
+                        .findById(storageRoomDto.getId())
+                        .orElseThrow(() -> new ResourceNotFoundException(STORAGE_ROOM, ID, storageRoomDto.getId()));
+
+        if (storageRoomDto.getReserved()){
+            storageRoom.setStartDate(storageRoomDto.getStartDate());
+            storageRoom.setEndDate(storageRoomDto.getEndDate());
+        }
+        storageRoom.setReserved(storageRoomDto.getReserved());
+
+        log.info("StorageRoom: " + storageRoom);
+        var addedStorageRoom = storageRoomRepository.save(storageRoom);
+        return fromStorageRoomToStorageRoomDto(addedStorageRoom);
+    }
+
+    private void isStorageRoomDtoValid(StorageRoomDto storageRoomDto) {
         var validator = new StorageRoomDtoValidator();
         var errors = validator.validate(storageRoomDto);
         if (!errors.isEmpty()) {
@@ -37,12 +55,6 @@ public class StorageRoomService {
                     .map(err -> err.getKey() + " - " + err.getValue())
                     .collect(Collectors.joining(", ")));
         }
-        var storageRoom = fromStorageRoomDtoToStorageRoom(storageRoomDto);
-        storageRoom.setStartDate(null);
-        storageRoom.setEndDate(null);
-        log.info("StorageRoom: " + storageRoom);
-        var addedStorageRoom = storageRoomRepository.save(storageRoom);
-        return fromStorageRoomToStorageRoomDto(addedStorageRoom);
     }
 
     public StorageRoomDto findStorageRoomById(Long id) {

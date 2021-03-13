@@ -17,10 +17,10 @@ public class StorageRoomController {
 
     private final StorageRoomService storageRoomService;
 
-    @PostMapping
-    public ResponseEntity<StorageRoomDto> addStorageRoom(@RequestBody StorageRoomDto storageRoomDto) {
-        log.info("Enter StorageRoomController -> addStorageRoom() with: " + storageRoomDto);
-        return new ResponseEntity<>(storageRoomService.addStorageRoom(storageRoomDto), HttpStatus.CREATED);
+    @PutMapping
+    public ResponseEntity<StorageRoomDto> updateStorageRoom(@RequestBody StorageRoomDto storageRoomDto) {
+        log.info("Enter StorageRoomController -> updateStorageRoomByWarehouseId() with: {} ",storageRoomDto);
+        return new ResponseEntity<>(storageRoomService.updateStorageRoom(storageRoomDto), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")

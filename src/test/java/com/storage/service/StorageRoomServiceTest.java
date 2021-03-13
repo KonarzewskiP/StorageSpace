@@ -19,7 +19,6 @@ import static com.storage.builders.MockDataForTest.createStorageRoom;
 import static com.storage.builders.MockDataForTest.createStorageRoomDto;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
@@ -34,14 +33,15 @@ public class StorageRoomServiceTest {
     private StorageRoomRepository storageRoomRepository;
 
     @Test
-    @DisplayName("should add storageRoom to repository")
-    void shouldAddStorageRoomToRepository() {
+    @DisplayName("should update storageRoom")
+    void shouldUpdateStorageRoom() {
         //given
         var storageRoom = createStorageRoom();
         when(storageRoomRepository.save(any(StorageRoom.class))).thenReturn(storageRoom);
+        when(storageRoomRepository.findById(any(Long.class))).thenReturn(Optional.of(storageRoom));
         var storageRoomDto = MockDataForTest.createStorageRoomDto();
         //when
-        var result = service.addStorageRoom(storageRoomDto);
+        var result = service.updateStorageRoom(storageRoomDto);
         //then
         assertThat(result.getId()).isEqualTo(3L);
     }
@@ -52,11 +52,25 @@ public class StorageRoomServiceTest {
         //given
         StorageRoomDto storageRoomDto = null;
         //when
-        var thrown = catchThrowable(() -> service.addStorageRoom(storageRoomDto));
+        var thrown = catchThrowable(() -> service.updateStorageRoom(storageRoomDto));
         //then
         assertThat(thrown)
                 .isInstanceOf(StorageRoomException.class)
                 .hasMessageContaining("Invalid StorageRoomDto!");
+    }
+
+    @Test
+    @DisplayName("should throw ResourceNotFoundException when can not find id of storageRoomDto")
+    void shouldThrowResourceNotFoundExceptionWhenCanNotFindIdOfStorageRoomDto() {
+        //given
+        var storageRoomDto = createStorageRoomDto();
+        storageRoomDto.setId(999L);
+        //when
+        var thrown = catchThrowable(() -> service.updateStorageRoom(storageRoomDto));
+        //then
+        assertThat(thrown)
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessageContaining("StorageRoom not found with id: 999");
     }
 
     @Test
@@ -66,7 +80,7 @@ public class StorageRoomServiceTest {
         var storageRoomDto = createStorageRoomDto();
         storageRoomDto.setReserved(null);
         //when
-        var thrown = catchThrowable(() -> service.addStorageRoom(storageRoomDto));
+        var thrown = catchThrowable(() -> service.updateStorageRoom(storageRoomDto));
         //then
         assertThat(thrown)
                 .isInstanceOf(StorageRoomException.class)

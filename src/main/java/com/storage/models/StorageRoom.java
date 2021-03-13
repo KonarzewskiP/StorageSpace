@@ -3,7 +3,9 @@ package com.storage.models;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.storage.models.enums.Size;
 import lombok.*;
+
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -20,10 +22,10 @@ public class StorageRoom {
     @Enumerated(EnumType.STRING)
     private Size size;
     private boolean reserved;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime startDate;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime endDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate startDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate endDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @EqualsAndHashCode.Exclude

@@ -18,12 +18,13 @@ public class StorageRoomDtoValidator implements Validator<StorageRoomDto> {
             errors.put("StorageRoomDto", "Can not be null");
             return errors;
         }
-        if (isNull(storageRoom.getSize())) {
-            errors.put("Size", "Can not be null");
-            return errors;
-        }
         if (isNull(storageRoom.getReserved())) {
             errors.put("Reserved", "Can not be null");
+            return errors;
+        }
+
+        if (isNull(storageRoom.getId())) {
+            errors.put("Id", "Can not be null");
             return errors;
         }
 

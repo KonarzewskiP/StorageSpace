@@ -41,22 +41,6 @@ public class StorageRoomDtoValidatorTest {
     }
 
     @Test
-    @DisplayName("should return error when size is null")
-    void shouldReturnErrorWhenSizeIsNull() {
-        //given
-        var storageRoomDto = createStorageRoomDto();
-        storageRoomDto.setSize(null);
-        //when
-        var result = validator.validate(storageRoomDto);
-        //then
-        assertAll(
-                () -> assertThat(result).containsKey("Size"),
-                () -> assertThat(result).containsValue("Can not be null"),
-                () -> assertThat(result).hasSize(1)
-        );
-    }
-
-    @Test
     @DisplayName("should return error when reserved is null")
     void shouldReturnErrorWhenReservedIsNull() {
         //given
@@ -67,6 +51,22 @@ public class StorageRoomDtoValidatorTest {
         //then
         assertAll(
                 () -> assertThat(result).containsKey("Reserved"),
+                () -> assertThat(result).containsValue("Can not be null"),
+                () -> assertThat(result).hasSize(1)
+        );
+    }
+
+    @Test
+    @DisplayName("should return error when id is null")
+    void shouldReturnErrorWhenIdIsNull() {
+        //given
+        var storageRoomDto = createStorageRoomDto();
+        storageRoomDto.setId(null);
+        //when
+        var result = validator.validate(storageRoomDto);
+        //then
+        assertAll(
+                () -> assertThat(result).containsKey("Id"),
                 () -> assertThat(result).containsValue("Can not be null"),
                 () -> assertThat(result).hasSize(1)
         );
@@ -134,7 +134,7 @@ public class StorageRoomDtoValidatorTest {
         //given
         var storageRoomDto = createStorageRoomDto();
         storageRoomDto.setReserved(true);
-        storageRoomDto.setStartDate(START_DATE.plusSeconds(10));
+        storageRoomDto.setStartDate(START_DATE.plusDays(1));
         storageRoomDto.setEndDate(START_DATE);
 
         //when

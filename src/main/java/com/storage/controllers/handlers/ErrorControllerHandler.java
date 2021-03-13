@@ -30,6 +30,14 @@ public class ErrorControllerHandler {
                 HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(value = StorageRoomException.class)
+    public ResponseEntity<CustomErrorResponse> handleValidationException(StorageRoomException e) {
+        log.error("Enter ErrorControllerHandler -> handleValidationException() WarehouseServiceException with: " + e);
+        return new ResponseEntity<>(
+                createCustomErrorResponse(e, HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value()),
+                HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(value = ResourceNotFoundException.class)
     public ResponseEntity<CustomErrorResponse> handleNotFoundException(ResourceNotFoundException e) {
         log.error("Enter ErrorControllerHandler -> handleNotFoundException() ResourceNotFoundException with: " + e);
@@ -38,6 +46,7 @@ public class ErrorControllerHandler {
                 createCustomErrorResponse(e, HttpStatus.NOT_FOUND.getReasonPhrase(), HttpStatus.NOT_FOUND.value()),
                 HttpStatus.NOT_FOUND);
     }
+
 
     @ExceptionHandler(value = QuoteDetailsException.class)
     public ResponseEntity<CustomErrorResponse> handleNotFoundException(QuoteDetailsException e) {

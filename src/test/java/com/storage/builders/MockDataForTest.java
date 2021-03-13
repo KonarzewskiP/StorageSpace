@@ -9,6 +9,7 @@ import com.storage.models.dto.UserDto;
 import com.storage.models.dto.WarehouseDto;
 import com.storage.models.enums.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -20,8 +21,8 @@ import java.util.stream.IntStream;
 
 public interface MockDataForTest {
 
-    LocalDateTime START_DATE = LocalDateTime.of(2021, 3, 13, 12, 0, 0);
-    LocalDateTime END_DATE = LocalDateTime.of(2021, 4, 11, 12, 0, 0);
+    LocalDate START_DATE = LocalDate.of(2021, 3, 13);
+    LocalDate END_DATE = LocalDate.of(2021, 4, 11);
 
     static User createUser() {
         return User.builder()
@@ -109,7 +110,7 @@ public interface MockDataForTest {
                 .collect(Collectors.toList());
     }
 
-    static Quote createQuote(){
+    static Quote createQuote() {
         return Quote.builder()
                 .firstName("John")
                 .surname("Bravo")
@@ -123,7 +124,7 @@ public interface MockDataForTest {
                 .build();
     }
 
-    static Map<String,List<String>> createMapForBulkPostcodesRequest(){
-        return Map.of("postcodes", List.of("SE11 5QY","SW19 3BE","TW9 2JX"));
+    static Map<String, List<String>> createMapForBulkPostcodesRequest() {
+        return Map.of("postcodes", List.of("SE11 5QY", "SW19 3BE", "TW9 2JX"));
     }
 }
