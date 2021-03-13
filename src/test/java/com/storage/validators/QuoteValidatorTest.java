@@ -6,9 +6,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.time.LocalDate;
+
 import static com.storage.builders.MockDataForTest.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class QuoteValidatorTest {
 
@@ -158,6 +161,38 @@ public class QuoteValidatorTest {
         assertAll(
                 () -> assertThat(result).containsKey("Duration"),
                 () -> assertThat(result).containsValue("Can not be null"),
+                () -> assertThat(result).hasSize(1)
+        );
+    }
+
+    @Test
+    @DisplayName("should return error when startDate is before present")
+    void shouldReturnErrorWhenStartDateIsBeforePresent() {
+        //given
+        var quote = createQuote();
+        quote.setStartDate(LocalDate.now().minusDays(1));
+        //when
+        var result = validator.validate(quote);
+        //then
+        assertAll(
+                () -> assertThat(result).containsKey("StartDate"),
+                () -> assertThat(result).containsValue("Must be after today"),
+                () -> assertThat(result).hasSize(1)
+        );
+    }
+
+    @Test
+    @DisplayName("should return error when startDate is the same day as present")
+    void shouldReturnErrorWhenStartDateIsTheSameDayAsPresent() {
+        //given
+        var quote = createQuote();
+        quote.setStartDate(LocalDate.now());
+        //when
+        var result = validator.validate(quote);
+        //then
+        assertAll(
+                () -> assertThat(result).containsKey("StartDate"),
+                () -> assertThat(result).containsValue("Must be after today"),
                 () -> assertThat(result).hasSize(1)
         );
     }

@@ -3,6 +3,7 @@ package com.storage.validators;
 import com.storage.models.Quote;
 import com.storage.validators.base.Validator;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -68,6 +69,9 @@ public class QuoteValidator implements Validator<Quote> {
             errors.put("Email", "Has incorrect format");
         }
 
+        if (!isStartDateValid(quotation)){
+            errors.put("StartDate","Must be after today");
+        }
 
         return errors;
     }
@@ -86,6 +90,10 @@ public class QuoteValidator implements Validator<Quote> {
 
     private boolean isEmailEmpty(Quote quotation) {
         return !quotation.getEmail().isBlank();
+    }
+
+    private boolean isStartDateValid(Quote quotation) {
+        return quotation.getStartDate().isAfter(LocalDate.now());
     }
 
     private boolean isEmailFormatValid(Quote quotation) {

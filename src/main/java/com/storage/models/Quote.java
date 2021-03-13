@@ -5,6 +5,7 @@ import com.storage.models.enums.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -24,7 +25,7 @@ public class Quote {
     Size size;
     TypeOfAccount type;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    LocalDateTime startDate;
+    LocalDate startDate;
     StorageDuration duration;
     Boolean needMoreThanOneLocation;
     Set<ExtraServices> extraServices;
