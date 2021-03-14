@@ -119,7 +119,7 @@ public interface MockDataForTest {
                 .warehouseName("Big Yellow")
                 .size(Size.THREE_SINGLE_GARAGES)
                 .type(TypeOfAccount.HOME)
-                .startDate(LocalDate.now())
+                .startDate(LocalDate.now().plusDays(1))
                 .duration(StorageDuration.EIGHT_TWELVE_WEEKS)
                 .build();
     }

@@ -43,7 +43,6 @@ import static com.storage.constants.AppConstants.*;
  * @since 05/03/2021
  */
 
-
 @Slf4j
 @Service
 @Transactional
@@ -53,8 +52,6 @@ public class PostcodeService {
     private final WarehouseRepository warehouseRepository;
 
     private static final long TIMEOUT_IN_SECONDS = 10L;
-
-
 
     /**
      * The method that calls API and returns Boolean object.
@@ -66,7 +63,6 @@ public class PostcodeService {
      * @author Pawel Konarzewski
      * @since 09/03/2021
      */
-
 
     public Boolean isValid(String postcode) {
         log.info("Enter PostcodeService -> isValid with: {}", postcode);
@@ -106,8 +102,8 @@ public class PostcodeService {
     private HttpRequest createGetRequestForValidation(String postcode) {
         log.info("Enter PostcodeService -> createGetRequest() with: " + postcode);
         var url = POSTCODE_BASE_CALL + "/" + postcode.toUpperCase().replaceAll(" ", "").concat("/validate");
-        return HttpRequest.newBuilder()
-                .uri(URI.create(url))
+        return HttpRequest
+                .newBuilder(URI.create(url))
                 .version(HttpClient.Version.HTTP_2)
                 .timeout(Duration.ofSeconds(TIMEOUT_IN_SECONDS))
                 .GET()
@@ -153,8 +149,8 @@ public class PostcodeService {
     private HttpRequest createGetRequest(String postcode) {
         log.info("Enter PostcodeService -> createGetRequest() with: " + postcode);
         var url = POSTCODE_BASE_CALL + "/" + postcode.toUpperCase().replaceAll(" ", "");
-        return HttpRequest.newBuilder()
-                .uri(URI.create(url))
+        return HttpRequest
+                .newBuilder(URI.create(url))
                 .version(HttpClient.Version.HTTP_2)
                 .timeout(Duration.ofSeconds(TIMEOUT_IN_SECONDS)) // HttpTimeoutException
                 .GET()
@@ -200,14 +196,14 @@ public class PostcodeService {
                 .send(createPostRequest(postcodes), HttpResponse.BodyHandlers.ofString());
     }
 
-    public HttpRequest createPostRequest(List<String> postcodes) {
+    private HttpRequest createPostRequest(List<String> postcodes) {
         log.info("Enter PostcodeService -> createPostRequest() with: {}", postcodes);
         var gson = new GsonBuilder().setPrettyPrinting().create();
         var map = Map.of("postcodes", postcodes);
         var json = gson.toJson(map);
 
-        return HttpRequest.newBuilder()
-                .uri(URI.create(POSTCODE_BASE_CALL))
+        return HttpRequest
+                .newBuilder(URI.create(POSTCODE_BASE_CALL))
                 .version(HttpClient.Version.HTTP_2)
                 .header("content-type", "application/json;charset=UTF-8")
                 .timeout(Duration.ofSeconds(TIMEOUT_IN_SECONDS)) // HttpTimeoutException

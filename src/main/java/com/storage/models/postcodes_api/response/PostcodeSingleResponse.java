@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PostcodeSingleResponse {
 
-    private String status;
+    private Integer status;
     private String postcode;
     private double longitude;
     private double latitude;

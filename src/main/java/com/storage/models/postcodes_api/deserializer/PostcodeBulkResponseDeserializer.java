@@ -38,7 +38,7 @@ public class PostcodeBulkResponseDeserializer implements JsonDeserializer<Postco
         List<ResultSingleResponse> list = new ArrayList<>();
         JsonObject jsonObject = json.getAsJsonObject();
 
-        postcodeResponse.setStatus(jsonObject.get("status").getAsString());
+        postcodeResponse.setStatus(jsonObject.get("status").getAsInt());
 
         for (JsonElement jObject : jsonObject.get("result").getAsJsonArray()) {
             JsonElement jElement = jObject.getAsJsonObject().get("result");

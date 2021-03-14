@@ -36,12 +36,12 @@ public class PostcodeResponseDeserializer implements JsonDeserializer<PostcodeSi
         JsonObject jsonObject = json.getAsJsonObject();
 
         if (!jsonObject.get("status").getAsString().equals("200")) {
-            response.setStatus(jsonObject.get("status").getAsString());
+            response.setStatus(jsonObject.get("status").getAsInt());
             response.setError(jsonObject.get("error").getAsString());
             return response;
         }
 
-        response.setStatus(jsonObject.get("status").getAsString());
+        response.setStatus(jsonObject.get("status").getAsInt());
         var jsonObjectResult = jsonObject.get("result").getAsJsonObject();
         response.setPostcode(jsonObjectResult.get("postcode").getAsString());
         response.setLatitude(jsonObjectResult.get("latitude").getAsDouble());

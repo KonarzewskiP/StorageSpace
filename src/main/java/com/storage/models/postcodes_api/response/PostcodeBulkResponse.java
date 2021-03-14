@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 public class PostcodeBulkResponse {
 
-    private String status;
+    private Integer status;
     @SerializedName("result")
     private List<ResultSingleResponse> result;
 
