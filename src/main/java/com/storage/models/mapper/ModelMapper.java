@@ -19,6 +19,7 @@ public interface ModelMapper {
                 .lastName(user.getLastName())
                 .email(user.getEmail())
                 .gender(user.getGender())
+                .role(user.getRole())
                 .build();
     }
 
@@ -29,6 +30,7 @@ public interface ModelMapper {
                 .lastName(userDto.getLastName())
                 .email(userDto.getEmail())
                 .gender(userDto.getGender())
+                .role(userDto.getRole())
                 .build();
     }
 

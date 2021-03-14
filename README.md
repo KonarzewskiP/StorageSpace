@@ -1,5 +1,5 @@
 # StorageSpace
-REST API using Spring Boot, MySQL, Java 11 HttpClient.
+REST API using Spring Boot, MySQL, Java 11 HttpClient, Swagger.
 
 Storage space is a fun project. The goal is to create a simple copy of Big Yellow Storage.
 
@@ -21,6 +21,7 @@ Storage space is a fun project. The goal is to create a simple copy of Big Yello
 * MySQL
 * jUnit 5   
 * Lombok  
+* Swagger
 * Mockito
 
 ## The future of the project
@@ -50,5 +51,95 @@ create database storage_management_system_db
 ```bash
 mvn spring-boot:run
 ```
-The app will start running at <http://localhost:8080>
+The app will start running at <http://localhost:8080>. You can test it in Postman or Swagger at <http://localhost:8080/swagger-ui.html>
 
+## Explore Rest APIs
+
+The app defines following CRUD APIs.
+
+### Warehouse
+
+| Method | Url | Description | Sample Valid Request Body |
+| ------ | --- | ----------- | ------------------------- |
+| POST    | /warehouses | Add warehouse | [JSON](#warehousecreate)|
+| GET    | /warehouses/{id} | Get warehouse by id | |
+| GET   | /warehouses | Get all warehouses | |
+| GET    | /warehouses/{id}/available | Get not reserved storage rooms in the specific warehouse by warehouse id | |
+
+### User
+
+| Method | Url | Description | Sample Valid Request Body |
+| ------ | --- | ----------- | ------------------------- |
+| POST    | /users | Add user | [JSON](#usercreate)|
+| GET    | /users/{id} | Get user by id | |
+
+### StorageRoom
+
+| Method | Url | Description | Sample Valid Request Body |
+| ------ | --- | ----------- | ------------------------- |
+| PUT    | /storages | Update storage room | [JSON](#updateStorageRoom)|
+| GET    | /storages/{id} | Get storage room by id | |
+
+### Quote
+
+| Method | Url | Description | Sample Valid Request Body |
+| ------ | --- | ----------- | ------------------------- |
+| POST    | /quote | Send quotation for user | [JSON](#quotepost)|
+
+### Postcode
+
+| Method | Url | Description | Sample Valid Request Body |
+| ------ | --- | ----------- | ------------------------- |
+| GET    | /postcodes/{postcode} | Check if postcode is valid ||
+| GET    | /postcodes/{postcode}/nearest | Get ordered warehouses by distance from the postcode | |
+
+
+## Sample Valid JSON Requests
+
+##### <a id="warehousecreate">Add warehouse -> /warehouses</a>
+```json
+{
+  "city": "London",
+  "name": "Blue Box",
+  "postCode": "SW8 3NS",
+  "street": "Ingate Place"
+}
+```
+##### <a id="usercreate">Add user -> /users</a>
+```json
+{
+  "email": "test@email.com",
+  "firstName": "Joe",
+  "gender": "MALE",
+  "lastName": "Smith",
+  "role": "CUSTOMER"
+}
+```
+##### <a id="updateStorageRoom">Update storage room -> /storages</a>
+```json
+{
+  "endDate": "2023-04-03",
+  "id": 2,
+  "reserved": true,
+  "startDate": "2023-03-03"
+}
+```
+##### <a id="quotepost">Send quotation-> /quote</a>
+```json
+{
+  "duration": "LESS_THAN_2_WEEKS",
+  "email": "steveKaczka@gmail.com",
+  "extraServices": [
+    "EXTENDED_HOURS",
+    "FORKLIFTING",
+    "ACCEPTING_DELIVERIES"
+  ],
+  "firstName": "James",
+  "postcode": "E2 6HN",
+  "size": "TELEPHONE_BOX",
+  "startDate": "2022-10-12",
+  "surname": "Cook",
+  "type": "BUSINESS",
+  "warehouseName": "Wapping"
+}
+```

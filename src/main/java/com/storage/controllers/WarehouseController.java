@@ -37,7 +37,7 @@ public class WarehouseController {
         return new ResponseEntity<>(warehouseService.getAllWarehouses(), HttpStatus.OK);
     }
 
-    @GetMapping("/available/{id}")
+    @GetMapping("/{id}/available")
     public ResponseEntity<List<StorageRoomDto>> getNotReservedStorageRoomsByWarehouseId(@PathVariable Long id) {
         log.info("Enter WarehouseController -> getNotReservedStorageRoomsByWarehouseId() with: " + id);
         return new ResponseEntity<>(warehouseService.getNotReservedStorageRoomsByWarehouseId(id), HttpStatus.OK);
