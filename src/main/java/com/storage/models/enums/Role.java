@@ -1,5 +1,5 @@
 package com.storage.models.enums;
 
 public enum Role {
-    ADMIN, DIRECTOR, CUSTOMER;
+    ROLE_ADMIN, ROLE_USER;
 }

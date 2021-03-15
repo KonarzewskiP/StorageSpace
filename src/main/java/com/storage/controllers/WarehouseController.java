@@ -19,7 +19,7 @@ public class WarehouseController {
 
     private final WarehouseService warehouseService;
 
-    @PostMapping
+    @PostMapping("/admin")
     public ResponseEntity<WarehouseDto> addWarehouse(@RequestBody WarehouseDto warehouseDto) {
         log.info("Enter WarehouseController -> addWarehouse() with: " + warehouseDto);
         return new ResponseEntity<>(warehouseService.addWarehouse(warehouseDto), HttpStatus.CREATED);
@@ -37,7 +37,7 @@ public class WarehouseController {
         return new ResponseEntity<>(warehouseService.getAllWarehouses(), HttpStatus.OK);
     }
 
-    @GetMapping("/{id}/available")
+    @GetMapping("/admin/{id}/available")
     public ResponseEntity<List<StorageRoomDto>> getNotReservedStorageRoomsByWarehouseId(@PathVariable Long id) {
         log.info("Enter WarehouseController -> getNotReservedStorageRoomsByWarehouseId() with: " + id);
         return new ResponseEntity<>(warehouseService.getNotReservedStorageRoomsByWarehouseId(id), HttpStatus.OK);

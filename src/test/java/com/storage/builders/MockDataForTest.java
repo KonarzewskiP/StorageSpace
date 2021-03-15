@@ -10,7 +10,6 @@ import com.storage.models.dto.WarehouseDto;
 import com.storage.models.enums.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +39,7 @@ public interface MockDataForTest {
                 .firstName("John")
                 .lastName("Orange")
                 .email("storageRooms@fakeEmail.com")
-                .role(Role.CUSTOMER)
+                .role(Role.ROLE_USER)
                 .gender(Gender.MALE)
                 .build();
     }
