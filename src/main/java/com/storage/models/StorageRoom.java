@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 @Builder
 @Table(name = "storage_rooms")
 public class StorageRoom {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

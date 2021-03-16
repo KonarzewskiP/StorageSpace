@@ -1,7 +1,7 @@
 package com.storage.controllers;
 
 import com.storage.models.Quote;
-import com.storage.models.QuoteResponse;
+import com.storage.models.dto.QuoteResponseDto;
 import com.storage.service.QuoteService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,7 @@ public class QuoteController {
     private final QuoteService quoteService;
 
     @PostMapping
-    public ResponseEntity<QuoteResponse> sendQuote(@RequestBody Quote quote) {
+    public ResponseEntity<QuoteResponseDto> sendQuote(@RequestBody Quote quote) {
         log.info("Enter QuoteController -> sendQuote() with: " + quote);
         return new ResponseEntity<>(quoteService.sendQuote(quote), HttpStatus.OK);
     }

@@ -7,7 +7,6 @@ import com.storage.models.mapper.ModelMapper;
 import com.storage.models.dto.WarehouseDto;
 import com.storage.repositories.StorageRoomRepository;
 import com.storage.repositories.WarehouseRepository;
-import com.storage.service.postcodes_api.PostcodeService;
 import com.storage.utils.Util;
 import com.storage.validators.WarehouseDtoValidator;
 import lombok.AllArgsConstructor;
@@ -18,7 +17,6 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.storage.constants.AppConstants.*;
 import static com.storage.models.mapper.ModelMapper.fromWarehouseToWarehouseDto;
 
 @Slf4j
@@ -27,21 +25,15 @@ import static com.storage.models.mapper.ModelMapper.fromWarehouseToWarehouseDto;
 @AllArgsConstructor
 public class WarehouseService {
 
+    public static final String WAREHOUSE = "Warehouse";
+    public static final String ID = "id";
+
     private final WarehouseRepository warehouseRepository;
     private final StorageRoomRepository storageRoomRepository;
-    private final PostcodeService postcodeService;
 
     public WarehouseDto addWarehouse(WarehouseDto warehouseDto) {
         log.info("Enter WarehouseService -> addWarehouse() with: " + warehouseDto);
-        var validator = new WarehouseDtoValidator();
-        var errors = validator.validate(warehouseDto);
-        if (!errors.isEmpty()) {
-            throw new WarehouseServiceException("Invalid WarehouseDto!, errors: " + errors
-                    .entrySet()
-                    .stream()
-                    .map(err -> err.getKey() + " - " + err.getValue())
-                    .collect(Collectors.joining(",")));
-        }
+        isWarehouseDtoValid(warehouseDto);
         var warehouse = ModelMapper.fromWarehouseDtoToWarehouse(warehouseDto);
 
         var list = Util.createStorageRoomsList();
@@ -51,6 +43,18 @@ public class WarehouseService {
         log.info("Warehouse: " + warehouse);
         var addedWarehouse = warehouseRepository.save(warehouse);
         return fromWarehouseToWarehouseDto(addedWarehouse);
+    }
+
+    private void isWarehouseDtoValid(WarehouseDto warehouseDto) {
+        var validator = new WarehouseDtoValidator();
+        var errors = validator.validate(warehouseDto);
+        if (!errors.isEmpty()) {
+            throw new WarehouseServiceException("Invalid WarehouseDto!, errors: " + errors
+                    .entrySet()
+                    .stream()
+                    .map(err -> err.getKey() + " - " + err.getValue())
+                    .collect(Collectors.joining(",")));
+        }
     }
 
     public WarehouseDto getWarehouseById(Long id) {

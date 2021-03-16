@@ -17,12 +17,27 @@ public class StorageRoomController {
 
     private final StorageRoomService storageRoomService;
 
+    /**
+     * The method that updates StorageRoom entity
+     * <p>
+     * Params: StorageRoomDto object with information to update.
+     * Returns: ResponseEntity with <code>StorageRoomDto</code> object
+     *
+     * @author Pawel Konarzewski
+     */
     @PutMapping
     public ResponseEntity<StorageRoomDto> updateStorageRoom(@RequestBody StorageRoomDto storageRoomDto) {
         log.info("Enter StorageRoomController -> updateStorageRoomByWarehouseId() with: {} ",storageRoomDto);
         return new ResponseEntity<>(storageRoomService.updateStorageRoom(storageRoomDto), HttpStatus.CREATED);
     }
-
+    /**
+     * The method that searches for StorageRoom by id
+     * <p>
+     * Params: StorageRoom id.
+     * Returns: ResponseEntity with <code>StorageRoomDto</code> object
+     *
+     * @author Pawel Konarzewski
+     */
     @GetMapping("/{id}")
     public ResponseEntity<StorageRoomDto> findStorageRoomById(@PathVariable Long id) {
         log.info("Enter StorageRoomController -> findStorageRoomById() with: " + id);

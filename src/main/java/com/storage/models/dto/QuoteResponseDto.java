@@ -1,4 +1,4 @@
-package com.storage.models;
+package com.storage.models.dto;
 
 
 import com.storage.models.enums.*;
@@ -9,7 +9,7 @@ import lombok.Data;
 @Builder
 @Data
 @AllArgsConstructor
-public class QuoteResponse {
+public class QuoteResponseDto {
 
      String email;
      DeliveryStatus status;

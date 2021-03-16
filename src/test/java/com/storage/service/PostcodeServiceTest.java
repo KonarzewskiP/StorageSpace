@@ -21,7 +21,6 @@ import java.net.http.HttpResponse;
 import java.util.List;
 
 import static com.storage.builders.MockDataForTest.createMapForBulkPostcodesRequest;
-import static com.storage.constants.AppConstants.POSTCODE_BASE_CALL;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -30,6 +29,8 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 public class PostcodeServiceTest {
+
+    private static final String POSTCODE_BASE_CALL = "https://api.postcodes.io/postcodes";
 
     @InjectMocks
     private PostcodeService service;
@@ -206,14 +207,14 @@ public class PostcodeServiceTest {
         var result = service.getOrderedWarehousesByDistanceFromPostcode(postcode);
         //then
         assertAll(
-                ()->assertThat(result.get(0).getId()).isEqualTo(13),
-                ()->assertThat(result.get(0).getName()).isEqualTo("Edmonton"),
-                ()->assertThat(result.get(1).getId()).isEqualTo(6),
-                ()->assertThat(result.get(1).getName()).isEqualTo("Barking"),
-                ()->assertThat(result.get(2).getId()).isEqualTo(24),
-                ()->assertThat(result.get(2).getName()).isEqualTo("Fulham"),
-                ()->assertThat(result.get(3).getId()).isEqualTo(2),
-                ()->assertThat(result.get(3).getName()).isEqualTo("Bromley")
+                () -> assertThat(result.get(0).getId()).isEqualTo(13),
+                () -> assertThat(result.get(0).getName()).isEqualTo("Edmonton"),
+                () -> assertThat(result.get(1).getId()).isEqualTo(6),
+                () -> assertThat(result.get(1).getName()).isEqualTo("Barking"),
+                () -> assertThat(result.get(2).getId()).isEqualTo(24),
+                () -> assertThat(result.get(2).getName()).isEqualTo("Fulham"),
+                () -> assertThat(result.get(3).getId()).isEqualTo(2),
+                () -> assertThat(result.get(3).getName()).isEqualTo("Bromley")
         );
     }
 }

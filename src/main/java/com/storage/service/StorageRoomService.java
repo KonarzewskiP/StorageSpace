@@ -13,9 +13,6 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.stream.Collectors;
 
-import static com.storage.constants.AppConstants.ID;
-import static com.storage.constants.AppConstants.STORAGE_ROOM;
-import static com.storage.models.mapper.ModelMapper.fromStorageRoomDtoToStorageRoom;
 import static com.storage.models.mapper.ModelMapper.fromStorageRoomToStorageRoomDto;
 
 @Slf4j
@@ -23,6 +20,9 @@ import static com.storage.models.mapper.ModelMapper.fromStorageRoomToStorageRoom
 @Transactional
 @RequiredArgsConstructor
 public class StorageRoomService {
+
+    public static final String STORAGE_ROOM = "StorageRoom";
+    public static final String ID = "id";
 
     private final StorageRoomRepository storageRoomRepository;
 

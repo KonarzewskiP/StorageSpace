@@ -12,7 +12,6 @@ import java.util.*;
 @Builder
 @Table(name = "warehouses")
 public class Warehouse {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -20,13 +19,11 @@ public class Warehouse {
     private String city;
     private String street;
     private String postCode;
-
     @OneToMany(
             cascade = {CascadeType.ALL}
     )
     @JoinColumn(name = "warehouse_id")
     @JsonIgnore
     private List<StorageRoom> storageRooms = new ArrayList<>();
-
 
 }

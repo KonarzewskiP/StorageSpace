@@ -16,13 +16,15 @@ Storage space is a fun project. The goal is to create a simple copy of Big Yello
 
 * Java
 * Spring
-* Hibernate
 * Maven
+* Hibernate
 * MySQL
-* jUnit 5   
+* jUnit 5
+* Mockito
 * Lombok  
 * Swagger
-* Mockito
+* Gson
+
 
 ## The future of the project
 * Creating a frontend

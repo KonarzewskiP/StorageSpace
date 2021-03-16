@@ -2,7 +2,7 @@ package com.storage.service;
 
 import com.storage.exceptions.QuoteDetailsException;
 import com.storage.models.Quote;
-import com.storage.models.QuoteResponse;
+import com.storage.models.dto.QuoteResponseDto;
 import com.storage.models.enums.DeliveryStatus;
 import com.storage.validators.QuoteValidator;
 import lombok.RequiredArgsConstructor;
@@ -43,7 +43,7 @@ public class QuoteService {
      * @author Pawel Konarzewski
      * @since 02/03/2021
      */
-    public QuoteResponse sendQuote(Quote quote) {
+    public QuoteResponseDto sendQuote(Quote quote) {
         log.info("Enter QuoteService -> sendQuote() with: " + quote);
         var validator = new QuoteValidator();
         var errors = validator.validate(quote);
@@ -81,12 +81,12 @@ public class QuoteService {
                 firstName, date, duration, size, roomType, warehouseName, price);
     }
 
-    private QuoteResponse sendEmail(Quote quote) {
+    private QuoteResponseDto sendEmail(Quote quote) {
         log.info("Enter QuoteService -> sendEmail() with: " + quote);
         var message = createMessage(quote);
         var recipientAddress = quote.getEmail();
         var quoteResponse =
-                QuoteResponse.builder().email(quote.getEmail()).build();
+                QuoteResponseDto.builder().email(quote.getEmail()).build();
         try {
             javaMailSender.send(createSimpleMailMessage(recipientAddress, message));
             quoteResponse.setStatus(DeliveryStatus.OK);

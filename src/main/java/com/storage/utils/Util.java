@@ -28,9 +28,8 @@ public interface Util {
      * lng1 - longitude of first postcode
      * lat2 - latitude of second postcode
      * lng2 - longitude of second postcode
+     * <p>
      * Returns: distance between two postcodes in km
-     *
-     * @since 05/03/2021
      */
     static double calculateDistance(ResultSingleResponse postcode1, PostcodeSingleResponse postcode2) {
         return calculateDistance(postcode1.getLatitude(), postcode1.getLongitude(), postcode2.getLatitude(), postcode2.getLongitude());

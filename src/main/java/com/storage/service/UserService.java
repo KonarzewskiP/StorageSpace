@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.stream.Collectors;
 
-import static com.storage.constants.AppConstants.*;
 import static com.storage.models.mapper.ModelMapper.fromUserDtoToUser;
 import static com.storage.models.mapper.ModelMapper.fromUserToUserDto;
 
@@ -22,10 +21,34 @@ import static com.storage.models.mapper.ModelMapper.fromUserToUserDto;
 @RequiredArgsConstructor
 public class UserService {
 
+    public static final String USER = "User";
+    public static final String ID = "id";
+
     private final UserRepository userRepository;
 
+    /**
+     * The method that saves an user in the database
+     * <p>
+     * Params: UserDto.
+     * Returns: <code>UserDto</code> object
+     *
+     * @author Pawel Konarzewski
+     */
     public UserDto addUser(UserDto userDto) {
         log.info("Enter UserService -> addUser() with: " + userDto);
+        isUserDtoValid(userDto);
+        checkEmailAvailability(userDto.getEmail());
+        var addedUser = userRepository.save(fromUserDtoToUser(userDto));
+        return fromUserToUserDto(addedUser);
+    }
+    /**
+     * The method that validates userDto
+     * <p>
+     * Params: UserDto.
+     * Throws: UserServiceException if userDto is not valid
+     * @author Pawel Konarzewski
+     */
+    private void isUserDtoValid(UserDto userDto) {
         var validator = new UserDtoValidator();
         var errors = validator.validate(userDto);
         if (!errors.isEmpty()) {
@@ -35,11 +58,14 @@ public class UserService {
                     .map(err -> err.getKey() + " -> " + err.getValue())
                     .collect(Collectors.joining(", ")));
         }
-        checkEmailAvailability(userDto.getEmail());
-        var addedUser = userRepository.save(fromUserDtoToUser(userDto));
-        return fromUserToUserDto(addedUser);
     }
-
+    /**
+     * The method that checks availability of email in database
+     * <p>
+     * Params: email.
+     * Throws: UserServiceException if email exist in database
+     * @author Pawel Konarzewski
+     */
     private void checkEmailAvailability(String email) {
         var user = userRepository.findByEmail(email).isPresent();
         if (user) {

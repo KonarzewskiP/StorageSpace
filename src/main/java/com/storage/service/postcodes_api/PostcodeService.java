@@ -17,6 +17,7 @@ import com.storage.repositories.WarehouseRepository;
 import com.storage.utils.Util;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -29,10 +30,6 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import static com.storage.constants.AppConstants.*;
-
-
 /**
  * Service Class that communicate with postcodes.io API and
  * provides methods for getting longitude/latitude coordinates
@@ -40,14 +37,15 @@ import static com.storage.constants.AppConstants.*;
  * between two postcodes.
  *
  * @author Pawel Konarzewski
- * @since 05/03/2021
  */
-
 @Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class PostcodeService {
+
+    private static final String POSTCODE_BASE_CALL="https://api.postcodes.io/postcodes";
+    public static final String POSTCODE = "Postcode";
 
     private final WarehouseRepository warehouseRepository;
 
@@ -61,12 +59,9 @@ public class PostcodeService {
      *          throws ResourceNotFoundException.
      *
      * @author Pawel Konarzewski
-     * @since 09/03/2021
      */
-
     public Boolean isValid(String postcode) {
         log.info("Enter PostcodeService -> isValid with: {}", postcode);
-
         try {
             var response = createGetResponseForValidation(postcode);
             Gson gson = new GsonBuilder()
@@ -74,7 +69,6 @@ public class PostcodeService {
                     .setPrettyPrinting()
                     .create();
             var isPostcodeValid = gson.fromJson(response.body(), Boolean.class);
-
             if (isPostcodeValid) {
                 return true;
             } else {
@@ -88,9 +82,7 @@ public class PostcodeService {
             Thread.currentThread().interrupt();
             throw new RuntimeException(exc.getMessage());
         }
-
     }
-
     private HttpResponse<String> createGetResponseForValidation(String postcode) throws IOException, InterruptedException {
         log.info("Enter PostcodeService -> createGetResponse()  with: {}", postcode);
         return HttpClient.newBuilder()
@@ -98,7 +90,6 @@ public class PostcodeService {
                 .build()
                 .send(createGetRequestForValidation(postcode), HttpResponse.BodyHandlers.ofString());
     }
-
     private HttpRequest createGetRequestForValidation(String postcode) {
         log.info("Enter PostcodeService -> createGetRequest() with: " + postcode);
         var url = POSTCODE_BASE_CALL + "/" + postcode.toUpperCase().replaceAll(" ", "").concat("/validate");
@@ -109,7 +100,6 @@ public class PostcodeService {
                 .GET()
                 .build();
     }
-
     /**
      * The method that calls API and returns PostcodeSingleResponse object
      * with coordinates for a single postcode.
@@ -119,9 +109,7 @@ public class PostcodeService {
      * is invalid, then returns PostcodeSingleResponse object with error property.
      *
      * @author Pawel Konarzewski
-     * @since 05/03/2021
      */
-
     public PostcodeSingleResponse getLatAndLngForSinglePostcode(String postcode) {
         log.info("Enter PostcodeService -> getLatAndLngForSinglePostcode() with: {}", postcode);
         try {
@@ -137,7 +125,6 @@ public class PostcodeService {
             throw new RuntimeException(exc.getMessage());
         }
     }
-
     private HttpResponse<String> createGetResponse(String postcode) throws IOException, InterruptedException {
         log.info("Enter PostcodeService -> createGetResponse() with: {}", postcode);
         return HttpClient.newBuilder()
@@ -145,7 +132,6 @@ public class PostcodeService {
                 .build()
                 .send(createGetRequest(postcode), HttpResponse.BodyHandlers.ofString());
     }
-
     private HttpRequest createGetRequest(String postcode) {
         log.info("Enter PostcodeService -> createGetRequest() with: " + postcode);
         var url = POSTCODE_BASE_CALL + "/" + postcode.toUpperCase().replaceAll(" ", "");
@@ -156,7 +142,6 @@ public class PostcodeService {
                 .GET()
                 .build();
     }
-
     /**
      * The method that call postcodes.io API and returns PostcodeBulkResponse object with
      * list of coordinate for many postcodes.
@@ -166,9 +151,7 @@ public class PostcodeService {
      * The list contains longitudes and latitudes of specific postcode.
      *
      * @author Pawel Konarzewski
-     * @since 05/03/2021
      */
-
     public PostcodeBulkResponse getLatAndLngForManyPostcodes(List<String> postcodes) {
         log.info("Enter PostcodeService -> getLatAndLngForManyPostcodes() with: " + postcodes);
         try {
@@ -187,7 +170,6 @@ public class PostcodeService {
             throw new RuntimeException(exc.getMessage());
         }
     }
-
     private HttpResponse<String> createPostResponse(List<String> postcodes) throws IOException, InterruptedException {
         log.info("Enter PostcodeService -> createPostResponse() with: {}", postcodes);
         return HttpClient.newBuilder()
@@ -195,7 +177,6 @@ public class PostcodeService {
                 .build()
                 .send(createPostRequest(postcodes), HttpResponse.BodyHandlers.ofString());
     }
-
     private HttpRequest createPostRequest(List<String> postcodes) {
         log.info("Enter PostcodeService -> createPostRequest() with: {}", postcodes);
         var gson = new GsonBuilder().setPrettyPrinting().create();
@@ -217,9 +198,7 @@ public class PostcodeService {
      * @param postcode
      * @return ResponseEntity with a <code>List<WarehouseDto></code>. Max 4 WarehouseDto objects in the list.
      * @author Pawel Konarzewski
-     * @since 09/03/2021
      */
-
     public List<WarehouseDto> getOrderedWarehousesByDistanceFromPostcode(String postcode) {
         log.info("Enter PostcodeService -> getNearestWarehouses() with: " + postcode);
         isValid(postcode);
@@ -248,7 +227,6 @@ public class PostcodeService {
             return null;
         }).collect(Collectors.toList());
     }
-
     private LinkedHashMap<String, Double> sortPostcodesByDistance(Map<String, Double> map) {
         return map
                 .entrySet()
@@ -258,7 +236,6 @@ public class PostcodeService {
                         (e1, e2) -> e1,
                         LinkedHashMap::new));
     }
-
     private Map<String, Double> generateMapOfPostcodesWithDistanceFromPostcode(PostcodeSingleResponse coordinatesForPostcode, PostcodeBulkResponse coordinatesOfWarehouses) {
         return coordinatesOfWarehouses.getResult().stream()
                 .collect(Collectors.toMap(ResultSingleResponse::getPostcode,

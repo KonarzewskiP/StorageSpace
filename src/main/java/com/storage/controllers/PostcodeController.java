@@ -15,24 +15,27 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/postcodes")
 public class PostcodeController {
-
     private final PostcodeService postcodeService;
-
+    /**
+     * The method that calls API and returns Boolean object.
+     * <p>
+     * Params: postcode - postcode from the UK
+     * Returns: HttpResponse 200 and Boolean true if postcode is valid,
+     *
+     * @author Pawel Konarzewski
+     */
     @GetMapping("/{postcode}")
-    public ResponseEntity<Boolean> isPostcodeValid(@PathVariable String postcode){
+    public ResponseEntity<Boolean> isPostcodeValid(@PathVariable String postcode) {
         log.info("Enter PostcodeController -> isPostcodeValid() with {}", postcode);
         return new ResponseEntity<>(postcodeService.isValid(postcode), HttpStatus.OK);
     }
-
     /**
      * Method that search for nearest Warehouses according to given postcode.
      *
      * @param postcode
-     * @return ResponseEntity with a <code>List<WarehouseDto></code>.
+     * @return ResponseEntity with a <code>List<WarehouseDto></code> of ordered warehouses.
      * @author Pawel Konarzewski
-     * @since 04/03/2021
      */
-
     @GetMapping("/{postcode}/nearest")
     public ResponseEntity<List<WarehouseDto>> getNearestWarehouses(@PathVariable String postcode) {
         log.info("Enter WarehouseController -> getNearestWarehouses() with: " + postcode);
