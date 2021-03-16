@@ -12,7 +12,7 @@ public enum StorageDuration {
     SIX_TWELVE_MOTHS("6-12 months"),
     PLUS_1_YEAR("1 year+");
 
-    private String duration;
+    private final String duration;
 
     StorageDuration(String duration) {
         this.duration = duration;

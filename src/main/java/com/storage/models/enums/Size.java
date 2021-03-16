@@ -17,9 +17,9 @@ public enum Size {
     TWO_DOUBLE_GARAGES("Two double garage",400, 35.15),
     TWO_SHIPPING_CONTAINERS("Two shipping containers",500, 38.32);
 
-    private String type;
-    private int size;
-    private double price;
+    private final String type;
+    private final int size;
+    private final double price;
 
     Size(String type, int size, double price) {
         this.type = type;

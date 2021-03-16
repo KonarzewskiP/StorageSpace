@@ -60,7 +60,6 @@ public class UserDtoValidator implements Validator<UserDto> {
         }
         return errors;
     }
-
     private boolean isFirstNameEmpty(UserDto userDto) {
         return !userDto.getFirstName().isBlank();
     }
@@ -76,11 +75,9 @@ public class UserDtoValidator implements Validator<UserDto> {
     private boolean isFirstNameStartsFromUppercase(UserDto userDto) {
         return userDto.getFirstName().matches("([A-Z][a-z]+)");
     }
-
     private boolean isLastNameStartsFromUppercase(UserDto userDto) {
         return userDto.getLastName().matches("([A-Z][a-z]+)");
     }
-
     private boolean isEmailFormatValid(UserDto userDto) {
         var pattern = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
         var matcher = pattern.matcher(userDto.getEmail());

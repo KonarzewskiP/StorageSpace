@@ -1,5 +1,8 @@
 package com.storage.models.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum ExtraServices {
 
     EXTENDED_HOURS("Extended hours access"),
@@ -8,7 +11,7 @@ public enum ExtraServices {
     ACCEPTING_DELIVERIES("Big Green accepting your deliveries"),
     FLEXI_OFFICES("Flexi offices");
 
-    private String type;
+    private final String type;
 
     ExtraServices(String type) {
         this.type = type;
