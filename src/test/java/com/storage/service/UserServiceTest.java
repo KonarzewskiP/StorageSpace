@@ -19,6 +19,7 @@ import static com.storage.builders.MockDataForTest.createUser;
 import static com.storage.builders.MockDataForTest.createUserDto;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -43,11 +44,13 @@ public class UserServiceTest {
         //when
         var result = service.addUser(testUserDto);
         //then
-        assertThat(result).isNotNull();
-        assertThat(result.getId()).isEqualTo(1L);
-        assertThat(result.getFirstName()).isEqualTo("Veronica");
-        assertThat(result.getLastName()).isEqualTo("Jobs");
-        assertThat(result.getGender()).isEqualTo(Gender.FEMALE);
+        assertAll(
+                () -> assertThat(result).isNotNull(),
+                () -> assertThat(result.getId()).isEqualTo(1L),
+                () -> assertThat(result.getFirstName()).isEqualTo("Veronica"),
+                () -> assertThat(result.getLastName()).isEqualTo("Jobs"),
+                () -> assertThat(result.getGender()).isEqualTo(Gender.FEMALE)
+        );
     }
 
     @Test
@@ -98,7 +101,7 @@ public class UserServiceTest {
         //given
         var id = 999L;
         //when
-        Throwable thrown = catchThrowable(() ->  service.getUserById(id));
+        Throwable thrown = catchThrowable(() -> service.getUserById(id));
         //then
         assertThat(thrown)
                 .isInstanceOf(ResourceNotFoundException.class)
@@ -111,7 +114,7 @@ public class UserServiceTest {
         //given
         Long id = null;
         //when
-        Throwable thrown = catchThrowable(() ->  service.getUserById(id));
+        Throwable thrown = catchThrowable(() -> service.getUserById(id));
         //then
         assertThat(thrown)
                 .isInstanceOf(ResourceNotFoundException.class)

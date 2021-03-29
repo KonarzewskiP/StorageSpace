@@ -1,5 +1,5 @@
 # StorageSpace
-REST API using Spring Boot, MySQL, Java 11 HttpClient, Swagger.
+REST API using Spring Framework.
 
 Storage space is a fun project. The goal is to create a simple copy of Big Yellow Storage.
 
