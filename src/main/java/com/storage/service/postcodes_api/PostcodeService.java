@@ -1,35 +1,26 @@
 
 package com.storage.service.postcodes_api;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.storage.exceptions.ResourceNotFoundException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.storage.models.Warehouse;
 import com.storage.models.dto.WarehouseDto;
 import com.storage.models.mapper.ModelMapper;
-import com.storage.models.postcodes_api.deserializer.PostcodeBulkResponseDeserializer;
-import com.storage.models.postcodes_api.deserializer.PostcodeResponseDeserializer;
-import com.storage.models.postcodes_api.deserializer.PostcodeValidationResponseDeserializer;
-import com.storage.models.postcodes_api.response.PostcodeBulkResponse;
-import com.storage.models.postcodes_api.response.PostcodeSingleResponse;
-import com.storage.models.postcodes_api.response.ResultSingleResponse;
+import com.storage.models.postcodes_api.response.*;
 import com.storage.repositories.WarehouseRepository;
 import com.storage.utils.Util;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import javax.transaction.Transactional;
-import java.io.IOException;
-import java.net.ProxySelector;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.time.Duration;
 import java.util.*;
 import java.util.stream.Collectors;
+
 /**
  * Service Class that communicate with postcodes.io API and
  * provides methods for getting longitude/latitude coordinates
@@ -38,159 +29,82 @@ import java.util.stream.Collectors;
  *
  * @author Pawel Konarzewski
  */
+
 @Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class PostcodeService {
 
-    private static final String POSTCODE_BASE_CALL="https://api.postcodes.io/postcodes";
-    public static final String POSTCODE = "Postcode";
+    private static final String POSTCODE_BASE_CALL = "https://api.postcodes.io/postcodes";
 
+    private final RestTemplate restTemplate;
+    private final ObjectMapper objectMapper;
     private final WarehouseRepository warehouseRepository;
-
-    private static final long TIMEOUT_IN_SECONDS = 10L;
 
     /**
      * The method that calls API and returns Boolean object.
      * <p>
      * Params: postcode - postcode from the UK
-     * Returns: true is postcode is valid, otherwise
-     *          throws ResourceNotFoundException.
+     * Returns: PostcodeValidation object with status code and result.
      *
      * @author Pawel Konarzewski
      */
-    public Boolean isValid(String postcode) {
-        log.info("Enter PostcodeService -> isValid with: {}", postcode);
-        try {
-            var response = createGetResponseForValidation(postcode);
-            Gson gson = new GsonBuilder()
-                    .registerTypeAdapter(Boolean.class, new PostcodeValidationResponseDeserializer())
-                    .setPrettyPrinting()
-                    .create();
-            var isPostcodeValid = gson.fromJson(response.body(), Boolean.class);
-            if (isPostcodeValid) {
-                return true;
-            } else {
-                throw new ResourceNotFoundException(POSTCODE, POSTCODE, postcode);
-            }
-        } catch (IOException exc) {
-            log.error("Error while sending or receiving data.");
-            throw new RuntimeException(exc.getMessage());
-        } catch (InterruptedException exc){
-            log.error("Error while sending request.");
-            Thread.currentThread().interrupt();
-            throw new RuntimeException(exc.getMessage());
-        }
+
+    public PostcodeValidationResponse isValid(String postcode) {
+
+        String validPostcode = postcode.toUpperCase().replaceAll(" ", "").concat("/validate");
+        ResponseEntity<PostcodeValidationResponse> response =
+                restTemplate.getForEntity(POSTCODE_BASE_CALL + "/" + validPostcode, PostcodeValidationResponse.class);
+
+        return response.getBody();
     }
-    private HttpResponse<String> createGetResponseForValidation(String postcode) throws IOException, InterruptedException {
-        log.info("Enter PostcodeService -> createGetResponse()  with: {}", postcode);
-        return HttpClient.newBuilder()
-                .proxy(ProxySelector.getDefault())
-                .build()
-                .send(createGetRequestForValidation(postcode), HttpResponse.BodyHandlers.ofString());
-    }
-    private HttpRequest createGetRequestForValidation(String postcode) {
-        log.info("Enter PostcodeService -> createGetRequest() with: " + postcode);
-        var url = POSTCODE_BASE_CALL + "/" + postcode.toUpperCase().replaceAll(" ", "").concat("/validate");
-        return HttpRequest
-                .newBuilder(URI.create(url))
-                .version(HttpClient.Version.HTTP_2)
-                .timeout(Duration.ofSeconds(TIMEOUT_IN_SECONDS))
-                .GET()
-                .build();
-    }
+
     /**
-     * The method that calls API and returns PostcodeSingleResponse object
+     * The method that calls API and returns PostcodeResponse object
      * with coordinates for a single postcode.
      * <p>
      * Params: postcode - postcode from the UK
-     * Returns: PostcodeSingleResponse object with longitude and latitude coordinates. If Postcode
-     * is invalid, then returns PostcodeSingleResponse object with error property.
+     * Returns: PostcodeResponse object with longitude and latitude coordinates.
      *
      * @author Pawel Konarzewski
      */
-    public PostcodeSingleResponse getLatAndLngForSinglePostcode(String postcode) {
+
+    public PostcodeResponse getCoordinatesPostcode(String postcode) {
         log.info("Enter PostcodeService -> getLatAndLngForSinglePostcode() with: {}", postcode);
-        try {
-            var response = createGetResponse(postcode);
-            Gson gson = new GsonBuilder()
-                    .registerTypeAdapter(PostcodeSingleResponse.class, new PostcodeResponseDeserializer())
-                    .setPrettyPrinting()
-                    .create();
-            return gson.fromJson(response.body(), PostcodeSingleResponse.class);
-        } catch (IOException | InterruptedException exc) {
-            log.error("Error while sending request.");
-            Thread.currentThread().interrupt();
-            throw new RuntimeException(exc.getMessage());
-        }
+
+        String validPostcode = postcode.toUpperCase().replaceAll(" ", "");
+        ResponseEntity<PostcodeResponse> response =
+                restTemplate.getForEntity(POSTCODE_BASE_CALL + "/" + validPostcode, PostcodeResponse.class);
+
+        return response.getBody();
     }
-    private HttpResponse<String> createGetResponse(String postcode) throws IOException, InterruptedException {
-        log.info("Enter PostcodeService -> createGetResponse() with: {}", postcode);
-        return HttpClient.newBuilder()
-                .proxy(ProxySelector.getDefault())
-                .build()
-                .send(createGetRequest(postcode), HttpResponse.BodyHandlers.ofString());
-    }
-    private HttpRequest createGetRequest(String postcode) {
-        log.info("Enter PostcodeService -> createGetRequest() with: " + postcode);
-        var url = POSTCODE_BASE_CALL + "/" + postcode.toUpperCase().replaceAll(" ", "");
-        return HttpRequest
-                .newBuilder(URI.create(url))
-                .version(HttpClient.Version.HTTP_2)
-                .timeout(Duration.ofSeconds(TIMEOUT_IN_SECONDS)) // HttpTimeoutException
-                .GET()
-                .build();
-    }
+
     /**
-     * The method that call postcodes.io API and returns PostcodeBulkResponse object with
-     * list of coordinate for many postcodes.
+     * The method that call postcodes.io API and returns PostcodeResponse object with
+     * list of Result objects containing coordinates for many postcodes.
      * <p>
      * Params: postcodes - an object containing a list of postcodes from the UK
-     * Returns: PostcodeBulkResponse object with a list of ResultSingleResponse objects.
-     * The list contains longitudes and latitudes of specific postcode.
+     * Returns: PostcodeResponse object with a list of Result objects.
+     * The list contains postcode, longitudes and latitudes of specific postcode.
      *
      * @author Pawel Konarzewski
      */
-    public PostcodeBulkResponse getLatAndLngForManyPostcodes(List<String> postcodes) {
-        log.info("Enter PostcodeService -> getLatAndLngForManyPostcodes() with: " + postcodes);
-        try {
-            var response = createPostResponse(postcodes);
-            Gson gson = new GsonBuilder()
-                    .registerTypeAdapter(PostcodeBulkResponse.class, new PostcodeBulkResponseDeserializer())
-                    .setPrettyPrinting()
-                    .create();
-            return gson.fromJson(response.body(), PostcodeBulkResponse.class);
-        } catch (IOException exc) {
-            log.error("Error while sending or receiving data.");
-            throw new RuntimeException(exc.getMessage());
-        } catch (InterruptedException exc){
-            log.error("Error while sending request.");
-            Thread.currentThread().interrupt();
-            throw new RuntimeException(exc.getMessage());
-        }
-    }
-    private HttpResponse<String> createPostResponse(List<String> postcodes) throws IOException, InterruptedException {
-        log.info("Enter PostcodeService -> createPostResponse() with: {}", postcodes);
-        return HttpClient.newBuilder()
-                .proxy(ProxySelector.getDefault())
-                .build()
-                .send(createPostRequest(postcodes), HttpResponse.BodyHandlers.ofString());
-    }
-    private HttpRequest createPostRequest(List<String> postcodes) {
-        log.info("Enter PostcodeService -> createPostRequest() with: {}", postcodes);
-        var gson = new GsonBuilder().setPrettyPrinting().create();
-        var map = Map.of("postcodes", postcodes);
-        var json = gson.toJson(map);
 
-        return HttpRequest
-                .newBuilder(URI.create(POSTCODE_BASE_CALL))
-                .version(HttpClient.Version.HTTP_2)
-                .header("content-type", "application/json;charset=UTF-8")
-                .timeout(Duration.ofSeconds(TIMEOUT_IN_SECONDS)) // HttpTimeoutException
-                .POST(HttpRequest.BodyPublishers.ofString(json))
-                .build();
+    public PostcodeResponse getCoordinatesPostcodes(List<String> postcodes) {
+        log.info("Enter PostcodeService -> getLatAndLngForManyPostcodes() with: " + postcodes);
+        var map = Map.of("postcodes", postcodes);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        var json = objectMapper.valueToTree(map);
+        HttpEntity<Object> request = new HttpEntity<>(json, headers);
+
+        ResponseEntity<PostcodeResponse> response =
+                restTemplate.postForEntity(POSTCODE_BASE_CALL, request, PostcodeResponse.class);
+        return response.getBody();
     }
+
 
     /**
      * Method that search for nearest Warehouses according to given postcode.
@@ -209,8 +123,8 @@ public class PostcodeService {
                 .map(Warehouse::getPostCode)
                 .collect(Collectors.toList());
 
-        var userPostcodeCoordinates = getLatAndLngForSinglePostcode(postcode);
-        var coordinatesOfWarehouses = getLatAndLngForManyPostcodes(listOfPostcodesFromEachWarehouse);
+        var userPostcodeCoordinates = getCoordinatesPostcode(postcode);
+        var coordinatesOfWarehouses = getCoordinatesPostcodes(listOfPostcodesFromEachWarehouse);
         var map = generateMapOfPostcodesWithDistanceFromPostcode(userPostcodeCoordinates, coordinatesOfWarehouses);
         LinkedHashMap<String, Double> sortedMap = sortPostcodesByDistance(map);
         List<Warehouse> orderedList = getOrderedListOfWarehouses(warehousesList, sortedMap);
@@ -227,6 +141,7 @@ public class PostcodeService {
             return null;
         }).collect(Collectors.toList());
     }
+
     private LinkedHashMap<String, Double> sortPostcodesByDistance(Map<String, Double> map) {
         return map
                 .entrySet()
@@ -236,9 +151,10 @@ public class PostcodeService {
                         (e1, e2) -> e1,
                         LinkedHashMap::new));
     }
-    private Map<String, Double> generateMapOfPostcodesWithDistanceFromPostcode(PostcodeSingleResponse coordinatesForPostcode, PostcodeBulkResponse coordinatesOfWarehouses) {
+
+    private Map<String, Double> generateMapOfPostcodesWithDistanceFromPostcode(PostcodeResponse coordinatesForPostcode, PostcodeResponse coordinatesOfWarehouses) {
         return coordinatesOfWarehouses.getResult().stream()
-                .collect(Collectors.toMap(ResultSingleResponse::getPostcode,
+                .collect(Collectors.toMap(Result::getPostcode,
                         storage -> Util.calculateDistance(storage, coordinatesForPostcode)));
     }
 

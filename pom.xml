@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.storage</groupId>
-    <artifactId>demo</artifactId>
+    <artifactId>StorageSpace</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>Big Storage</name>
     <description>Storage Space Management System</description>

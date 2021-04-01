@@ -1,5 +1,6 @@
 package com.storage.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.GsonBuilder;
 import com.storage.exceptions.ResourceNotFoundException;
 import com.storage.models.Warehouse;
@@ -10,9 +11,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -28,26 +34,50 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
+@RestClientTest // ??
 public class PostcodeServiceTest {
 
     private static final String POSTCODE_BASE_CALL = "https://api.postcodes.io/postcodes";
 
-    @InjectMocks
-    private PostcodeService service;
+    @TestConfiguration
+    public static class TestConfig {
 
-    @Mock
+        @MockBean
+        private RestTemplate restTemplate;
+
+        @MockBean
+        private WarehouseRepository warehouseRepository;
+
+        @MockBean
+        private ObjectMapper objectMapper;
+
+        @Bean
+        public PostcodeService service() {
+            return new PostcodeService(restTemplate, objectMapper, warehouseRepository);
+        }
+
+    }
+
+    @Autowired
+    private RestTemplate restTemplate;
+    @Autowired
+    private PostcodeService service;
+    @Autowired
     private WarehouseRepository warehouseRepository;
+
 
     @Test
     @DisplayName("should return true for valid postcode")
     void shouldReturnTrueForValidPostcode() {
         //given
-        var postcode = "NW13LH";
+        var postcode = "NW1 3LH";
         //when
         var result = service.isValid(postcode);
         //then
-        assertThat(result).isTrue();
+        assertThat(result.getResult()).isEqualTo("true");
+        fail("Not implemented");
     }
+
 
     @ParameterizedTest
     @ValueSource(strings = {"IP83NL", "IP83NL/validate"})
@@ -134,34 +164,39 @@ public class PostcodeServiceTest {
     @Test
     @DisplayName("should return object with coordinates for single postcode")
     void shouldReturnObjectWithCoordinatesForSinglePostcode() {
-        //given
+/*        //given
         var postcode = "NW13LH";
         //when
-        var result = service.getLatAndLngForSinglePostcode(postcode);
+        var result = service.getCoordinatesPostcode(postcode);
         //then
         assertAll(
                 () -> assertThat(result.getPostcode()).isEqualTo("NW1 3LH"),
                 () -> assertThat(result.getLatitude()).isEqualTo(51.527516),
-                () -> assertThat(result.getLongitude()).isEqualTo(-0.143089),
-                () -> assertThat(result.getError()).isNull()
+                () -> assertThat(result.getLongitude()).isEqualTo(-0.143089)
+//                () -> assertThat(result.getError()).isNull()
         );
+        */
+
+        fail("Not implemented");
+
     }
 
     @Test
     @DisplayName("should return object with error field for invalid postcode")
     void shouldReturnObjectWithErrorFieldForInvalidPostcode() {
-        //given
+/*        //given
         var postcode = "NW1333";
         //when
-        var result = service.getLatAndLngForSinglePostcode(postcode);
+        var result = service.getCoordinatesPostcode(postcode);
         //then
         assertAll(
                 () -> assertThat(result.getStatus()).isEqualTo(404),
                 () -> assertThat(result.getPostcode()).isNull(),
                 () -> assertThat(result.getLatitude()).isEqualTo(0.0),
-                () -> assertThat(result.getLongitude()).isEqualTo(0.0),
-                () -> assertThat(result.getError()).contains("Invalid postcode")
-        );
+                () -> assertThat(result.getLongitude()).isEqualTo(0.0)
+//                () -> assertThat(result.getError()).contains("Invalid postcode")
+        );*/
+        fail("Not implemented");
     }
 
     @Test
@@ -170,7 +205,7 @@ public class PostcodeServiceTest {
         //given
         var listOfPostcodes = List.of("CM16 4BL", "CF399BQ", "ca9 3tw", "xxxxxxx");
         //when
-        var result = service.getLatAndLngForManyPostcodes(listOfPostcodes);
+        var result = service.getCoordinatesPostcodes(listOfPostcodes);
         var postcodes = result.getResult();
         //then
         assertAll(

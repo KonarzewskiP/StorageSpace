@@ -1,6 +1,7 @@
 package com.storage.controllers;
 
 import com.storage.models.dto.WarehouseDto;
+import com.storage.models.postcodes_api.response.PostcodeValidationResponse;
 import com.storage.service.postcodes_api.PostcodeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +17,8 @@ import java.util.List;
 @RequestMapping("/postcodes")
 public class PostcodeController {
     private final PostcodeService postcodeService;
+
+
     /**
      * The method that calls API and returns Boolean object.
      * <p>
@@ -25,7 +28,7 @@ public class PostcodeController {
      * @author Pawel Konarzewski
      */
     @GetMapping("/{postcode}")
-    public ResponseEntity<Boolean> isPostcodeValid(@PathVariable String postcode) {
+    public ResponseEntity<PostcodeValidationResponse> isPostcodeValid(@PathVariable String postcode) {
         log.info("Enter PostcodeController -> isPostcodeValid() with {}", postcode);
         return new ResponseEntity<>(postcodeService.isValid(postcode), HttpStatus.OK);
     }

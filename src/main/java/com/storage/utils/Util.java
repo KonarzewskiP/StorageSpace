@@ -2,8 +2,8 @@ package com.storage.utils;
 
 import com.storage.models.StorageRoom;
 import com.storage.models.enums.Size;
-import com.storage.models.postcodes_api.response.PostcodeSingleResponse;
-import com.storage.models.postcodes_api.response.ResultSingleResponse;
+import com.storage.models.postcodes_api.response.PostcodeResponse;
+import com.storage.models.postcodes_api.response.Result;
 
 import java.util.Arrays;
 import java.util.List;
@@ -31,8 +31,8 @@ public interface Util {
      * <p>
      * Returns: distance between two postcodes in km
      */
-    static double calculateDistance(ResultSingleResponse postcode1, PostcodeSingleResponse postcode2) {
-        return calculateDistance(postcode1.getLatitude(), postcode1.getLongitude(), postcode2.getLatitude(), postcode2.getLongitude());
+    static double calculateDistance(Result postcode1, PostcodeResponse postcode2) {
+        return calculateDistance(postcode1.getLatitude(), postcode1.getLongitude(), postcode2.getResult().get(0).getLatitude(), postcode2.getResult().get(0).getLongitude());
     }
 
     private static double calculateDistance(double lat1, double lng1, double lat2, double lng2) {
