@@ -41,7 +41,7 @@ public class PostcodeController {
      */
     @GetMapping("/{postcode}/nearest")
     public ResponseEntity<List<WarehouseDto>> getNearestWarehouses(@PathVariable String postcode) {
-        log.info("Enter WarehouseController -> getNearestWarehouses() with: " + postcode);
+        log.info("Enter PostcodeController -> getNearestWarehouses() with: " + postcode);
         return new ResponseEntity<>(postcodeService.getOrderedWarehousesByDistanceFromPostcode(postcode), HttpStatus.OK);
     }
 }

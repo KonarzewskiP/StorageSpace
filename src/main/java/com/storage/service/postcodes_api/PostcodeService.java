@@ -10,6 +10,7 @@ import com.storage.repositories.WarehouseRepository;
 import com.storage.utils.Util;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -36,7 +37,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PostcodeService {
 
-    private static final String POSTCODE_BASE_CALL = "https://api.postcodes.io/postcodes";
+    @Value("${postcode.api.url}")
+    private String postcodeUrl;
 
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
@@ -55,7 +57,7 @@ public class PostcodeService {
 
         String validPostcode = postcode.toUpperCase().replaceAll(" ", "").concat("/validate");
         ResponseEntity<PostcodeValidationResponse> response =
-                restTemplate.getForEntity(POSTCODE_BASE_CALL + "/" + validPostcode, PostcodeValidationResponse.class);
+                restTemplate.getForEntity(postcodeUrl + "/" + validPostcode, PostcodeValidationResponse.class);
 
         return response.getBody();
     }
@@ -75,7 +77,7 @@ public class PostcodeService {
 
         String validPostcode = postcode.toUpperCase().replaceAll(" ", "");
         ResponseEntity<PostcodeResponse> response =
-                restTemplate.getForEntity(POSTCODE_BASE_CALL + "/" + validPostcode, PostcodeResponse.class);
+                restTemplate.getForEntity(postcodeUrl + "/" + validPostcode, PostcodeResponse.class);
 
         return response.getBody();
     }
@@ -92,7 +94,7 @@ public class PostcodeService {
      */
 
     public PostcodeResponse getCoordinatesPostcodes(List<String> postcodes) {
-        log.info("Enter PostcodeService -> getLatAndLngForManyPostcodes() with: " + postcodes);
+        log.info("Enter PostcodeService -> getCoordinatesPostcodes() with: " + postcodes);
         var map = Map.of("postcodes", postcodes);
 
         HttpHeaders headers = new HttpHeaders();
@@ -101,7 +103,7 @@ public class PostcodeService {
         HttpEntity<Object> request = new HttpEntity<>(json, headers);
 
         ResponseEntity<PostcodeResponse> response =
-                restTemplate.postForEntity(POSTCODE_BASE_CALL, request, PostcodeResponse.class);
+                restTemplate.postForEntity(postcodeUrl, request, PostcodeResponse.class);
         return response.getBody();
     }
 
@@ -114,7 +116,7 @@ public class PostcodeService {
      * @author Pawel Konarzewski
      */
     public List<WarehouseDto> getOrderedWarehousesByDistanceFromPostcode(String postcode) {
-        log.info("Enter PostcodeService -> getNearestWarehouses() with: " + postcode);
+        log.info("Enter PostcodeService -> getOrderedWarehousesByDistanceFromPostcode() with: " + postcode);
         isValid(postcode);
 
         var warehousesList = warehouseRepository.findAll();
