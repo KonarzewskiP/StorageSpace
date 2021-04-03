@@ -1,5 +1,6 @@
 package com.storage.models.mapper;
 
+import com.storage.models.Address;
 import com.storage.models.User;
 import com.storage.models.StorageRoom;
 import com.storage.models.Warehouse;
@@ -38,9 +39,7 @@ public interface ModelMapper {
         return warehouse == null ? null : WarehouseDto.builder()
                 .id(warehouse.getId())
                 .name(warehouse.getName())
-                .city(warehouse.getCity())
-                .street(warehouse.getStreet())
-                .postCode(warehouse.getPostCode())
+                .address(warehouse.getAddress())
                 .build();
     }
 
@@ -48,9 +47,7 @@ public interface ModelMapper {
         return warehouseDto == null ? null : Warehouse.builder()
                 .id(warehouseDto.getId())
                 .name(warehouseDto.getName())
-                .city(warehouseDto.getCity())
-                .street(warehouseDto.getStreet())
-                .postCode(warehouseDto.getPostCode())
+                .address(warehouseDto.getAddress())
                 .build();
     }
 

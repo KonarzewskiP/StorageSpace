@@ -112,7 +112,7 @@ public class PostcodeService {
      * Method that search for nearest Warehouses according to given postcode.
      *
      * @param postcode
-     * @return ResponseEntity with a <code>List<WarehouseDto></code>. Max 4 WarehouseDto objects in the list.
+     * @return ResponseEntity with a <code>List<WarehouseDto></code>.
      * @author Pawel Konarzewski
      */
     public List<WarehouseDto> getOrderedWarehousesByDistanceFromPostcode(String postcode) {
@@ -122,7 +122,7 @@ public class PostcodeService {
         var warehousesList = warehouseRepository.findAll();
         var listOfPostcodesFromEachWarehouse = warehousesList
                 .stream()
-                .map(Warehouse::getPostCode)
+                .map(warehouse -> warehouse.getAddress().getPostcode())
                 .collect(Collectors.toList());
 
         var userPostcodeCoordinates = getCoordinatesPostcode(postcode);
@@ -133,10 +133,20 @@ public class PostcodeService {
         return ModelMapper.fromWarehouseListToWarehouseDtoList(orderedList);
     }
 
+    /**
+     * Method that return list of Warehouses ordered by distance from postcode given by User.
+     *
+     * @param sortedMap - sorted map of warehouses by postcode. Key is a string representing postcode of warehouse.
+     *                  Value is a double value representing distance from warehouse to the postcode given by user
+     *                  in call to PostcodeController.
+     * @return <code>List<Warehouse></code>.
+     * @author Pawel Konarzewski
+     */
+
     private List<Warehouse> getOrderedListOfWarehouses(List<Warehouse> warehousesList, LinkedHashMap<String, Double> sortedMap) {
         return sortedMap.keySet().stream().map(aDouble -> {
             for (Warehouse x : warehousesList) {
-                if (aDouble.equals(x.getPostCode())) {
+                if (aDouble.equals(x.getAddress().getPostcode())) {
                     return x;
                 }
             }

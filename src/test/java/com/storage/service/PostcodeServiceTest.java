@@ -173,7 +173,7 @@ public class PostcodeServiceTest {
         );
     }
 
-    @Test
+/*    @Test
     @Ignore
     @DisplayName("should return ordered list of warehouses by distance from postcode")
     void shouldReturnOrderedListOfWarehousesByDistanceFromPostcode() {
@@ -205,6 +205,6 @@ public class PostcodeServiceTest {
                 () -> assertThat(result.get(3).getId()).isEqualTo(2),
                 () -> assertThat(result.get(3).getName()).isEqualTo("Bromley")
         );
-    }
+    }*/
 }
 

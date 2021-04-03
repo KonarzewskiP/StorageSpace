@@ -1,6 +1,7 @@
 package com.storage.models.dto;
 
 
+import com.storage.models.Address;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,8 +15,6 @@ public class WarehouseDto {
 
     private Long id;
     private String name;
-    private String city;
-    private String street;
-    private String postCode;
+    private Address address;
 
 }

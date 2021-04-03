@@ -16,14 +16,16 @@ public class Warehouse {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private String city;
-    private String street;
-    private String postCode;
+
+    @OneToOne(cascade = CascadeType.PERSIST,mappedBy = "warehouse")
+    private Address address;
+
     @OneToMany(
             cascade = {CascadeType.ALL}
     )
     @JoinColumn(name = "warehouse_id")
     @JsonIgnore
     private List<StorageRoom> storageRooms = new ArrayList<>();
+
 
 }

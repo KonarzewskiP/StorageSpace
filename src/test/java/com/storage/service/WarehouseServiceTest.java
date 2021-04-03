@@ -2,6 +2,7 @@ package com.storage.service;
 
 import com.storage.exceptions.ResourceNotFoundException;
 import com.storage.exceptions.WarehouseServiceException;
+import com.storage.models.Address;
 import com.storage.models.Warehouse;
 import com.storage.models.dto.WarehouseDto;
 import com.storage.repositories.StorageRoomRepository;
@@ -44,16 +45,18 @@ public class WarehouseServiceTest {
         when(warehouseRepository.save(any(Warehouse.class))).thenReturn(warehouse);
         var testWarehouseDto = WarehouseDto.builder()
                 .name("Fake Name")
-                .city("London")
-                .street("Ashton Road")
-                .postCode("RM3 8NF")
+                .address(Address.builder()
+                        .city("London")
+                        .street("Ashton Road")
+                        .postcode("RM3 8NF")
+                        .build())
                 .build();
         //when
         var result = service.addWarehouse(testWarehouseDto);
         //then
         assertAll(
-                ()->assertThat(result.getId()).isEqualTo(2L),
-                ()->assertThat(result.getName()).isEqualTo("Big Yellow")
+                () -> assertThat(result.getId()).isEqualTo(2L),
+                () -> assertThat(result.getName()).isEqualTo("Big Yellow")
         );
 
 
@@ -65,7 +68,7 @@ public class WarehouseServiceTest {
         //given
         WarehouseDto warehouseDto = null;
         //when
-        Throwable thrown = catchThrowable(()-> service.addWarehouse(warehouseDto));
+        Throwable thrown = catchThrowable(() -> service.addWarehouse(warehouseDto));
         //then
         assertThat(thrown)
                 .isInstanceOf(WarehouseServiceException.class)
@@ -77,12 +80,14 @@ public class WarehouseServiceTest {
     void shouldThrowWarehouseServiceExceptionWhenWarehouseDtoIsInvalid() {
         var warehouseDto = WarehouseDto.builder()
                 .name("")
-                .city("")
-                .street("")
-                .postCode("RM3 8NF1")
+                .address(Address.builder()
+                        .city("")
+                        .street("")
+                        .postcode("RM3 8NF1")
+                        .build())
                 .build();
         //when
-        Throwable thrown = catchThrowable(()-> service.addWarehouse(warehouseDto));
+        Throwable thrown = catchThrowable(() -> service.addWarehouse(warehouseDto));
         //then
         assertThat(thrown)
                 .isInstanceOf(WarehouseServiceException.class)
@@ -158,7 +163,6 @@ public class WarehouseServiceTest {
                 .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessageContaining("Warehouse not found with id: 999");
     }
-
 
 
 }
