@@ -78,6 +78,4 @@ public class WarehouseService {
                 .map(ModelMapper::fromStorageRoomToStorageRoomDto)
                 .collect(Collectors.toList());
     }
-
-
 }

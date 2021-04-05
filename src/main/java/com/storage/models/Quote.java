@@ -9,11 +9,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
-@Getter
-@Setter
+@Data
 public class Quote {
 
     String firstName;
@@ -23,7 +20,7 @@ public class Quote {
     String warehouseName;
 
     Size size;
-    TypeOfAccount type;
+    TypeOfStorage type;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     LocalDate startDate;
     StorageDuration duration;

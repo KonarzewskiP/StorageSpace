@@ -108,6 +108,23 @@ public class ErrorControllerHandler {
                 createCustomErrorResponse(e, e.getStatusCode().getReasonPhrase(), e.getStatusCode().value()),
                 e.getStatusCode());
     }
+
+    /**
+     * The method throw custom error object for UserServiceException
+     * <p>
+     * Params: UserServiceException .
+     * Returns: ResponseEntity with <code>CustomErrorResponse</code> object
+     *
+     * @author Pawel Konarzewski
+     */
+    @ExceptionHandler(value = EnumParsingException.class)
+    public ResponseEntity<CustomErrorResponseDto> handleNotFoundException(EnumParsingException e) {
+        log.error("Enter ErrorControllerHandler -> handleNotFoundException() EnumParsingException with: " + e);
+
+        return new ResponseEntity<>(
+                createCustomErrorResponse(e, HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value()),
+                HttpStatus.BAD_REQUEST);
+    }
     /**
      * The method that creates custom CustomErrorResponse
      * <p>
