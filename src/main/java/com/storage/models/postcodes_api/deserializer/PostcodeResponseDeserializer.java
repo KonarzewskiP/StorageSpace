@@ -32,7 +32,7 @@ public class PostcodeResponseDeserializer extends StdDeserializer<PostcodeRespon
 
 
     @Override
-    public PostcodeResponse deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+    public PostcodeResponse deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
         log.info("Enter PostcodeResponseDeserializer -> deserialize() with JsonParser: {}", p);
 
         JsonNode node = p.getCodec().readTree(p);

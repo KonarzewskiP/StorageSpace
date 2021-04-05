@@ -2,10 +2,9 @@ package com.storage.service;
 
 import com.google.gson.GsonBuilder;
 import com.storage.exceptions.PostcodeException;
-import com.storage.models.Warehouse;
-import com.storage.models.dto.WarehouseDto;
 import com.storage.models.postcodes_api.response.PostcodeResponse;
 import com.storage.models.postcodes_api.response.PostcodeValidationResponse;
+import com.storage.models.postcodes_api.response.Result;
 import com.storage.repositories.WarehouseRepository;
 import com.storage.service.postcodes_api.PostcodeService;
 import org.junit.Ignore;
@@ -37,6 +36,9 @@ import static com.storage.builders.MockDataForTest.createMapForBulkPostcodesRequ
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
@@ -93,21 +95,45 @@ public class PostcodeServiceTest {
                 .isInstanceOf(PostcodeException.class);
     }
 
-/*    @Test
-    @DisplayName("should return 404 when sending bad request for postcode validation")
-    void shouldReturn404WhenSendingBadRequestForPostcodeValidation() throws Exception {
+    @Test
+    @Ignore
+    @DisplayName("test2")
+    void test2() {
         //given
-        var client = HttpClient.newBuilder().build();
-        //when
-        var request = HttpRequest
-                .newBuilder(URI.create(postcodeUrl + "/NW13L"))
-                .version(HttpClient.Version.HTTP_2)
-                .GET()
+        var postcode = "SW178EF";
+        var postcodeResult = Result.builder()
+                .postcode("SW178EF")
+                .latitude(51.431047)
+                .longitude(-0.155261)
                 .build();
-        var response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        var postcodeResponse = PostcodeResponse.builder().status(200).result(List.of(postcodeResult)).build();
+        when(restTemplate.getForEntity(anyString(), any())).thenReturn(ResponseEntity.ok(postcodeResponse));
+        //when
+        var result = service.getCoordinatesPostcode(postcode);
         //then
-        assertThat(response.statusCode()).isEqualTo(404);
-    }*/
+        assertThat(result.getStatus()).isEqualTo(200);
+    }
+
+
+    @Test
+    @Ignore
+    @DisplayName("should return 404 when sending bad request for postcode validation")
+    void shouldReturn404WhenSendingBadRequestForPostcodeValidation() {
+        //given
+        var postcode = "NW1311";
+        //when
+        var result = restTemplate.getForEntity("http://localhost:"
+                + port + "/postcodes/" + postcode + "/nearest", PostcodeException.class);
+        System.out.println("-----------------------------------------------------------");
+        System.out.println(result.getStatusCodeValue());
+        System.out.println(result);
+        System.out.println("-----------------------------------------------------------");
+        //then
+        assertThat(result.getStatusCodeValue()).isEqualTo(404);
+    /*    assertThat(result)
+                .isInstanceOf(PostcodeException.class);*/
+    }
+
 
     @Test
     @DisplayName("should return 200 when sending correct request for many postcodes")
