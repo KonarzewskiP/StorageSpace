@@ -43,6 +43,7 @@ public class QuoteService {
      * @author Pawel Konarzewski
      * @since 02/03/2021
      */
+
     public QuoteResponseDto sendQuote(Quote quote) {
         log.info("Enter QuoteService -> sendQuote() with: " + quote);
         var validator = new QuoteValidator();

@@ -1,51 +1,76 @@
 package com.storage.models.postcodes_api.deserializer;
 
-import com.google.gson.*;
-import com.storage.models.postcodes_api.response.PostcodeSingleResponse;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
+import com.storage.models.postcodes_api.response.PostcodeResponse;
+import com.storage.models.postcodes_api.response.Result;
 import lombok.extern.slf4j.Slf4j;
 
-import java.lang.reflect.Type;
-
-/**
- * Class that deserialize JSON from rest API call to
- * PostcodeSingleResponse object.
- *
- * @author Pawel Konarzewski
- * @since 07/03/2021
- */
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
-public class PostcodeResponseDeserializer implements JsonDeserializer<PostcodeSingleResponse> {
+public class PostcodeResponseDeserializer extends StdDeserializer<PostcodeResponse> {
 
-    /**
-     * Method that deserialize JSON to PostcodeSingleResponse object.
-     * <p>
-     *
-     * Returns: PostcodeSingleResponse object with a list of ResultSingleResponse objects.
-     * The list contains longitudes and latitudes of specific postcode. If postcode in JSON
-     * is not valid then ResultSingleResponse object is created with latitude and longitude null values.
-     *
-     * @author Pawel Konarzewski
-     * @since 07/03/2021
-     */
+    public PostcodeResponseDeserializer() {
+        super((JavaType) null);
+    }
+
+    protected PostcodeResponseDeserializer(Class<?> vc) {
+        super(vc);
+    }
+
+    protected PostcodeResponseDeserializer(JavaType valueType) {
+        super(valueType);
+    }
+
 
     @Override
-    public PostcodeSingleResponse deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-        log.info("Enter PostcodeResponseDeserializer -> deserialize():");
-        var response = new PostcodeSingleResponse();
-        JsonObject jsonObject = json.getAsJsonObject();
+    public PostcodeResponse deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+        log.info("Enter PostcodeResponseDeserializer -> deserialize() with JsonParser: {}", p);
 
-        if (!jsonObject.get("status").getAsString().equals("200")) {
-            response.setStatus(jsonObject.get("status").getAsInt());
-            response.setError(jsonObject.get("error").getAsString());
-            return response;
+        JsonNode node = p.getCodec().readTree(p);
+        var status = node.get("status").asInt();
+
+        JsonNode results = node.get("result");
+
+        List<Result> resultsList = new ArrayList<>();
+        if (results.isArray()) {
+            for (JsonNode objNode : results) {
+                var result = objNode.get("result");
+                var postcode = result.get("postcode").asText();
+                var longitude = result.get("longitude").asDouble();
+                var latitude = result.get("latitude").asDouble();
+                resultsList.add(
+                        Result.builder()
+                                .postcode(postcode)
+                                .longitude(longitude)
+                                .latitude(latitude)
+                                .build()
+                );
+            }
+        } else {
+            var postcode = results.get("postcode").asText();
+            var longitude = results.get("longitude").asDouble();
+            var latitude = results.get("latitude").asDouble();
+            resultsList.add(
+                    Result.builder()
+                            .postcode(postcode)
+                            .longitude(longitude)
+                            .latitude(latitude)
+                            .build()
+            );
         }
 
-        response.setStatus(jsonObject.get("status").getAsInt());
-        var jsonObjectResult = jsonObject.get("result").getAsJsonObject();
-        response.setPostcode(jsonObjectResult.get("postcode").getAsString());
-        response.setLatitude(jsonObjectResult.get("latitude").getAsDouble());
-        response.setLongitude(jsonObjectResult.get("longitude").getAsDouble());
-        return response;
+        return PostcodeResponse.builder()
+                .status(status)
+                .result(resultsList)
+                .build();
     }
 }

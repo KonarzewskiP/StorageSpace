@@ -1,16 +1,12 @@
 package com.storage.builders;
 
-import com.storage.models.Quote;
-import com.storage.models.StorageRoom;
-import com.storage.models.User;
-import com.storage.models.Warehouse;
+import com.storage.models.*;
 import com.storage.models.dto.StorageRoomDto;
 import com.storage.models.dto.UserDto;
 import com.storage.models.dto.WarehouseDto;
 import com.storage.models.enums.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -49,9 +45,11 @@ public interface MockDataForTest {
         return Warehouse.builder()
                 .id(2L)
                 .name("Big Yellow")
-                .city("London")
-                .street("289 Kennington Ln")
-                .postCode("SE11 5QY")
+                .address(Address.builder()
+                        .city("London")
+                        .street("289 Kennington Ln")
+                        .postcode("SE11 5QY")
+                        .build())
                 .storageRooms(createStorageRoomsList())
                 .build();
     }
@@ -60,9 +58,11 @@ public interface MockDataForTest {
         return WarehouseDto.builder()
                 .id(2L)
                 .name("Big Yellow")
-                .city("London")
-                .street("289 Kennington Ln")
-                .postCode("SE11 5QY")
+                .address(Address.builder()
+                        .city("London")
+                        .street("289 Kennington Ln")
+                        .postcode("SE11 5QY")
+                        .build())
                 .build();
     }
 
@@ -118,7 +118,7 @@ public interface MockDataForTest {
                 .postcode("SE11 5QY")
                 .warehouseName("Big Yellow")
                 .size(Size.THREE_SINGLE_GARAGES)
-                .type(TypeOfAccount.HOME)
+                .type(TypeOfStorage.HOME)
                 .startDate(LocalDate.now().plusDays(1))
                 .duration(StorageDuration.EIGHT_TWELVE_WEEKS)
                 .build();

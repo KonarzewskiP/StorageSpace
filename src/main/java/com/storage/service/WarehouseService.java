@@ -35,11 +35,12 @@ public class WarehouseService {
         log.info("Enter WarehouseService -> addWarehouse() with: " + warehouseDto);
         isWarehouseDtoValid(warehouseDto);
         var warehouse = ModelMapper.fromWarehouseDtoToWarehouse(warehouseDto);
+        var address = warehouseDto.getAddress();
 
         var list = Util.createStorageRoomsList();
         storageRoomRepository.saveAll(list);
         warehouse.setStorageRooms(list);
-        warehouse.setPostCode(warehouse.getPostCode().toUpperCase());
+        warehouse.setAddress(address);
         log.info("Warehouse: " + warehouse);
         var addedWarehouse = warehouseRepository.save(warehouse);
         return fromWarehouseToWarehouseDto(addedWarehouse);
@@ -77,6 +78,4 @@ public class WarehouseService {
                 .map(ModelMapper::fromStorageRoomToStorageRoomDto)
                 .collect(Collectors.toList());
     }
-
-
 }

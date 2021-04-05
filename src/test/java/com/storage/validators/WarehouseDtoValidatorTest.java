@@ -62,7 +62,8 @@ class WarehouseDtoValidatorTest {
     void shouldReturnErrorWhenCityIsNull() {
         //given
         var warehouseDto = createWarehouseDto();
-        warehouseDto.setCity(null);
+        var address = warehouseDto.getAddress();
+        address.setCity(null);
         //when
         var result = validator.validate(warehouseDto);
         //then
@@ -78,7 +79,8 @@ class WarehouseDtoValidatorTest {
     void shouldReturnErrorWhenStreetIsNull() {
         //given
         var warehouseDto = createWarehouseDto();
-        warehouseDto.setStreet(null);
+        var address = warehouseDto.getAddress();
+        address.setStreet(null);
         //when
         var result = validator.validate(warehouseDto);
         //then
@@ -94,7 +96,8 @@ class WarehouseDtoValidatorTest {
     void shouldReturnErrorWhenPostcodeIsNull() {
         //given
         var warehouseDto = createWarehouseDto();
-        warehouseDto.setPostCode(null);
+        var address = warehouseDto.getAddress();
+        address.setPostcode(null);
         //when
         var result = validator.validate(warehouseDto);
         //then
@@ -126,7 +129,8 @@ class WarehouseDtoValidatorTest {
     void shouldReturnErrorWhenCityIsEmpty() {
         //given
         var warehouseDto = createWarehouseDto();
-        warehouseDto.setCity("");
+        var address = warehouseDto.getAddress();
+        address.setCity("");
         //when
         var result = validator.validate(warehouseDto);
         //then
@@ -142,7 +146,8 @@ class WarehouseDtoValidatorTest {
     void shouldReturnErrorWhenStreetIsEmpty() {
         //given
         var warehouseDto = createWarehouseDto();
-        warehouseDto.setStreet("");
+        var address = warehouseDto.getAddress();
+        address.setStreet("");
         //when
         var result = validator.validate(warehouseDto);
         //then
@@ -158,7 +163,8 @@ class WarehouseDtoValidatorTest {
     void shouldReturnErrorWhenPostcodeIsEmpty() {
         //given
         var warehouseDto = createWarehouseDto();
-        warehouseDto.setPostCode("");
+        var address = warehouseDto.getAddress();
+        address.setPostcode("");
         //when
         var result = validator.validate(warehouseDto);
         //then
@@ -176,7 +182,8 @@ class WarehouseDtoValidatorTest {
     void shouldReturnErrorWhenPostcodeHasInvalidFormat(String postcode) {
         //given
         var warehouseDto = createWarehouseDto();
-        warehouseDto.setPostCode(postcode);
+        var address = warehouseDto.getAddress();
+        address.setPostcode(postcode);
         //when
         var result = validator.validate(warehouseDto);
         //then
@@ -193,7 +200,8 @@ class WarehouseDtoValidatorTest {
     @DisplayName("valid postcode should trigger no errors")
     void validPostcodeShouldTriggerNoErrors(String postcode) {
         var warehouseDto = createWarehouseDto();
-        warehouseDto.setPostCode(postcode);
+        var address = warehouseDto.getAddress();
+        address.setPostcode(postcode);
         //when
         var result = validator.validate(warehouseDto);
         //then

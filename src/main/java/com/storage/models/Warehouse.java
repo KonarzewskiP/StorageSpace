@@ -1,6 +1,7 @@
 package com.storage.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.storage.models.enums.SpecType;
 import lombok.*;
 import javax.persistence.*;
 import java.util.*;
@@ -16,9 +17,10 @@ public class Warehouse {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private String city;
-    private String street;
-    private String postCode;
+
+    @OneToOne(cascade = CascadeType.PERSIST,mappedBy = "warehouse")
+    private Address address;
+
     @OneToMany(
             cascade = {CascadeType.ALL}
     )
@@ -26,4 +28,6 @@ public class Warehouse {
     @JsonIgnore
     private List<StorageRoom> storageRooms = new ArrayList<>();
 
+    @Enumerated(EnumType.STRING)
+    private SpecType typeOfStorage;
 }

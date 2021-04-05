@@ -5,15 +5,33 @@ import lombok.Getter;
 @Getter
 public enum ExtraServices {
 
-    EXTENDED_HOURS("Extended hours access"),
-    FORKLIFTING("Forklifting"),
-    PARCEL_COURIER("Parcel courier service"),
-    ACCEPTING_DELIVERIES("Big Green accepting your deliveries"),
-    FLEXI_OFFICES("Flexi offices");
+    EXTENDED_HOURS,
+    FORKLIFTING,
+    PARCEL_COURIER,
+    ACCEPTING_DELIVERIES,
+    FLEXI_OFFICES;
 
-    private final String type;
 
-    ExtraServices(String type) {
-        this.type = type;
+    @Override
+    public String toString() {
+
+        switch (this) {
+            case FORKLIFTING -> {
+                return "Forklifting";
+            }
+            case FLEXI_OFFICES -> {
+                return "Flexi offices";
+            }
+            case EXTENDED_HOURS -> {
+                return "Extended hours access";
+            }
+            case PARCEL_COURIER -> {
+                return "Parcel courier service";
+            }
+            case ACCEPTING_DELIVERIES -> {
+                return "Accepting your deliveries";
+            }
+        }
+        return "Unknown service";
     }
 }

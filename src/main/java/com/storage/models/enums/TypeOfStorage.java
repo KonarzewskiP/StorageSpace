@@ -1,5 +1,5 @@
 package com.storage.models.enums;
 
-public enum TypeOfAccount {
+public enum TypeOfStorage {
     HOME, BUSINESS, STUDENT
 }
