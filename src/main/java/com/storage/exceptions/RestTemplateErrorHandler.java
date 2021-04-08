@@ -22,11 +22,8 @@ public class RestTemplateErrorHandler extends DefaultResponseErrorHandler {
         } else {
             log.error("Unknown HttpStatusCode with exception code: {} with message: {}", response.getStatusCode(), response.getStatusText());
         }
-        // For testing purposes
          String error = new String(response.getBody().readAllBytes(), StandardCharsets.UTF_8);
 
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        String error = objectMapper.readTree(response.getBody()).get("error").asText();
         throw new PostcodeException(response.getStatusCode(), error);
     }
 }

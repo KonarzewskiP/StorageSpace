@@ -1,5 +1,6 @@
 package com.storage.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,6 +24,7 @@ public class Address {
 
     @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "warehouse_id",unique = true)
+    @JsonIgnore
     private Warehouse warehouse;
 
 }

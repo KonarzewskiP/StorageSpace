@@ -1,5 +1,8 @@
 # StorageSpace
-REST API using Spring Framework.
+
+Storage Space is a REST application for renting storage space in different warehouses.
+It is built with Java, Spring Boot, and Spring Framework. 
+It enables to reserve a storage room at the specific warehouse and receive a quotation for a chosen room.
 
 Storage space is a fun project. The goal is to create a simple copy of Big Yellow Storage.
 
@@ -23,8 +26,6 @@ Storage space is a fun project. The goal is to create a simple copy of Big Yello
 * Mockito
 * Lombok  
 * Swagger
-* Gson
-
 
 ## The future of the project
 * Creating a frontend

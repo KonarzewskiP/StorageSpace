@@ -11,7 +11,7 @@ import org.mockito.Mock;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static com.storage.builders.MockDataForTest.createQuote;
+import static com.storage.builders.Fixtures.createQuote;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 

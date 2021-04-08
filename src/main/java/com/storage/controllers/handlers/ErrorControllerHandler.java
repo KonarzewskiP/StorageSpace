@@ -1,7 +1,10 @@
 package com.storage.controllers.handlers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.storage.exceptions.*;
 import com.storage.models.dto.CustomErrorResponseDto;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +15,10 @@ import java.time.LocalDateTime;
 
 @Slf4j
 @RestControllerAdvice
+@RequiredArgsConstructor
 public class ErrorControllerHandler {
+
+    private final ObjectMapper objectMapper;
 
     /**
      * The method throw custom error object for UserServiceException
@@ -26,7 +32,7 @@ public class ErrorControllerHandler {
     public ResponseEntity<CustomErrorResponseDto> handleValidationException(UserServiceException e) {
         log.error("Enter ErrorControllerHandler -> handleValidationException() DirectorServiceException with: " + e);
         return new ResponseEntity<>(
-                createCustomErrorResponse(e, HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value()),
+                createCustomErrorResponse(e.getMessage(), HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value()),
                 HttpStatus.BAD_REQUEST);
     }
     /**
@@ -41,7 +47,7 @@ public class ErrorControllerHandler {
     public ResponseEntity<CustomErrorResponseDto> handleValidationException(WarehouseServiceException e) {
         log.error("Enter ErrorControllerHandler -> handleValidationException() WarehouseServiceException with: " + e);
         return new ResponseEntity<>(
-                createCustomErrorResponse(e, HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value()),
+                createCustomErrorResponse(e.getMessage(), HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value()),
                 HttpStatus.BAD_REQUEST);
     }
     /**
@@ -56,7 +62,7 @@ public class ErrorControllerHandler {
     public ResponseEntity<CustomErrorResponseDto> handleValidationException(StorageRoomException e) {
         log.error("Enter ErrorControllerHandler -> handleValidationException() WarehouseServiceException with: " + e);
         return new ResponseEntity<>(
-                createCustomErrorResponse(e, HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value()),
+                createCustomErrorResponse(e.getMessage(), HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value()),
                 HttpStatus.BAD_REQUEST);
     }
     /**
@@ -72,7 +78,7 @@ public class ErrorControllerHandler {
         log.error("Enter ErrorControllerHandler -> handleNotFoundException() ResourceNotFoundException with: " + e);
 
         return new ResponseEntity<>(
-                createCustomErrorResponse(e, HttpStatus.NOT_FOUND.getReasonPhrase(), HttpStatus.NOT_FOUND.value()),
+                createCustomErrorResponse(e.getMessage(), HttpStatus.NOT_FOUND.getReasonPhrase(), HttpStatus.NOT_FOUND.value()),
                 HttpStatus.NOT_FOUND);
     }
     /**
@@ -88,7 +94,7 @@ public class ErrorControllerHandler {
         log.error("Enter ErrorControllerHandler -> handleNotFoundException() QuoteDetailsException with: " + e);
 
         return new ResponseEntity<>(
-                createCustomErrorResponse(e, HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value()),
+                createCustomErrorResponse(e.getMessage(), HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value()),
                 HttpStatus.BAD_REQUEST);
     }
 
@@ -101,11 +107,12 @@ public class ErrorControllerHandler {
      * @author Pawel Konarzewski
      */
     @ExceptionHandler(value = PostcodeException.class)
-    public ResponseEntity<CustomErrorResponseDto> handleNotFoundException(PostcodeException e) {
+    public ResponseEntity<CustomErrorResponseDto> handleNotFoundException(PostcodeException e) throws JsonProcessingException {
         log.error("Enter ErrorControllerHandler -> handleNotFoundException() PostcodeException with: " + e);
 
+        var error = objectMapper.readTree(e.getError()).get("error").asText();
         return new ResponseEntity<>(
-                createCustomErrorResponse(e, e.getStatusCode().getReasonPhrase(), e.getStatusCode().value()),
+                createCustomErrorResponse(error, e.getStatusCode().getReasonPhrase(), e.getStatusCode().value()),
                 e.getStatusCode());
     }
 
@@ -122,7 +129,7 @@ public class ErrorControllerHandler {
         log.error("Enter ErrorControllerHandler -> handleNotFoundException() EnumParsingException with: " + e);
 
         return new ResponseEntity<>(
-                createCustomErrorResponse(e, HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value()),
+                createCustomErrorResponse(e.getMessage(), HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value()),
                 HttpStatus.BAD_REQUEST);
     }
     /**
@@ -135,10 +142,10 @@ public class ErrorControllerHandler {
      *
      * @author Pawel Konarzewski
      */
-    private CustomErrorResponseDto createCustomErrorResponse(Exception e, String errorCode, Integer status) {
+    private CustomErrorResponseDto createCustomErrorResponse(String msg, String errorCode, Integer status) {
         return CustomErrorResponseDto.builder()
                 .errorCode(errorCode)
-                .errorMessage(e.getMessage())
+                .errorMessage(msg)
                 .status(status)
                 .timestamp(LocalDateTime.now())
                 .build();

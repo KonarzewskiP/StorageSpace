@@ -5,6 +5,9 @@ import com.storage.models.dto.StorageRoomDto;
 import com.storage.models.dto.UserDto;
 import com.storage.models.dto.WarehouseDto;
 import com.storage.models.enums.*;
+import com.storage.models.postcodes_api.response.PostcodeResponse;
+import com.storage.models.postcodes_api.response.PostcodeValidationResponse;
+import com.storage.models.postcodes_api.response.Result;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -15,12 +18,15 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public interface MockDataForTest {
+public class Fixtures {
 
-    LocalDate START_DATE = LocalDate.of(2021, 3, 13);
-    LocalDate END_DATE = LocalDate.of(2021, 4, 11);
+    private Fixtures() {
+    }
 
-    static User createUser() {
+    public static LocalDate START_DATE = LocalDate.of(2021, 3, 13);
+    public static LocalDate END_DATE = LocalDate.of(2021, 4, 11);
+
+    public static User createUser() {
         return User.builder()
                 .id(1L)
                 .firstName("Veronica")
@@ -30,7 +36,7 @@ public interface MockDataForTest {
                 .build();
     }
 
-    static UserDto createUserDto() {
+    public static UserDto createUserDto() {
         return UserDto.builder()
                 .id(10L)
                 .firstName("John")
@@ -41,7 +47,7 @@ public interface MockDataForTest {
                 .build();
     }
 
-    static Warehouse createWarehouse() {
+    public static Warehouse createWarehouse() {
         return Warehouse.builder()
                 .id(2L)
                 .name("Big Yellow")
@@ -54,7 +60,7 @@ public interface MockDataForTest {
                 .build();
     }
 
-    static WarehouseDto createWarehouseDto() {
+    public static WarehouseDto createWarehouseDto() {
         return WarehouseDto.builder()
                 .id(2L)
                 .name("Big Yellow")
@@ -66,7 +72,7 @@ public interface MockDataForTest {
                 .build();
     }
 
-    static StorageRoom createStorageRoom() {
+    public static StorageRoom createStorageRoom() {
         return StorageRoom.builder()
                 .id(3L)
                 .size(Size.GARDEN_SHED)
@@ -76,7 +82,7 @@ public interface MockDataForTest {
                 .build();
     }
 
-    static StorageRoomDto createStorageRoomDto() {
+    public static StorageRoomDto createStorageRoomDto() {
         return StorageRoomDto.builder()
                 .id(30L)
                 .size(Size.GARDEN_SHED)
@@ -86,7 +92,7 @@ public interface MockDataForTest {
                 .build();
     }
 
-    static List<StorageRoom> createStorageRoomsList() {
+    public static List<StorageRoom> createStorageRoomsList() {
         AtomicLong index = new AtomicLong(100L);
         return Arrays.stream(Size.values())
                 .map(size -> StorageRoom.builder()
@@ -96,7 +102,7 @@ public interface MockDataForTest {
                 .collect(Collectors.toList());
     }
 
-    static List<StorageRoom> createIncrementalNumberOfStorageRoomsList() {
+    public static List<StorageRoom> createIncrementalNumberOfStorageRoomsList() {
         AtomicLong index = new AtomicLong(100L);
         AtomicInteger count = new AtomicInteger(1);
         return Arrays.stream(Size.values())
@@ -110,7 +116,7 @@ public interface MockDataForTest {
                 .collect(Collectors.toList());
     }
 
-    static Quote createQuote() {
+    public static Quote createQuote() {
         return Quote.builder()
                 .firstName("John")
                 .surname("Bravo")
@@ -124,7 +130,35 @@ public interface MockDataForTest {
                 .build();
     }
 
-    static Map<String, List<String>> createMapForBulkPostcodesRequest() {
+    public static Map<String, List<String>> createMapForBulkPostcodesRequest() {
         return Map.of("postcodes", List.of("SE11 5QY", "SW19 3BE", "TW9 2JX"));
+    }
+
+    public static PostcodeResponse createPostcodeResponse() {
+        var postcodeResult = Result.builder()
+                .postcode("SW178EF")
+                .latitude(51.431047)
+                .longitude(-0.155261)
+                .build();
+
+        return PostcodeResponse.builder()
+                .status(200)
+                .result(List.of(postcodeResult))
+                .build();
+    }
+
+    public static PostcodeValidationResponse createPositivePostcodeValidationResponse(){
+        return PostcodeValidationResponse.builder()
+                .status(200)
+                .result(true)
+                .build();
+
+    }
+    public static PostcodeValidationResponse createNegativePostcodeValidationResponse(){
+        return PostcodeValidationResponse.builder()
+                .status(200)
+                .result(false)
+                .build();
+
     }
 }

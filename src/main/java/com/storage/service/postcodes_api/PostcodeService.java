@@ -54,6 +54,7 @@ public class PostcodeService {
      */
 
     public PostcodeValidationResponse isValid(String postcode) {
+        log.info("Enter PostcodeService -> isValid() with: {}", postcode);
 
         String validPostcode = postcode.toUpperCase().replaceAll(" ", "").concat("/validate");
         ResponseEntity<PostcodeValidationResponse> response =
@@ -64,7 +65,8 @@ public class PostcodeService {
 
     /**
      * The method that calls API and returns PostcodeResponse object
-     * with coordinates for a single postcode.
+     * with coordinates for a single postcode. In case of invalid postcode restTemplate will throw
+     * an error with 404 status code.
      * <p>
      * Params: postcode - postcode from the UK
      * Returns: PostcodeResponse object with longitude and latitude coordinates.
@@ -73,12 +75,11 @@ public class PostcodeService {
      */
 
     public PostcodeResponse getCoordinatesPostcode(String postcode) {
-        log.info("Enter PostcodeService -> getLatAndLngForSinglePostcode() with: {}", postcode);
+        log.info("Enter PostcodeService -> getCoordinatesPostcode() with: {}", postcode);
 
         String validPostcode = postcode.toUpperCase().replaceAll(" ", "");
         ResponseEntity<PostcodeResponse> response =
                 restTemplate.getForEntity(postcodeUrl + "/" + validPostcode, PostcodeResponse.class);
-
         return response.getBody();
     }
 
@@ -109,15 +110,15 @@ public class PostcodeService {
 
 
     /**
-     * Method that search for nearest Warehouses according to given postcode.
+     * Method that sort warehouses by distance from user postcode.
      *
      * @param postcode
-     * @return ResponseEntity with a <code>List<WarehouseDto></code>.
+     * @return <code>List<WarehouseDto></code>.
      * @author Pawel Konarzewski
      */
     public List<WarehouseDto> getOrderedWarehousesByDistanceFromPostcode(String postcode) {
         log.info("Enter PostcodeService -> getOrderedWarehousesByDistanceFromPostcode() with: " + postcode);
-        isValid(postcode);
+
 
         var warehousesList = warehouseRepository.findAll();
         var listOfPostcodesFromEachWarehouse = warehousesList
@@ -125,11 +126,12 @@ public class PostcodeService {
                 .map(warehouse -> warehouse.getAddress().getPostcode())
                 .collect(Collectors.toList());
 
-        var userPostcodeCoordinates = getCoordinatesPostcode(postcode);
         var coordinatesOfWarehouses = getCoordinatesPostcodes(listOfPostcodesFromEachWarehouse);
-        var map = generateMapOfPostcodesWithDistanceFromPostcode(userPostcodeCoordinates, coordinatesOfWarehouses);
-        LinkedHashMap<String, Double> sortedMap = sortPostcodesByDistance(map);
-        List<Warehouse> orderedList = getOrderedListOfWarehouses(warehousesList, sortedMap);
+        var userPostcodeCoordinates = getCoordinatesPostcode(postcode);
+
+        var map = getWarehousePostcodeByDistanceFromUserPostcode(userPostcodeCoordinates, coordinatesOfWarehouses);
+        var sortedMap = sortPostcodesByDistance(map);
+        var orderedList = getOrderedListOfWarehouses(warehousesList, sortedMap);
         return ModelMapper.fromWarehouseListToWarehouseDtoList(orderedList);
     }
 
@@ -164,7 +166,7 @@ public class PostcodeService {
                         LinkedHashMap::new));
     }
 
-    private Map<String, Double> generateMapOfPostcodesWithDistanceFromPostcode(PostcodeResponse coordinatesForPostcode, PostcodeResponse coordinatesOfWarehouses) {
+    private Map<String, Double> getWarehousePostcodeByDistanceFromUserPostcode(PostcodeResponse coordinatesForPostcode, PostcodeResponse coordinatesOfWarehouses) {
         return coordinatesOfWarehouses.getResult().stream()
                 .collect(Collectors.toMap(Result::getPostcode,
                         storage -> Util.calculateDistance(storage, coordinatesForPostcode)));

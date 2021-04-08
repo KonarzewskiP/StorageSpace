@@ -4,8 +4,8 @@ import com.storage.models.dto.StorageRoomDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static com.storage.builders.MockDataForTest.START_DATE;
-import static com.storage.builders.MockDataForTest.createStorageRoomDto;
+import static com.storage.builders.Fixtures.START_DATE;
+import static com.storage.builders.Fixtures.createStorageRoomDto;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 

@@ -15,8 +15,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Optional;
 
-import static com.storage.builders.MockDataForTest.createUser;
-import static com.storage.builders.MockDataForTest.createUserDto;
+import static com.storage.builders.Fixtures.createUser;
+import static com.storage.builders.Fixtures.createUserDto;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.api.Assertions.assertAll;

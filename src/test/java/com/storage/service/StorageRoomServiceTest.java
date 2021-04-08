@@ -1,6 +1,6 @@
 package com.storage.service;
 
-import com.storage.builders.MockDataForTest;
+import com.storage.builders.Fixtures;
 import com.storage.exceptions.ResourceNotFoundException;
 import com.storage.exceptions.StorageRoomException;
 import com.storage.models.StorageRoom;
@@ -15,8 +15,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Optional;
 
-import static com.storage.builders.MockDataForTest.createStorageRoom;
-import static com.storage.builders.MockDataForTest.createStorageRoomDto;
+import static com.storage.builders.Fixtures.createStorageRoom;
+import static com.storage.builders.Fixtures.createStorageRoomDto;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
@@ -39,7 +39,7 @@ public class StorageRoomServiceTest {
         var storageRoom = createStorageRoom();
         when(storageRoomRepository.save(any(StorageRoom.class))).thenReturn(storageRoom);
         when(storageRoomRepository.findById(any(Long.class))).thenReturn(Optional.of(storageRoom));
-        var storageRoomDto = MockDataForTest.createStorageRoomDto();
+        var storageRoomDto = Fixtures.createStorageRoomDto();
         //when
         var result = service.updateStorageRoom(storageRoomDto);
         //then
