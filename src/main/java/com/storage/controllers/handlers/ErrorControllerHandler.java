@@ -35,6 +35,7 @@ public class ErrorControllerHandler {
                 createCustomErrorResponse(e.getMessage(), HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value()),
                 HttpStatus.BAD_REQUEST);
     }
+
     /**
      * The method throw custom error object for UserServiceException
      * <p>
@@ -50,6 +51,7 @@ public class ErrorControllerHandler {
                 createCustomErrorResponse(e.getMessage(), HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value()),
                 HttpStatus.BAD_REQUEST);
     }
+
     /**
      * The method throw custom error object for UserServiceException
      * <p>
@@ -65,6 +67,7 @@ public class ErrorControllerHandler {
                 createCustomErrorResponse(e.getMessage(), HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value()),
                 HttpStatus.BAD_REQUEST);
     }
+
     /**
      * The method throw custom error object for UserServiceException
      * <p>
@@ -81,6 +84,7 @@ public class ErrorControllerHandler {
                 createCustomErrorResponse(e.getMessage(), HttpStatus.NOT_FOUND.getReasonPhrase(), HttpStatus.NOT_FOUND.value()),
                 HttpStatus.NOT_FOUND);
     }
+
     /**
      * The method throw custom error object for UserServiceException
      * <p>
@@ -110,7 +114,11 @@ public class ErrorControllerHandler {
     public ResponseEntity<CustomErrorResponseDto> handleNotFoundException(PostcodeException e) throws JsonProcessingException {
         log.error("Enter ErrorControllerHandler -> handleNotFoundException() PostcodeException with: " + e);
 
-        var error = objectMapper.readTree(e.getError()).get("error").asText();
+        var error = objectMapper
+                .readTree(e.getError())
+                .get("error")
+                .asText();
+
         return new ResponseEntity<>(
                 createCustomErrorResponse(error, e.getStatusCode().getReasonPhrase(), e.getStatusCode().value()),
                 e.getStatusCode());
@@ -132,6 +140,7 @@ public class ErrorControllerHandler {
                 createCustomErrorResponse(e.getMessage(), HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value()),
                 HttpStatus.BAD_REQUEST);
     }
+
     /**
      * The method that creates custom CustomErrorResponse
      * <p>

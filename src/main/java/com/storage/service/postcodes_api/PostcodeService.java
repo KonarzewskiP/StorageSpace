@@ -108,7 +108,6 @@ public class PostcodeService {
         return response.getBody();
     }
 
-
     /**
      * Method that sort warehouses by distance from user postcode.
      *
