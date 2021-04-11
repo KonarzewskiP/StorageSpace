@@ -32,7 +32,6 @@ public class Fixtures {
                 .firstName("Veronica")
                 .lastName("Jobs")
                 .gender(Gender.FEMALE)
-
                 .build();
     }
 
