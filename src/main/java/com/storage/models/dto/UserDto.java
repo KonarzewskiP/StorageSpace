@@ -5,7 +5,6 @@ import com.storage.models.enums.Role;
 import lombok.*;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class UserDto {

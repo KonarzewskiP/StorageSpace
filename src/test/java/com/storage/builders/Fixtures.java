@@ -1,13 +1,14 @@
 package com.storage.builders;
 
 import com.storage.models.*;
+import com.storage.models.dto.AddressDto;
 import com.storage.models.dto.StorageRoomDto;
 import com.storage.models.dto.UserDto;
 import com.storage.models.dto.WarehouseDto;
+import com.storage.models.dto.externals.postcode.Result;
 import com.storage.models.enums.*;
-import com.storage.models.postcodes_api.response.PostcodeResponse;
-import com.storage.models.postcodes_api.response.PostcodeValidationResponse;
-import com.storage.models.postcodes_api.response.Result;
+import com.storage.models.dto.externals.postcode.PostcodeResponse;
+import com.storage.models.dto.externals.postcode.PostcodeValidationResponse;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -63,7 +64,7 @@ public class Fixtures {
         return WarehouseDto.builder()
                 .id(2L)
                 .name("Big Yellow")
-                .address(Address.builder()
+                .address(AddressDto.builder()
                         .city("London")
                         .street("289 Kennington Ln")
                         .postcode("SE11 5QY")
@@ -142,7 +143,7 @@ public class Fixtures {
 
         return PostcodeResponse.builder()
                 .status(200)
-                .result(List.of(postcodeResult))
+                .result(postcodeResult)
                 .build();
     }
 
@@ -159,5 +160,22 @@ public class Fixtures {
                 .result(false)
                 .build();
 
+    }
+
+    public static AddressDto createAddressDto(){
+        return AddressDto.builder()
+                .city("London")
+                .postcode("NW1 9PA")
+                .street("Camden St")
+                .build();
+    }
+
+    public static Address createAddress(){
+        return Address.builder()
+                .id(1L)
+                .city("London")
+                .postcode("NW1 9PA")
+                .street("Camden St")
+                .build();
     }
 }

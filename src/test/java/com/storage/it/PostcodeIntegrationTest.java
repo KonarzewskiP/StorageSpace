@@ -34,7 +34,7 @@ public class PostcodeIntegrationTest {
         String postcode = "SW178EF";
         //when
         var mockResult = mockMvc.perform(get("/postcodes/" + postcode + "/nearest"))
-                .andExpect(status().is2xxSuccessful());
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -45,8 +45,7 @@ public class PostcodeIntegrationTest {
         //when
         var mockResult = mockMvc.perform(get("/postcodes/" + postcode + "/nearest"))
                 .andDo(print())
-                .andExpect(status().is4xxClientError())
-                .andExpect(jsonPath("$.status").value(404))
+                .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.errorMessage").value("Invalid postcode"))
                 .andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(PostcodeException.class));
     }

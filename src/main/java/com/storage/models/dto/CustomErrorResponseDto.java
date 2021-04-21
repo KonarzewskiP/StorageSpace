@@ -10,12 +10,11 @@ import java.time.LocalDateTime;
 
 @Builder
 @Getter
-@Setter
 public class CustomErrorResponseDto  {
 
-    private String errorCode;
-    private String errorMessage;
-    private int status;
+    private final String errorCode;
+    private final String errorMessage;
+    private final int status;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
-    private LocalDateTime timestamp;
+    private final LocalDateTime timestamp;
 }

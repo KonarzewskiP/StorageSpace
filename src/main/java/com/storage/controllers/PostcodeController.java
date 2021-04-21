@@ -1,7 +1,7 @@
 package com.storage.controllers;
 
 import com.storage.models.dto.WarehouseDto;
-import com.storage.models.postcodes_api.response.PostcodeValidationResponse;
+import com.storage.models.dto.externals.postcode.PostcodeValidationResponse;
 import com.storage.service.postcodes_api.PostcodeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

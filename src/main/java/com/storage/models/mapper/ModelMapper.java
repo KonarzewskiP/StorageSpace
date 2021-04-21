@@ -4,6 +4,7 @@ import com.storage.models.Address;
 import com.storage.models.User;
 import com.storage.models.StorageRoom;
 import com.storage.models.Warehouse;
+import com.storage.models.dto.AddressDto;
 import com.storage.models.dto.UserDto;
 import com.storage.models.dto.StorageRoomDto;
 import com.storage.models.dto.WarehouseDto;
@@ -39,7 +40,7 @@ public interface ModelMapper {
         return warehouse == null ? null : WarehouseDto.builder()
                 .id(warehouse.getId())
                 .name(warehouse.getName())
-                .address(warehouse.getAddress())
+                .address(fromAddressToAddressDto(warehouse.getAddress()))
                 .build();
     }
 
@@ -47,7 +48,23 @@ public interface ModelMapper {
         return warehouseDto == null ? null : Warehouse.builder()
                 .id(warehouseDto.getId())
                 .name(warehouseDto.getName())
-                .address(warehouseDto.getAddress())
+                .address(fromAddressDtoToAddress(warehouseDto.getAddress()))
+                .build();
+    }
+
+    static AddressDto fromAddressToAddressDto(Address address) {
+        return address == null ? null : AddressDto.builder()
+                .postcode(address.getPostcode())
+                .city(address.getCity())
+                .street(address.getStreet())
+                .build();
+    }
+
+    static Address fromAddressDtoToAddress(AddressDto addressDto) {
+        return addressDto == null ? null : Address.builder()
+                .postcode(addressDto.getPostcode())
+                .city(addressDto.getCity())
+                .street(addressDto.getStreet())
                 .build();
     }
 

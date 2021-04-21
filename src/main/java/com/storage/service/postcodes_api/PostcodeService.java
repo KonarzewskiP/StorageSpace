@@ -4,8 +4,11 @@ package com.storage.service.postcodes_api;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.storage.models.Warehouse;
 import com.storage.models.dto.WarehouseDto;
+import com.storage.models.dto.externals.postcode.PostcodeResponse;
+import com.storage.models.dto.externals.postcode.PostcodeResponseMany;
+import com.storage.models.dto.externals.postcode.PostcodeValidationResponse;
+import com.storage.models.dto.externals.postcode.ResultMany;
 import com.storage.models.mapper.ModelMapper;
-import com.storage.models.postcodes_api.response.*;
 import com.storage.repositories.WarehouseRepository;
 import com.storage.utils.Util;
 import lombok.RequiredArgsConstructor;
@@ -94,7 +97,7 @@ public class PostcodeService {
      * @author Pawel Konarzewski
      */
 
-    public PostcodeResponse getCoordinatesPostcodes(List<String> postcodes) {
+    public PostcodeResponseMany getCoordinatesPostcodes(List<String> postcodes) {
         log.info("Enter PostcodeService -> getCoordinatesPostcodes() with: " + postcodes);
         var map = Map.of("postcodes", postcodes);
 
@@ -103,9 +106,7 @@ public class PostcodeService {
         var json = objectMapper.valueToTree(map);
         HttpEntity<Object> request = new HttpEntity<>(json, headers);
 
-        ResponseEntity<PostcodeResponse> response =
-                restTemplate.postForEntity(postcodeUrl, request, PostcodeResponse.class);
-        return response.getBody();
+        return restTemplate.postForObject(postcodeUrl, request, PostcodeResponseMany.class);
     }
 
     /**
@@ -145,9 +146,10 @@ public class PostcodeService {
      */
 
     private List<Warehouse> getOrderedListOfWarehouses(List<Warehouse> warehousesList, LinkedHashMap<String, Double> sortedMap) {
-        return sortedMap.keySet().stream().map(aDouble -> {
+        log.info("Enter PostcodeService -> getOrderedListOfWarehouses()");
+        return sortedMap.keySet().stream().map(postcode -> {
             for (Warehouse x : warehousesList) {
-                if (aDouble.equals(x.getAddress().getPostcode())) {
+                if (postcode.equals(x.getAddress().getPostcode())) {
                     return x;
                 }
             }
@@ -156,6 +158,7 @@ public class PostcodeService {
     }
 
     private LinkedHashMap<String, Double> sortPostcodesByDistance(Map<String, Double> map) {
+        log.info("Enter PostcodeService -> sortPostcodesByDistance() ");
         return map
                 .entrySet()
                 .stream()
@@ -165,10 +168,11 @@ public class PostcodeService {
                         LinkedHashMap::new));
     }
 
-    private Map<String, Double> getWarehousePostcodeByDistanceFromUserPostcode(PostcodeResponse coordinatesForPostcode, PostcodeResponse coordinatesOfWarehouses) {
+    private Map<String, Double> getWarehousePostcodeByDistanceFromUserPostcode(PostcodeResponse coordinatesForPostcode, PostcodeResponseMany coordinatesOfWarehouses) {
+        log.info("Enter PostcodeService -> getWarehousePostcodeByDistanceFromUserPostcode() ");
         return coordinatesOfWarehouses.getResult().stream()
-                .collect(Collectors.toMap(Result::getPostcode,
-                        storage -> Util.calculateDistance(storage, coordinatesForPostcode)));
+                .collect(Collectors.toMap((ResultMany resultMany) -> resultMany.getResult().getPostcode(),
+                        storage -> Util.calculateDistance(storage.getResult(), coordinatesForPostcode)));
     }
 
 

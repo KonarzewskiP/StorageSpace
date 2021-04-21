@@ -18,7 +18,8 @@ public class Warehouse {
     private Long id;
     private String name;
 
-    @OneToOne(cascade = CascadeType.PERSIST,mappedBy = "warehouse")
+    @OneToOne
+    @JoinColumn(name = "address_id")
     private Address address;
 
     @OneToMany(

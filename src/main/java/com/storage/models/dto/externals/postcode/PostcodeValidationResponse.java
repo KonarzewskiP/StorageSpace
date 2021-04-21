@@ -1,4 +1,4 @@
-package com.storage.models.postcodes_api.response;
+package com.storage.models.dto.externals.postcode;
 
 import lombok.*;
 

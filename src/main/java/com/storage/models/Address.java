@@ -1,10 +1,6 @@
 package com.storage.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -21,10 +17,4 @@ public class Address {
     private String city;
     private String postcode;
     private String street;
-
-    @OneToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "warehouse_id",unique = true)
-    @JsonIgnore
-    private Warehouse warehouse;
-
 }

@@ -3,8 +3,10 @@ package com.storage.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.storage.models.Address;
 import com.storage.models.Warehouse;
-import com.storage.models.postcodes_api.response.PostcodeResponse;
-import com.storage.models.postcodes_api.response.Result;
+import com.storage.models.dto.externals.postcode.PostcodeResponse;
+import com.storage.models.dto.externals.postcode.PostcodeResponseMany;
+import com.storage.models.dto.externals.postcode.Result;
+import com.storage.models.dto.externals.postcode.ResultMany;
 import com.storage.repositories.WarehouseRepository;
 import com.storage.service.postcodes_api.PostcodeService;
 import org.junit.jupiter.api.DisplayName;
@@ -51,10 +53,9 @@ public class PostcodeServiceTest {
         //then
         assertAll(
                 () -> assertThat(result.getStatus()).isEqualTo(200),
-                () -> assertThat(result.getResult().size()).isEqualTo(1),
-                () -> assertThat(result.getResult().get(0).getLongitude()).isEqualTo(-0.155261),
-                () -> assertThat(result.getResult().get(0).getLatitude()).isEqualTo(51.431047),
-                () -> assertThat(result.getResult().get(0).getPostcode()).isEqualTo(postcode)
+                () -> assertThat(result.getResult().getLongitude()).isEqualTo(-0.155261),
+                () -> assertThat(result.getResult().getLatitude()).isEqualTo(51.431047),
+                () -> assertThat(result.getResult().getPostcode()).isEqualTo(postcode)
         );
     }
 
@@ -96,14 +97,13 @@ public class PostcodeServiceTest {
         //given
         var postcodesResponse = getPostcodeResponseForManyPostcodes();
         ReflectionTestUtils.setField(service, "postcodeUrl", "postcode.api.url");
-        when(restTemplate.postForEntity(anyString(), any(), any())).thenReturn(ResponseEntity.ok(postcodesResponse));
+        when(restTemplate.postForObject(anyString(), any(), any())).thenReturn(postcodesResponse);
         //when
         var result = service.getCoordinatesPostcodes(List.of());
         //then
         assertAll(
-                () -> assertThat(result.getStatus()).isEqualTo(200),
                 () -> assertThat(result.getResult().size()).isEqualTo(4),
-                () -> assertThat(result.getResult().get(0).getPostcode()).isEqualTo("N183AF")
+                () -> assertThat(result.getResult().get(0).getResult().getPostcode()).isEqualTo("N183AF")
         );
 
     }
@@ -116,7 +116,7 @@ public class PostcodeServiceTest {
         var listOfWarehouses = getListOfWarehouses();
         var postcodeCoordinates = PostcodeResponse.builder()
                 .status(200)
-                .result(List.of(Result.builder()
+                .result((Result.builder()
                         .postcode("E176PJ")
                         .longitude(-0.027387)
                         .latitude(51.585106)
@@ -126,7 +126,7 @@ public class PostcodeServiceTest {
         ReflectionTestUtils.setField(service, "postcodeUrl", "postcode.api.url");
         when(restTemplate.getForEntity(anyString(), any())).thenReturn(ResponseEntity.ok(postcodeCoordinates));
         when(warehouseRepository.findAll()).thenReturn(listOfWarehouses);
-        when(restTemplate.postForEntity(anyString(), any(), any())).thenReturn(ResponseEntity.ok(postcodesResponse));
+        when(restTemplate.postForObject(anyString(), any(), any())).thenReturn(postcodesResponse);
         //when
         var result = service.getOrderedWarehousesByDistanceFromPostcode(postcode);
         //then
@@ -142,8 +142,6 @@ public class PostcodeServiceTest {
         );
 
     }
-
-
 
 
     private List<Warehouse> getListOfWarehouses() {
@@ -177,30 +175,37 @@ public class PostcodeServiceTest {
                         .build());
     }
 
-    private PostcodeResponse getPostcodeResponseForManyPostcodes() {
-        return PostcodeResponse.builder()
+    private PostcodeResponseMany getPostcodeResponseForManyPostcodes() {
+        return PostcodeResponseMany.builder()
                 .status(200)
-                .result(List.of(Result.builder()
-                                .postcode("N183AF")
-                                .longitude(-0.045596)
-                                .latitude(51.612134)
+                .result(List.of(ResultMany.builder()
+                                .result(Result.builder()
+                                        .postcode("N183AF")
+                                        .longitude(-0.045596)
+                                        .latitude(51.612134)
+                                        .build())
                                 .build(),
-                        Result.builder()
-                                .postcode("SW62ST")
-                                .longitude(-0.185081)
-                                .latitude(51.468849)
+                        ResultMany.builder()
+                                .result(Result.builder()
+                                        .postcode("SW62ST")
+                                        .longitude(-0.185081)
+                                        .latitude(51.468849)
+                                        .build())
                                 .build(),
-                        Result.builder()
-                                .postcode("BR13RB")
-                                .longitude(0.011502)
-                                .latitude(51.410732)
+                        ResultMany.builder()
+                                .result(Result.builder()
+                                        .postcode("BR13RB")
+                                        .longitude(0.011502)
+                                        .latitude(51.410732)
+                                        .build())
                                 .build(),
-                        Result.builder()
-                                .postcode("IG118BL")
-                                .longitude(0.068501)
-                                .latitude(51.539173)
+                        ResultMany.builder()
+                                .result(Result.builder()
+                                        .postcode("IG118BL")
+                                        .longitude(0.068501)
+                                        .latitude(51.539173)
+                                        .build())
                                 .build()))
                 .build();
     }
-
 }
