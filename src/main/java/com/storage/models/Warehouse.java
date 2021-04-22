@@ -13,6 +13,7 @@ import java.util.*;
 @Builder
 @Table(name = "warehouses")
 public class Warehouse {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,8 +28,10 @@ public class Warehouse {
     )
     @JoinColumn(name = "warehouse_id")
     @JsonIgnore
+    @Builder.Default
     private List<StorageRoom> storageRooms = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
-    private SpecType typeOfStorage;
+    @Builder.Default
+    private SpecType specType = SpecType.REGULAR;
 }

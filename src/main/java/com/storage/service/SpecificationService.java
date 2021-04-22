@@ -9,11 +9,22 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+/**
+ * @author Pawel Konarzewski
+ * @version 1.0
+ */
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class SpecificationService {
+
+    /**
+     * The method that return the specific type of specification with details.
+     * <p>
+     * @param specType enum with information to update.
+     * @return Exact data about the specification type.
+     */
 
     public WarehouseSpec getSpec(SpecType specType) {
         log.info("Enter SpecificationController -> getSpec() of: " + specType);

@@ -2,6 +2,7 @@
 package com.storage.service.postcodes_api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.storage.exceptions.PostcodeException;
 import com.storage.models.Warehouse;
 import com.storage.models.dto.WarehouseDto;
 import com.storage.models.dto.externals.postcode.PostcodeResponse;
@@ -48,12 +49,13 @@ public class PostcodeService {
     private final WarehouseRepository warehouseRepository;
 
     /**
-     * The method that calls API and returns Boolean object.
+     * The method that calls external API to check if postcode given by the user is valid.
+     * Only postcodes from the UK can be verified.
      * <p>
-     * Params: postcode - postcode from the UK
-     * Returns: PostcodeValidation object with status code and result.
      *
-     * @author Pawel Konarzewski
+     * @param postcode postcode given by the user.
+     * @return PostcodeValidation object with status code and result. If postcode exist,
+     * return the result as true, otherwise the result is false.
      */
 
     public PostcodeValidationResponse isValid(String postcode) {
@@ -67,14 +69,16 @@ public class PostcodeService {
     }
 
     /**
-     * The method that calls API and returns PostcodeResponse object
-     * with coordinates for a single postcode. In case of invalid postcode restTemplate will throw
-     * an error with 404 status code.
+     * The method that calls external API and returns coordinates for postcode.
+     * In case of invalid postcode restTemplate will throw an RestClientException which is
+     * handled by RestTemplateErrorHandler class.
      * <p>
-     * Params: postcode - postcode from the UK
-     * Returns: PostcodeResponse object with longitude and latitude coordinates.
+     * Only postcodes from the UK can be verified.
      *
-     * @author Pawel Konarzewski
+     * @param postcode postcode given by the user.
+     * @throws PostcodeException if the postcode is invalid.
+     * @return object with the longitude and latitude for postcode.
+     *
      */
 
     public PostcodeResponse getCoordinatesPostcode(String postcode) {
@@ -87,14 +91,14 @@ public class PostcodeService {
     }
 
     /**
-     * The method that call postcodes.io API and returns PostcodeResponse object with
-     * list of Result objects containing coordinates for many postcodes.
+     * The method that calls external API and returns longitudes and latitudes of each postcode.
+     * If a postcode is invalid, then returns null values, otherwise it returns data for
+     * specific postcode.
      * <p>
-     * Params: postcodes - an object containing a list of postcodes from the UK
-     * Returns: PostcodeResponse object with a list of Result objects.
-     * The list contains postcode, longitudes and latitudes of specific postcode.
+     * Only postcodes from the UK can be verified.
      *
-     * @author Pawel Konarzewski
+     * @param postcodes list of postcodes.
+     * @return object holding list of the data containing longitudes and latitudes of each postcode.
      */
 
     public PostcodeResponseMany getCoordinatesPostcodes(List<String> postcodes) {
@@ -110,16 +114,15 @@ public class PostcodeService {
     }
 
     /**
-     * Method that sort warehouses by distance from user postcode.
+     * The method that sort all warehouses from the database in ascending order by distance from
+     * the postcode given by user in call to the controller method- getNearestWarehouses().
      *
-     * @param postcode
-     * @return <code>List<WarehouseDto></code>.
-     * @author Pawel Konarzewski
+     * @param postcode postcode given by the user.
+     * @return list of ordered warehouses in descending order. From the closest to the most further away,
+     * according to the postcode given by the user.
      */
     public List<WarehouseDto> getOrderedWarehousesByDistanceFromPostcode(String postcode) {
         log.info("Enter PostcodeService -> getOrderedWarehousesByDistanceFromPostcode() with: " + postcode);
-
-
         var warehousesList = warehouseRepository.findAll();
         var listOfPostcodesFromEachWarehouse = warehousesList
                 .stream()
@@ -136,26 +139,37 @@ public class PostcodeService {
     }
 
     /**
-     * Method that return list of Warehouses ordered by distance from postcode given by User.
+     * The method is to convert the list of warehouses from the database and
+     * sorted postcodes of warehouses into an ordered list of warehouses.
      *
-     * @param sortedMap - sorted map of warehouses by postcode. Key is a string representing postcode of warehouse.
-     *                  Value is a double value representing distance from warehouse to the postcode given by user
-     *                  in call to PostcodeController.
-     * @return <code>List<Warehouse></code>.
-     * @author Pawel Konarzewski
+     * @param sortedPostcodesByDistance sorted postcodes by distance. Key is a string representing the
+     *                                  postcode of the warehouse. Value is a double value representing the
+     *                                  distance from the warehouse to the postcode given by the user in the
+     *                                  call to the controller method - getNearestWarehouses().
+     * @param warehousesList            list of all warehouse retrieved from the database.
+     * @return list of warehouses ordered by distance from the postcode given by the user.
      */
 
-    private List<Warehouse> getOrderedListOfWarehouses(List<Warehouse> warehousesList, LinkedHashMap<String, Double> sortedMap) {
+    private List<Warehouse> getOrderedListOfWarehouses(List<Warehouse> warehousesList, LinkedHashMap<String, Double> sortedPostcodesByDistance) {
         log.info("Enter PostcodeService -> getOrderedListOfWarehouses()");
-        return sortedMap.keySet().stream().map(postcode -> {
-            for (Warehouse x : warehousesList) {
-                if (postcode.equals(x.getAddress().getPostcode())) {
-                    return x;
+        return sortedPostcodesByDistance.keySet().stream().map(postcode -> {
+            for (Warehouse warehouse : warehousesList) {
+                if (postcode.equals(warehouse.getAddress().getPostcode())) {
+                    return warehouse;
                 }
             }
             return null;
         }).collect(Collectors.toList());
     }
+
+    /**
+     * The method is to sort in descending order postcodes of warehouses by distance from the postcode
+     * given by the user.
+     *
+     * @param map data structure holding postcodes of warehouses as a key and distance
+     *            from this postcode to the postcode given by the user.
+     * @return map of ordered warehouse postcodes by distance from the postcode given by the user.
+     */
 
     private LinkedHashMap<String, Double> sortPostcodesByDistance(Map<String, Double> map) {
         log.info("Enter PostcodeService -> sortPostcodesByDistance() ");
@@ -167,6 +181,15 @@ public class PostcodeService {
                         (e1, e2) -> e1,
                         LinkedHashMap::new));
     }
+
+    /**
+     * The method is to get the calculated distance from each warehouse to the postcode given by the user.
+     *
+     * @param coordinatesForPostcode  coordinates of the postcode given by the user in the call to the controller
+     *                                method - getNearestWarehouses().
+     * @param coordinatesOfWarehouses coordinates of all warehouses from the database.
+     * @return map of postcodes as a key and distance from the postcode given by the user as a value.
+     */
 
     private Map<String, Double> getWarehousePostcodeByDistanceFromUserPostcode(PostcodeResponse coordinatesForPostcode, PostcodeResponseMany coordinatesOfWarehouses) {
         log.info("Enter PostcodeService -> getWarehousePostcodeByDistanceFromUserPostcode() ");

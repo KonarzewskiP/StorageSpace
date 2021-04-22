@@ -3,7 +3,7 @@ VALUES (1, 'Rick', 'Sanchez', 'rick@sanchez.com', 'ADMIN', 'MALE'),
        (2, 'Morty', 'Smith', 'morty@smith.com', 'CUSTOMER', 'MALE'),
        (3, 'Summer', 'Smith', 'summer@smith.com', 'CUSTOMER', 'FEMALE');
 
-INSERT INTO warehouses (id, name, type_of_storage, address_id)
+INSERT INTO warehouses (id, name, spec_type, address_id)
 VALUES (1, 'Byfleet','REGULAR',1),
        (2, 'Bromley ','REGULAR',2),
        (3, 'Bow ','PREMIUM',3),

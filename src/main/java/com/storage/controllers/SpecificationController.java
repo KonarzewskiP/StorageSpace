@@ -9,6 +9,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * @author Pawel Konarzewski
+ * @version 1.0
+ */
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -16,6 +21,15 @@ import org.springframework.web.bind.annotation.*;
 public class SpecificationController {
 
     private final SpecificationService specificationService;
+
+    /**
+     * The method that returns different types of warehouse specifications.
+     * Each warehouse has  own specification and depending on this specification,
+     * customers can have different services.
+     * <p>
+     * @param specType enum with information to update.
+     * @return ResponseEntity with <code>WarehouseSpec</code> object.
+     */
 
     @GetMapping("/{specType}")
     public ResponseEntity<WarehouseSpec> getSpec(@PathVariable SpecType specType) {
