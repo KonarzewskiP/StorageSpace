@@ -2,7 +2,6 @@ package com.storage.service;
 
 import com.storage.models.WarehouseSpec;
 import com.storage.models.enums.*;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -16,11 +15,10 @@ import java.util.Map;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class SpecificationService {
 
     /**
-     * The method that return the specific type of specification with details.
+     * Return the specific type of specification with details.
      * <p>
      * @param specType enum with information to update.
      * @return Exact data about the specification type.

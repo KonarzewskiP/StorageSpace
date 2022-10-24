@@ -1,7 +1,7 @@
 package com.storage.service;
 
 import com.storage.exceptions.QuoteDetailsException;
-import com.storage.models.Quote;
+import com.storage.models.businessObject.Quote;
 import com.storage.models.dto.QuoteResponseDto;
 import com.storage.models.enums.DeliveryStatus;
 import com.storage.validators.QuoteValidator;
@@ -12,7 +12,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.math.BigDecimal;
 import java.time.format.DateTimeFormatter;
 import java.util.stream.Collectors;
 
@@ -71,11 +70,11 @@ public class QuoteService {
         String firstName = quote.getFirstName();
         var dateFormatter = DateTimeFormatter.ofPattern("yyyy-MMMM-dd");
         String date = quote.getStartDate().format(dateFormatter);
-        int size = quote.getSize().getSize();
-        String roomType = quote.getSize().getType();
+        float size = quote.getStorageSize().getSizeInSqMeters();
+        String roomType = quote.getStorageSize().getType();
         String duration = quote.getDuration().getDuration();
         String warehouseName = quote.getWarehouseName();
-        BigDecimal price = quote.quote();
+//        BigDecimal price = quote.quote();
 
         return String.format("Hi %s, here is your price.\n\n" +
                         "Move-in: %s\nAnticipated stay: %s\nRoom size: %s sq ft\nRoom type: %s\n\n%s:\n£%.2f per week.",

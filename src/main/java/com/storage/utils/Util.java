@@ -1,9 +1,9 @@
 package com.storage.utils;
 
 import com.storage.models.StorageRoom;
-import com.storage.models.dto.externals.postcode.Result;
-import com.storage.models.enums.Size;
 import com.storage.models.dto.externals.postcode.PostcodeResponse;
+import com.storage.models.dto.externals.postcode.Result;
+import com.storage.models.enums.StorageSize;
 
 import java.util.Arrays;
 import java.util.List;
@@ -11,12 +11,24 @@ import java.util.stream.Collectors;
 
 public interface Util {
 
+    /**
+     * the method is to create storage rooms for the newly added warehouse.
+     * It will create one room of each size.
+     *
+     * @return list of storages
+     */
+
     static List<StorageRoom> createStorageRoomsList() {
-        return Arrays.stream(Size.values())
+        return Arrays.stream(StorageSize.values())
                 .map(size -> StorageRoom.builder()
-                        .size(size)
+                        .storageSize(size)
                         .build())
                 .collect(Collectors.toList());
+    }
+
+
+    static double calculateDistance(Result postcode1, PostcodeResponse postcode2) {
+        return calculateDistance(postcode1.getLatitude(), postcode1.getLongitude(), postcode2.getResult().getLatitude(), postcode2.getResult().getLongitude());
     }
 
     /**
@@ -24,16 +36,14 @@ public interface Util {
      * latitude and longitude coordinates by
      * using the haversine formula
      * <p>
-     * Params: lat1 - latitude of first postcode
-     * lng1 - longitude of first postcode
-     * lat2 - latitude of second postcode
-     * lng2 - longitude of second postcode
-     * <p>
-     * Returns: distance between two postcodes in km
+     *
+     * @param lat1 latitude of first postcode
+     * @param lng1 longitude of first postcode
+     * @param lat2 latitude of second postcode
+     * @param lng2 longitude of second postcode
+     *             <p>
+     * @return distance between two postcodes in km
      */
-    static double calculateDistance(Result postcode1, PostcodeResponse postcode2) {
-        return calculateDistance(postcode1.getLatitude(), postcode1.getLongitude(), postcode2.getResult().getLatitude(), postcode2.getResult().getLongitude());
-    }
 
     private static double calculateDistance(double lat1, double lng1, double lat2, double lng2) {
         var earthRadius = 6371;

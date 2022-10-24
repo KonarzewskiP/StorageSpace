@@ -1,6 +1,6 @@
 package com.storage.validators;
 
-import com.storage.models.Quote;
+import com.storage.models.businessObject.Quote;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -8,10 +8,9 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import java.time.LocalDate;
 
-import static com.storage.builders.Fixtures.*;
+import static com.storage.builders.Fixtures.createQuote;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.fail;
 
 public class QuoteValidatorTest {
 
@@ -109,7 +108,7 @@ public class QuoteValidatorTest {
     void shouldReturnErrorWhenSizeIsNull() {
         //given
         var quote = createQuote();
-        quote.setSize(null);
+        quote.setStorageSize(null);
         //when
         var result = validator.validate(quote);
         //then

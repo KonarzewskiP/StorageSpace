@@ -1,7 +1,7 @@
 package com.storage.service;
 
-import com.storage.exceptions.UserServiceException;
 import com.storage.exceptions.ResourceNotFoundException;
+import com.storage.exceptions.UserServiceException;
 import com.storage.models.dto.UserDto;
 import com.storage.repositories.UserRepository;
 import com.storage.validators.UserDtoValidator;
@@ -34,21 +34,24 @@ public class UserService {
      *
      * @author Pawel Konarzewski
      */
-    public UserDto addUser(UserDto userDto) {
-        log.info("Enter UserService -> addUser() with: " + userDto);
-        isUserDtoValid(userDto);
-        checkEmailAvailability(userDto.getEmail());
-        var addedUser = userRepository.save(fromUserDtoToUser(userDto));
+    public UserDto addUser(UserDto request) {
+        log.info("Adding user with req: {} ", request);
+        isRequestValid(request);
+        checkEmailAvailability(request.getEmail());
+        var addedUser = userRepository.save(fromUserDtoToUser(request));
+        log.info("Added user");
         return fromUserToUserDto(addedUser);
     }
+
     /**
      * The method that validates userDto
      * <p>
      * Params: UserDto.
      * Throws: UserServiceException if userDto is not valid
+     *
      * @author Pawel Konarzewski
      */
-    private void isUserDtoValid(UserDto userDto) {
+    private void isRequestValid(UserDto userDto) {
         var validator = new UserDtoValidator();
         var errors = validator.validate(userDto);
         if (!errors.isEmpty()) {
@@ -59,18 +62,18 @@ public class UserService {
                     .collect(Collectors.joining(", ")));
         }
     }
+
     /**
      * The method that checks availability of email in database
      * <p>
      * Params: email.
      * Throws: UserServiceException if email exist in database
+     *
      * @author Pawel Konarzewski
      */
     private void checkEmailAvailability(String email) {
-        var user = userRepository.findByEmail(email).isPresent();
-        if (user) {
-            throw new UserServiceException("Invalid UserDto! Email already exist in database");
-        }
+        userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserServiceException("Invalid UserDto! Email already exist in database"));
     }
 
     public UserDto getUserById(Long id) {

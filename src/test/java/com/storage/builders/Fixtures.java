@@ -1,14 +1,18 @@
 package com.storage.builders;
 
-import com.storage.models.*;
+import com.storage.models.Address;
+import com.storage.models.StorageRoom;
+import com.storage.models.User;
+import com.storage.models.Warehouse;
+import com.storage.models.businessObject.Quote;
 import com.storage.models.dto.AddressDto;
 import com.storage.models.dto.StorageRoomDto;
 import com.storage.models.dto.UserDto;
 import com.storage.models.dto.WarehouseDto;
-import com.storage.models.dto.externals.postcode.Result;
-import com.storage.models.enums.*;
 import com.storage.models.dto.externals.postcode.PostcodeResponse;
 import com.storage.models.dto.externals.postcode.PostcodeValidationResponse;
+import com.storage.models.dto.externals.postcode.Result;
+import com.storage.models.enums.*;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -75,7 +79,7 @@ public class Fixtures {
     public static StorageRoom createStorageRoom() {
         return StorageRoom.builder()
                 .id(3L)
-                .size(Size.GARDEN_SHED)
+                .storageSize(StorageSize.GARDEN_SHED)
                 .reserved(true)
                 .startDate(START_DATE)
                 .endDate(END_DATE)
@@ -85,7 +89,7 @@ public class Fixtures {
     public static StorageRoomDto createStorageRoomDto() {
         return StorageRoomDto.builder()
                 .id(30L)
-                .size(Size.GARDEN_SHED)
+                .storageSize(StorageSize.GARDEN_SHED)
                 .reserved(false)
                 .startDate(null)
                 .endDate(null)
@@ -94,10 +98,10 @@ public class Fixtures {
 
     public static List<StorageRoom> createStorageRoomsList() {
         AtomicLong index = new AtomicLong(100L);
-        return Arrays.stream(Size.values())
+        return Arrays.stream(StorageSize.values())
                 .map(size -> StorageRoom.builder()
                         .id(index.getAndIncrement())
-                        .size(size)
+                        .storageSize(size)
                         .build())
                 .collect(Collectors.toList());
     }
@@ -105,11 +109,11 @@ public class Fixtures {
     public static List<StorageRoom> createIncrementalNumberOfStorageRoomsList() {
         AtomicLong index = new AtomicLong(100L);
         AtomicInteger count = new AtomicInteger(1);
-        return Arrays.stream(Size.values())
+        return Arrays.stream(StorageSize.values())
                 .flatMap(size -> IntStream.range(0, count.getAndIncrement())
                         .mapToObj(i -> StorageRoom.builder()
                                 .id(index.getAndIncrement())
-                                .size(size)
+                                .storageSize(size)
                                 .build()
                         )
                 )
@@ -123,10 +127,10 @@ public class Fixtures {
                 .email("johnBravo@gmail.com")
                 .postcode("SE11 5QY")
                 .warehouseName("Big Yellow")
-                .size(Size.THREE_SINGLE_GARAGES)
+                .storageSize(StorageSize.THREE_SINGLE_GARAGES)
                 .type(TypeOfStorage.HOME)
                 .startDate(LocalDate.now().plusDays(1))
-                .duration(StorageDuration.EIGHT_TWELVE_WEEKS)
+                .duration(StorageDuration.UP_TO_6_MONTHS)
                 .build();
     }
 

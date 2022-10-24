@@ -5,16 +5,15 @@ import com.storage.exceptions.ResourceNotFoundException;
 import com.storage.exceptions.WarehouseServiceException;
 import com.storage.models.dto.AddressDto;
 import com.storage.models.dto.StorageRoomDto;
-import com.storage.models.mapper.ModelMapper;
 import com.storage.models.dto.WarehouseDto;
+import com.storage.models.mapper.ModelMapper;
 import com.storage.repositories.AddressRepository;
 import com.storage.repositories.StorageRoomRepository;
 import com.storage.repositories.WarehouseRepository;
 import com.storage.service.postcodes_api.PostcodeService;
-import com.storage.utils.Util;
 import com.storage.validators.AddressDtoValidator;
 import com.storage.validators.WarehouseDtoValidator;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -23,8 +22,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.storage.models.mapper.ModelMapper.*;
-import static com.storage.models.mapper.ModelMapper.fromAddressDtoToAddress;
-import static com.storage.models.mapper.ModelMapper.fromWarehouseToWarehouseDto;
 import static com.storage.utils.Util.createStorageRoomsList;
 
 /**
@@ -35,7 +32,7 @@ import static com.storage.utils.Util.createStorageRoomsList;
 @Slf4j
 @Service
 @Transactional
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class WarehouseService {
 
     public static final String WAREHOUSE = "Warehouse";
@@ -45,6 +42,7 @@ public class WarehouseService {
     private final StorageRoomRepository storageRoomRepository;
     private final AddressRepository addressRepository;
     private final PostcodeService postcodeService;
+    private final AddressDtoValidator addressDtoValidator;
 
     /**
      * The method add the warehouse to the database.
@@ -78,8 +76,7 @@ public class WarehouseService {
      */
 
     private void isAddressDtoValid(AddressDto addressDto) {
-        var validator = new AddressDtoValidator(postcodeService);
-        var errors = validator.validate(addressDto);
+        var errors = addressDtoValidator.validate(addressDto);
         if (!errors.isEmpty()) {
             throw new AddressException("Invalid AddressDto!, errors: " + errors
                     .entrySet()

@@ -3,7 +3,7 @@ package com.storage.models.enums;
 public enum Reason {
 
     MOVING,
-    DECLUTTERING,
+    STORAGE,
     IMPROVEMENTS,
     PERSONAL_CHANGE,
     TRAVELLING,
@@ -11,26 +11,14 @@ public enum Reason {
 
     @Override
     public String toString() {
-
-        switch (this) {
-            case MOVING -> {
-                return "Moving";
-            }
-            case DECLUTTERING -> {
-                return "Decluttering";
-            }
-            case TRAVELLING -> {
-                return "Travelling";
-            }
-            case IMPROVEMENTS -> {
-                return "Home improvements";
-            }
-            case PERSONAL_CHANGE -> {
-                return "Change in personal circumstances";
-            }
-            default ->  {
-                return "Other";
-            }
-        }
+      return switch (this) {
+            case MOVING ->  "Moving";
+            case STORAGE ->  "Decluttering";
+            case TRAVELLING ->  "Travelling";
+            case IMPROVEMENTS -> "Home improvements";
+            case PERSONAL_CHANGE ->  "Change in personal circumstances";
+            default ->  "Other";
+        };
     }
+
 }

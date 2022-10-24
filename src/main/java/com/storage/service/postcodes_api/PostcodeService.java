@@ -23,7 +23,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import javax.transaction.Transactional;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -49,13 +51,14 @@ public class PostcodeService {
     private final WarehouseRepository warehouseRepository;
 
     /**
-     * The method that calls external API to check if postcode given by the user is valid.
-     * Only postcodes from the UK can be verified.
+     * Method that calls external API to check if postcode given by the user is valid.
+     *
+     * NOTE: Only postcodes from the UK can be verified.
      * <p>
      *
      * @param postcode postcode given by the user.
-     * @return PostcodeValidation object with status code and result. If postcode exist,
-     * return the result as true, otherwise the result is false.
+     * @return PostcodeValidation object with status code and result.
+     * If postcode exist, returns true, otherwise false.
      */
 
     public PostcodeValidationResponse isValid(String postcode) {
@@ -73,7 +76,7 @@ public class PostcodeService {
      * In case of invalid postcode restTemplate will throw an RestClientException which is
      * handled by RestTemplateErrorHandler class.
      * <p>
-     * Only postcodes from the UK can be verified.
+     * NOTE: Only postcodes from the UK can be verified.
      *
      * @param postcode postcode given by the user.
      * @throws PostcodeException if the postcode is invalid.

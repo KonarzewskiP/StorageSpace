@@ -1,12 +1,11 @@
 package com.storage.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.storage.models.enums.Size;
+import com.storage.models.enums.StorageSize;
 import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -19,7 +18,7 @@ public class StorageRoom {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Enumerated(EnumType.STRING)
-    private Size size;
+    private StorageSize storageSize;
     private boolean reserved;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate startDate;

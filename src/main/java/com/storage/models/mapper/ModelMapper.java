@@ -1,12 +1,12 @@
 package com.storage.models.mapper;
 
 import com.storage.models.Address;
-import com.storage.models.User;
 import com.storage.models.StorageRoom;
+import com.storage.models.User;
 import com.storage.models.Warehouse;
 import com.storage.models.dto.AddressDto;
-import com.storage.models.dto.UserDto;
 import com.storage.models.dto.StorageRoomDto;
+import com.storage.models.dto.UserDto;
 import com.storage.models.dto.WarehouseDto;
 
 import java.util.List;
@@ -78,7 +78,7 @@ public interface ModelMapper {
     static StorageRoomDto fromStorageRoomToStorageRoomDto(StorageRoom storageRoom) {
         return storageRoom == null ? null : StorageRoomDto.builder()
                 .id(storageRoom.getId())
-                .size(storageRoom.getSize())
+                .storageSize(storageRoom.getStorageSize())
                 .reserved(storageRoom.isReserved())
                 .startDate(storageRoom.getStartDate())
                 .endDate(storageRoom.getEndDate())
@@ -88,7 +88,7 @@ public interface ModelMapper {
     static StorageRoom fromStorageRoomDtoToStorageRoom(StorageRoomDto storageRoomDto) {
         return storageRoomDto == null ? null : StorageRoom.builder()
                 .id(storageRoomDto.getId())
-                .size(storageRoomDto.getSize())
+                .storageSize(storageRoomDto.getStorageSize())
                 .reserved(storageRoomDto.getReserved())
                 .startDate(storageRoomDto.getStartDate())
                 .endDate(storageRoomDto.getEndDate())

@@ -1,6 +1,6 @@
 package com.storage.validators;
 
-import com.storage.models.Quote;
+import com.storage.models.businessObject.Quote;
 import com.storage.validators.base.Validator;
 
 import java.time.LocalDate;
@@ -36,7 +36,7 @@ public class QuoteValidator implements Validator<Quote> {
             errors.put("Email", "Can not be null");
             return errors;
         }
-        if (isNull(quotation.getSize())) {
+        if (isNull(quotation.getStorageSize())) {
             errors.put("Size", "Can not be null");
             return errors;
         }

@@ -1,7 +1,7 @@
 package com.storage.service;
 
 import com.storage.exceptions.QuoteDetailsException;
-import com.storage.models.Quote;
+import com.storage.models.businessObject.Quote;
 import com.storage.models.enums.DeliveryStatus;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

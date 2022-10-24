@@ -7,7 +7,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -28,7 +31,7 @@ public class PostcodeController {
      * @author Pawel Konarzewski
      */
     @GetMapping("/{postcode}")
-    public ResponseEntity<PostcodeValidationResponse> isPostcodeValid(@PathVariable String postcode) {
+    public ResponseEntity<PostcodeValidationResponse> isValid(@PathVariable String postcode) {
         log.info("Enter PostcodeController -> isPostcodeValid() with {}", postcode);
         return new ResponseEntity<>(postcodeService.isValid(postcode), HttpStatus.OK);
     }

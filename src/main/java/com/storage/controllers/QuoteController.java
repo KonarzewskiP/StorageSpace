@@ -1,6 +1,6 @@
 package com.storage.controllers;
 
-import com.storage.models.Quote;
+import com.storage.models.businessObject.Quote;
 import com.storage.models.dto.QuoteResponseDto;
 import com.storage.service.QuoteService;
 import lombok.RequiredArgsConstructor;
