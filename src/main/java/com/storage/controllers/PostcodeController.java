@@ -23,7 +23,7 @@ public class PostcodeController {
 
 
     /**
-     * The method that calls API and returns Boolean object.
+     * Calls API and returns Boolean object.
      * <p>
      * Params: postcode - postcode from the UK
      * Returns: HttpResponse 200 and Boolean true if postcode is valid,
@@ -36,7 +36,7 @@ public class PostcodeController {
         return new ResponseEntity<>(postcodeService.isValid(postcode), HttpStatus.OK);
     }
     /**
-     * Method that search for nearest Warehouses according to given postcode.
+     * Search for nearest Warehouses according to given postcode.
      *
      * @param postcode
      * @return ResponseEntity with a <code>List<WarehouseDto></code> of ordered warehouses.

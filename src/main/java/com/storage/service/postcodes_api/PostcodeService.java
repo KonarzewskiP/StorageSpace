@@ -72,7 +72,7 @@ public class PostcodeService {
     }
 
     /**
-     * The method that calls external API and returns coordinates for postcode.
+     * Calls external API and returns coordinates for postcode.
      * In case of invalid postcode restTemplate will throw an RestClientException which is
      * handled by RestTemplateErrorHandler class.
      * <p>

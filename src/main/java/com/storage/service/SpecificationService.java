@@ -8,6 +8,11 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+/* TODO need to think it through
+ - what is the usage of the class
+ - how to make it more clear
+ */
 /**
  * @author Pawel Konarzewski
  * @version 1.0

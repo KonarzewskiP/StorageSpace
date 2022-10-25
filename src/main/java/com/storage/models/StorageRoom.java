@@ -1,6 +1,7 @@
 package com.storage.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.storage.models.base.AbstractObject;
 import com.storage.models.enums.StorageSize;
 import lombok.*;
 
@@ -13,12 +14,12 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 @Table(name = "storage_rooms")
-public class StorageRoom {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class StorageRoom extends AbstractObject {
+
     @Enumerated(EnumType.STRING)
     private StorageSize storageSize;
+
+    //TODO improve reservation systems
     private boolean reserved;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate startDate;

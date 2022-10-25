@@ -8,6 +8,7 @@ import org.springframework.web.client.DefaultResponseErrorHandler;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
+//TODO - delete
 @Slf4j
 @Component
 public class RestTemplateErrorHandler extends DefaultResponseErrorHandler {

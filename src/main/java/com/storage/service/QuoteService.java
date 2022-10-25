@@ -15,6 +15,8 @@ import javax.transaction.Transactional;
 import java.time.format.DateTimeFormatter;
 import java.util.stream.Collectors;
 
+//TODO create separate Email Service class
+
 /**
  * Class that provides methods for sending email with quotation
  * for guest users

@@ -9,6 +9,10 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Set;
 
+/**
+ * Object used to send a replay to an
+ * enquiry about specific warehouse
+ * */
 @Builder
 @Data
 public class Quote {
@@ -32,7 +36,8 @@ public class Quote {
         return price.multiply(BigDecimal.valueOf(7)).multiply(BigDecimal.valueOf(discount));
     }
 
-    //TODO need improvment - pricing concept is wrong
+    // TODO need improvment - pricing concept is wrong
+
   /*  public BigDecimal quote() {
         BigDecimal price = BigDecimal.valueOf(storageSize.getPrice());
 
