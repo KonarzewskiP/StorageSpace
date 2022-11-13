@@ -1,7 +1,7 @@
 package com.storage.service;
 
+import com.storage.exceptions.NotFoundException;
 import com.storage.exceptions.UserServiceException;
-import com.storage.exceptions.ResourceNotFoundException;
 import com.storage.models.User;
 import com.storage.models.dto.UserDto;
 import com.storage.models.enums.Gender;
@@ -103,7 +103,7 @@ public class UserServiceTest {
         Throwable thrown = catchThrowable(() -> service.getUserById(id));
         //then
         assertThat(thrown)
-                .isInstanceOf(ResourceNotFoundException.class)
+                .isInstanceOf(NotFoundException.class)
                 .hasMessageContaining("User not found with id: 999");
     }
 
@@ -116,7 +116,7 @@ public class UserServiceTest {
         Throwable thrown = catchThrowable(() -> service.getUserById(id));
         //then
         assertThat(thrown)
-                .isInstanceOf(ResourceNotFoundException.class)
+                .isInstanceOf(NotFoundException.class)
                 .hasMessageContaining("User not found with id: null");
     }
 }

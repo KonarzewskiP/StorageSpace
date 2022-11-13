@@ -1,30 +1,33 @@
 package com.storage.validators;
 
 import com.storage.models.dto.StorageRoomDto;
+import com.storage.models.requests.StorageRoomUpdateRequest;
 import com.storage.validators.base.Validator;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static java.util.Objects.isNull;
 
-public class StorageRoomDtoValidator implements Validator<StorageRoomDto> {
+public class StorageRoomDtoValidator implements Validator<StorageRoomUpdateRequest> {
 
     @Override
-    public Map<String, String> validate(StorageRoomDto storageRoom) {
+    public Map<String, String> validate(StorageRoomUpdateRequest storageRoom) {
         Map<String, String> errors = new HashMap<>();
 
         if (isNull(storageRoom)) {
             errors.put("StorageRoomDto", "Can not be null");
             return errors;
         }
+
         if (isNull(storageRoom.getReserved())) {
             errors.put("Reserved", "Can not be null");
             return errors;
         }
 
-        if (isNull(storageRoom.getId())) {
-            errors.put("Id", "Can not be null");
+        if (StringUtils.isBlank(storageRoom.getUuid())) {
+            errors.put("UUID", "Can not be null or empty");
             return errors;
         }
 
@@ -35,6 +38,7 @@ public class StorageRoomDtoValidator implements Validator<StorageRoomDto> {
         if (isNull(storageRoom.getStartDate())){
             errors.put("StartDate", "Can not be null");
             return errors;
+
         } else if (isNull(storageRoom.getEndDate())){
             errors.put("EndDate", "Can not be null");
             return errors;

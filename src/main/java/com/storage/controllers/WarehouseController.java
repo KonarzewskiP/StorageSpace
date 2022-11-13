@@ -20,15 +20,16 @@ public class WarehouseController {
     private final WarehouseService warehouseService;
 
     @PostMapping
-    public ResponseEntity<WarehouseDto> addWarehouse(@RequestBody WarehouseDto warehouseDto) {
+    public ResponseEntity<WarehouseDto> createWarehouse(@RequestBody WarehouseDto warehouseDto) {
         log.info("Enter WarehouseController -> addWarehouse() with: " + warehouseDto);
         return new ResponseEntity<>(warehouseService.addWarehouse(warehouseDto), HttpStatus.CREATED);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<WarehouseDto> getWarehouseById(@PathVariable Long id) {
-        log.info("Enter WarehouseController -> getWarehouseById() with: " + id);
-        return new ResponseEntity<>(warehouseService.getWarehouseById(id), HttpStatus.OK);
+    @GetMapping("/{uuid}")
+    public ResponseEntity<WarehouseDto> getWarehouseByUuid(@PathVariable String uuid) {
+        log.info("Enter WarehouseController -> getWarehouseByUuid() [UUID:{}] ", uuid);
+
+        return new ResponseEntity<>(warehouseService.getByUuid(uuid), HttpStatus.OK);
     }
 
     @GetMapping
@@ -38,12 +39,23 @@ public class WarehouseController {
     }
 
     @GetMapping("/{id}/available")
-    public ResponseEntity<List<StorageRoomDto>> getNotReservedStorageRoomsByWarehouseId(@PathVariable Long id) {
+    public ResponseEntity<List<StorageRoomDto>> getNotReservedStorageRoomsByWarehouseUuid(@PathVariable Long id) {
         log.info("Enter WarehouseController -> getNotReservedStorageRoomsByWarehouseId() with: " + id);
         return new ResponseEntity<>(warehouseService.getNotReservedStorageRoomsByWarehouseId(id), HttpStatus.OK);
     }
 
-
+    /**
+     * Search for nearest Warehouses according to given postcode.
+     *
+     * @param postcode
+     * @return ResponseEntity with a <code>List<WarehouseDto></code> of ordered warehouses.
+     * @author Pawel Konarzewski
+     */
+    @GetMapping("/{postcode}/nearest")
+    public ResponseEntity<List<WarehouseDto>> getNearestFromPostcode(@PathVariable String postcode) {
+        log.info("Enter PostcodeController -> getNearestWarehouses() with: " + postcode);
+        return new ResponseEntity<>(warehouseService.getOrderedByDistanceFromPostcode(postcode), HttpStatus.OK);
+    }
 
 
 }

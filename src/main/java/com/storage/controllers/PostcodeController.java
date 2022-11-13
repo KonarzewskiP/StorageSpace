@@ -1,18 +1,12 @@
 package com.storage.controllers;
 
-import com.storage.models.dto.WarehouseDto;
-import com.storage.models.dto.externals.postcode.PostcodeValidationResponse;
-import com.storage.service.postcodes_api.PostcodeService;
+import com.storage.exceptions.BadRequestException;
+import com.storage.models.requests.ValidatePostcodesRequest;
+import com.storage.service.PostcodeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -23,7 +17,7 @@ public class PostcodeController {
 
 
     /**
-     * Calls API and returns Boolean object.
+     * Check if postcode is valid
      * <p>
      * Params: postcode - postcode from the UK
      * Returns: HttpResponse 200 and Boolean true if postcode is valid,
@@ -31,20 +25,23 @@ public class PostcodeController {
      * @author Pawel Konarzewski
      */
     @GetMapping("/{postcode}")
-    public ResponseEntity<PostcodeValidationResponse> isValid(@PathVariable String postcode) {
-        log.info("Enter PostcodeController -> isPostcodeValid() with {}", postcode);
-        return new ResponseEntity<>(postcodeService.isValid(postcode), HttpStatus.OK);
+    public boolean isValid(@PathVariable String postcode) {
+        log.info("Start postcode validation: {}", postcode);
+        if (StringUtils.isBlank(postcode))
+            throw new BadRequestException("Postcode can not be empty or null");
+
+        var isPostcodeValid = postcodeService.isValid(postcode);
+        log.info("Start postcode validation: {}", postcode);
+//        return new ResponseEntity<>(isPostcodeValid, HttpStatus.OK);
+        return true;
     }
-    /**
-     * Search for nearest Warehouses according to given postcode.
-     *
-     * @param postcode
-     * @return ResponseEntity with a <code>List<WarehouseDto></code> of ordered warehouses.
-     * @author Pawel Konarzewski
-     */
-    @GetMapping("/{postcode}/nearest")
-    public ResponseEntity<List<WarehouseDto>> getNearestWarehouses(@PathVariable String postcode) {
-        log.info("Enter PostcodeController -> getNearestWarehouses() with: " + postcode);
-        return new ResponseEntity<>(postcodeService.getOrderedWarehousesByDistanceFromPostcode(postcode), HttpStatus.OK);
+
+    @GetMapping("/validate")
+    public boolean isValidMultiple(@RequestBody ValidatePostcodesRequest request) {
+        var isPostcodeValid = postcodeService.getMultipleCoordinates(request.getPostcodes());
+//        return new ResponseEntity<>(isPostcodeValid, HttpStatus.OK);
+        return true;
     }
+
+
 }

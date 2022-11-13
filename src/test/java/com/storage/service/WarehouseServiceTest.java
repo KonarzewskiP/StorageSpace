@@ -1,17 +1,15 @@
 package com.storage.service;
 
 import com.storage.exceptions.AddressException;
-import com.storage.exceptions.ResourceNotFoundException;
+import com.storage.exceptions.NotFoundException;
 import com.storage.exceptions.WarehouseServiceException;
 import com.storage.models.Address;
-import com.storage.models.StorageRoom;
 import com.storage.models.Warehouse;
 import com.storage.models.dto.AddressDto;
 import com.storage.models.dto.WarehouseDto;
 import com.storage.repositories.AddressRepository;
 import com.storage.repositories.StorageRoomRepository;
 import com.storage.repositories.WarehouseRepository;
-import com.storage.service.postcodes_api.PostcodeService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,14 +17,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.List;
 import java.util.Optional;
 
 import static com.storage.builders.Fixtures.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
@@ -132,7 +128,7 @@ public class WarehouseServiceTest {
         var warehouse = createWarehouse();
         when(warehouseRepository.findById(anyLong())).thenReturn(Optional.of(warehouse));
         //when
-        var result = service.getWarehouseById(999L);
+        var result = service.getByUuid(999L);
         //then
         assertThat(result.getId()).isEqualTo(2L);
     }
@@ -143,10 +139,10 @@ public class WarehouseServiceTest {
         //given
         Long id = null;
         //when
-        Throwable thrown = catchThrowable(() -> service.getWarehouseById(id));
+        Throwable thrown = catchThrowable(() -> service.getByUuid(id));
         //then
         assertThat(thrown)
-                .isInstanceOf(ResourceNotFoundException.class)
+                .isInstanceOf(NotFoundException.class)
                 .hasMessageContaining("Warehouse not found with id: null");
     }
 
@@ -156,10 +152,10 @@ public class WarehouseServiceTest {
         //given
         var id = 999L;
         //when
-        Throwable thrown = catchThrowable(() -> service.getWarehouseById(id));
+        Throwable thrown = catchThrowable(() -> service.getByUuid(id));
         //then
         assertThat(thrown)
-                .isInstanceOf(ResourceNotFoundException.class)
+                .isInstanceOf(NotFoundException.class)
                 .hasMessageContaining("Warehouse not found with id: 999");
     }
 
@@ -185,7 +181,7 @@ public class WarehouseServiceTest {
         Throwable thrown = catchThrowable(() -> service.getNotReservedStorageRoomsByWarehouseId(id));
         //then
         assertThat(thrown)
-                .isInstanceOf(ResourceNotFoundException.class)
+                .isInstanceOf(NotFoundException.class)
                 .hasMessageContaining("Warehouse not found with id: 999");
     }
 

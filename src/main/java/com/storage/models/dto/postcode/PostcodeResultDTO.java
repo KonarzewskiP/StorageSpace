@@ -1,4 +1,4 @@
-package com.storage.models.dto.externals.postcode;
+package com.storage.models.dto.postcode;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Result {
-
+public class PostcodeResultDTO {
     private String postcode;
     private double longitude;
     private double latitude;

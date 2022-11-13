@@ -9,9 +9,9 @@ import com.storage.models.dto.AddressDto;
 import com.storage.models.dto.StorageRoomDto;
 import com.storage.models.dto.UserDto;
 import com.storage.models.dto.WarehouseDto;
-import com.storage.models.dto.externals.postcode.PostcodeResponse;
-import com.storage.models.dto.externals.postcode.PostcodeValidationResponse;
-import com.storage.models.dto.externals.postcode.Result;
+import com.storage.models.dto.postcode.PostcodeDTO;
+import com.storage.models.dto.postcode.PostcodeResultDTO;
+import com.storage.models.dto.postcode.PostcodeValidateDTO;
 import com.storage.models.enums.*;
 
 import java.time.LocalDate;
@@ -53,7 +53,6 @@ public class Fixtures {
 
     public static Warehouse createWarehouse() {
         return Warehouse.builder()
-                .id(2L)
                 .name("Big Yellow")
                 .address(Address.builder()
                         .city("London")
@@ -78,7 +77,6 @@ public class Fixtures {
 
     public static StorageRoom createStorageRoom() {
         return StorageRoom.builder()
-                .id(3L)
                 .storageSize(StorageSize.GARDEN_SHED)
                 .reserved(true)
                 .startDate(START_DATE)
@@ -100,7 +98,7 @@ public class Fixtures {
         AtomicLong index = new AtomicLong(100L);
         return Arrays.stream(StorageSize.values())
                 .map(size -> StorageRoom.builder()
-                        .id(index.getAndIncrement())
+//                        .id(index.getAndIncrement())
                         .storageSize(size)
                         .build())
                 .collect(Collectors.toList());
@@ -112,7 +110,7 @@ public class Fixtures {
         return Arrays.stream(StorageSize.values())
                 .flatMap(size -> IntStream.range(0, count.getAndIncrement())
                         .mapToObj(i -> StorageRoom.builder()
-                                .id(index.getAndIncrement())
+//                                .id(index.getAndIncrement())
                                 .storageSize(size)
                                 .build()
                         )
@@ -138,28 +136,28 @@ public class Fixtures {
         return Map.of("postcodes", List.of("SE11 5QY", "SW19 3BE", "TW9 2JX"));
     }
 
-    public static PostcodeResponse createPostcodeResponse() {
-        var postcodeResult = Result.builder()
+    public static PostcodeDTO createPostcodeResponse() {
+        var postcodeResult = PostcodeResultDTO.builder()
                 .postcode("SW178EF")
                 .latitude(51.431047)
                 .longitude(-0.155261)
                 .build();
 
-        return PostcodeResponse.builder()
+        return PostcodeDTO.builder()
                 .status(200)
-                .result(postcodeResult)
+                .postcodeResultDTO(postcodeResult)
                 .build();
     }
 
-    public static PostcodeValidationResponse createPositivePostcodeValidationResponse(){
-        return PostcodeValidationResponse.builder()
+    public static PostcodeValidateDTO createPositivePostcodeValidationResponse(){
+        return PostcodeValidateDTO.builder()
                 .status(200)
                 .result(true)
                 .build();
 
     }
-    public static PostcodeValidationResponse createNegativePostcodeValidationResponse(){
-        return PostcodeValidationResponse.builder()
+    public static PostcodeValidateDTO createNegativePostcodeValidationResponse(){
+        return PostcodeValidateDTO.builder()
                 .status(200)
                 .result(false)
                 .build();

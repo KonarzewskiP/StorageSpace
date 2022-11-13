@@ -2,12 +2,15 @@ package com.storage.controllers;
 
 
 import com.storage.models.dto.StorageRoomDto;
+import com.storage.models.requests.StorageRoomUpdateRequest;
 import com.storage.service.StorageRoomService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.transaction.Transactional;
 
 @Slf4j
 @RestController
@@ -25,11 +28,15 @@ public class StorageRoomController {
      *
      * @author Pawel Konarzewski
      */
-    @PutMapping
-    public ResponseEntity<StorageRoomDto> updateStorageRoom(@RequestBody StorageRoomDto storageRoomDto) {
-        log.info("Enter StorageRoomController -> updateStorageRoomByWarehouseId() with: {} ",storageRoomDto);
-        return new ResponseEntity<>(storageRoomService.updateStorageRoom(storageRoomDto), HttpStatus.CREATED);
+    @Transactional
+    @PutMapping("/{uuid}")
+    public ResponseEntity<StorageRoomDto> updateByUuid(@PathVariable String uuid,@RequestBody StorageRoomUpdateRequest request) {
+        log.info("Enter StorageRoomController -> updateStorageRoomByWarehouseId() with: [UUID:{}], [request:{}] ",uuid, request);
+
+        var storageRoom = storageRoomService.findByUuidForUpdate(uuid);
+        return new ResponseEntity<>(storageRoomService.updateStorageRoom(storageRoom, request), HttpStatus.CREATED);
     }
+
     /**
      * The method that searches for StorageRoom by id
      * <p>
@@ -38,10 +45,10 @@ public class StorageRoomController {
      *
      * @author Pawel Konarzewski
      */
-    @GetMapping("/{id}")
-    public ResponseEntity<StorageRoomDto> findStorageRoomById(@PathVariable Long id) {
-        log.info("Enter StorageRoomController -> findStorageRoomById() with: " + id);
-        return new ResponseEntity<>(storageRoomService.findStorageRoomById(id), HttpStatus.OK);
+    @GetMapping("/{uuid}")
+    public ResponseEntity<StorageRoomDto> findByUuid(@PathVariable String uuid) {
+        log.info("Enter StorageRoomController -> findByUuid() with [UUID:{}] ", uuid);
+        return new ResponseEntity<>(storageRoomService.findByUuid(uuid), HttpStatus.OK);
     }
 
 }

@@ -1,6 +1,6 @@
 package com.storage.service;
 
-import com.storage.exceptions.ResourceNotFoundException;
+import com.storage.exceptions.NotFoundException;
 import com.storage.exceptions.UserServiceException;
 import com.storage.models.dto.UserDto;
 import com.storage.repositories.UserRepository;
@@ -79,7 +79,7 @@ public class UserService {
     public UserDto getUserById(Long id) {
         log.info("Enter UserService -> getUserById() with: " + id);
         var director =
-                userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(USER, ID, id));
+                userRepository.findById(id).orElseThrow(() -> new NotFoundException(USER, ID, id));
         return fromUserToUserDto(director);
     }
 }

@@ -12,6 +12,7 @@ import com.storage.models.dto.WarehouseDto;
 import java.util.List;
 import java.util.stream.Collectors;
 
+//TODO split all model mappers to separate classes and improve mapping. (ModelMapper)
 public interface ModelMapper {
 
     static UserDto fromUserToUserDto(User user) {
@@ -46,7 +47,7 @@ public interface ModelMapper {
 
     static Warehouse fromWarehouseDtoToWarehouse(WarehouseDto warehouseDto) {
         return warehouseDto == null ? null : Warehouse.builder()
-                .id(warehouseDto.getId())
+//                .id(warehouseDto.getId())
                 .name(warehouseDto.getName())
                 .address(fromAddressDtoToAddress(warehouseDto.getAddress()))
                 .build();
@@ -87,7 +88,6 @@ public interface ModelMapper {
 
     static StorageRoom fromStorageRoomDtoToStorageRoom(StorageRoomDto storageRoomDto) {
         return storageRoomDto == null ? null : StorageRoom.builder()
-                .id(storageRoomDto.getId())
                 .storageSize(storageRoomDto.getStorageSize())
                 .reserved(storageRoomDto.getReserved())
                 .startDate(storageRoomDto.getStartDate())

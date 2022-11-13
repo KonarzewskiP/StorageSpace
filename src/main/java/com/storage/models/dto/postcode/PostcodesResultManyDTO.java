@@ -1,16 +1,17 @@
-package com.storage.models.dto.externals.postcode;
+package com.storage.models.dto.postcode;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResultMany {
-
+public class PostcodesResultManyDTO {
     private String query;
-    private Result result;
+    private List<PostcodeResultDTO> result;
 }

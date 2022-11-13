@@ -3,12 +3,10 @@ package com.storage.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.storage.models.Address;
 import com.storage.models.Warehouse;
-import com.storage.models.dto.externals.postcode.PostcodeResponse;
-import com.storage.models.dto.externals.postcode.PostcodeResponseMany;
-import com.storage.models.dto.externals.postcode.Result;
-import com.storage.models.dto.externals.postcode.ResultMany;
+import com.storage.models.dto.postcode.PostcodeDTO;
+import com.storage.models.dto.postcode.PostcodeDetailsManyDTO;
+import com.storage.models.dto.postcode.PostcodeResultDTO;
 import com.storage.repositories.WarehouseRepository;
-import com.storage.service.postcodes_api.PostcodeService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -49,13 +47,13 @@ public class PostcodeServiceTest {
         var postcodeResponse = createPostcodeResponse();
         when(restTemplate.getForEntity(anyString(), any())).thenReturn(ResponseEntity.ok(postcodeResponse));
         //when
-        var result = service.getCoordinatesPostcode(postcode);
+        var result = service.getSingleCoordinates(postcode);
         //then
         assertAll(
                 () -> assertThat(result.getStatus()).isEqualTo(200),
-                () -> assertThat(result.getResult().getLongitude()).isEqualTo(-0.155261),
-                () -> assertThat(result.getResult().getLatitude()).isEqualTo(51.431047),
-                () -> assertThat(result.getResult().getPostcode()).isEqualTo(postcode)
+                () -> assertThat(result.getPostcodeResultDTO().getLongitude()).isEqualTo(-0.155261),
+                () -> assertThat(result.getPostcodeResultDTO().getLatitude()).isEqualTo(51.431047),
+                () -> assertThat(result.getPostcodeResultDTO().getPostcode()).isEqualTo(postcode)
         );
     }
 
@@ -99,11 +97,11 @@ public class PostcodeServiceTest {
         ReflectionTestUtils.setField(service, "postcodeUrl", "postcode.api.url");
         when(restTemplate.postForObject(anyString(), any(), any())).thenReturn(postcodesResponse);
         //when
-        var result = service.getCoordinatesPostcodes(List.of());
+        var result = service.getMultipleCoordinates(List.of());
         //then
         assertAll(
-                () -> assertThat(result.getResult().size()).isEqualTo(4),
-                () -> assertThat(result.getResult().get(0).getResult().getPostcode()).isEqualTo("N183AF")
+                () -> assertThat(result.getPostcodeResultDTO().size()).isEqualTo(4),
+                () -> assertThat(result.getPostcodeResultDTO().get(0).getResult().getPostcode()).isEqualTo("N183AF")
         );
 
     }
@@ -114,9 +112,9 @@ public class PostcodeServiceTest {
         //given
         var postcode = "e176pj";
         var listOfWarehouses = getListOfWarehouses();
-        var postcodeCoordinates = PostcodeResponse.builder()
+        var postcodeCoordinates = PostcodeDTO.builder()
                 .status(200)
-                .result((Result.builder()
+                .postcodeResultDTO((PostcodeResultDTO.builder()
                         .postcode("E176PJ")
                         .longitude(-0.027387)
                         .latitude(51.585106)
@@ -146,28 +144,28 @@ public class PostcodeServiceTest {
 
     private List<Warehouse> getListOfWarehouses() {
         return List.of(Warehouse.builder()
-                        .id(13L)
+//                        .id(13L)
                         .name("Edmonton")
                         .address(Address.builder()
                                 .postcode("N183AF")
                                 .build())
                         .build(),
                 Warehouse.builder()
-                        .id(24L)
+//                        .id(24L)
                         .name("Fulham")
                         .address(Address.builder()
                                 .postcode("SW62ST")
                                 .build())
                         .build(),
                 Warehouse.builder()
-                        .id(2L)
+//                        .id(2L)
                         .name("Bromley")
                         .address(Address.builder()
                                 .postcode("BR13RB")
                                 .build())
                         .build(),
                 Warehouse.builder()
-                        .id(6L)
+//                        .id(6L)
                         .name("Barking")
                         .address(Address.builder()
                                 .postcode("IG118BL")
@@ -175,8 +173,9 @@ public class PostcodeServiceTest {
                         .build());
     }
 
-    private PostcodeResponseMany getPostcodeResponseForManyPostcodes() {
-        return PostcodeResponseMany.builder()
+    private PostcodeDetailsManyDTO getPostcodeResponseForManyPostcodes() {
+        return null;
+        /*return PostcodeResponseMany.builder()
                 .status(200)
                 .result(List.of(ResultMany.builder()
                                 .result(Result.builder()
@@ -206,6 +205,6 @@ public class PostcodeServiceTest {
                                         .latitude(51.539173)
                                         .build())
                                 .build()))
-                .build();
+                .build();*/
     }
 }

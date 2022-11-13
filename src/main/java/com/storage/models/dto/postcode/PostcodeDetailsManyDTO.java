@@ -1,4 +1,4 @@
-package com.storage.models.dto.externals.postcode;
+package com.storage.models.dto.postcode;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,8 +11,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PostcodeResponseMany {
+public class PostcodeDetailsManyDTO {
 
     private int status;
-    private List<ResultMany> result;
+    private List<PostcodeResultDTO> postcodeResultDTO;
 }

@@ -7,7 +7,6 @@ import com.storage.models.dto.CustomErrorResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -90,9 +89,9 @@ public class ErrorControllerHandler {
      *
      * @author Pawel Konarzewski
      */
-    @ExceptionHandler(value = ResourceNotFoundException.class)
+    @ExceptionHandler(value = NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public CustomErrorResponseDto handleNotFoundException(ResourceNotFoundException e) {
+    public CustomErrorResponseDto handleNotFoundException(NotFoundException e) {
         log.error("Enter ErrorControllerHandler -> handleNotFoundException() ResourceNotFoundException with: " + e);
         return createCustomErrorResponse(e.getMessage(), HttpStatus.NOT_FOUND.getReasonPhrase(), HttpStatus.NOT_FOUND.value());
     }

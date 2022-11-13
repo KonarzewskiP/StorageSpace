@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 //TODO - delete
+// related to the postcodeService
 @Slf4j
 @Component
 public class RestTemplateErrorHandler extends DefaultResponseErrorHandler {

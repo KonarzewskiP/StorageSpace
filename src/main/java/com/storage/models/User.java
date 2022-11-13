@@ -1,8 +1,12 @@
 package com.storage.models;
 
+import com.storage.models.base.AbstractObject;
 import com.storage.models.enums.Gender;
 import com.storage.models.enums.Role;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
@@ -12,12 +16,12 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 @Table(name = "users")
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class User extends AbstractObject {
+    @Column(name = "first_name", nullable = false)
     private String firstName;
+    @Column(name = "last_name", nullable = false)
     private String lastName;
+    @Column(name = "email", nullable = false)
     private String email;
     @Enumerated(EnumType.STRING)
     private Role role;

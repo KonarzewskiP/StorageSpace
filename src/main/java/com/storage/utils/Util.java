@@ -1,14 +1,16 @@
 package com.storage.utils;
 
 import com.storage.models.StorageRoom;
-import com.storage.models.dto.externals.postcode.PostcodeResponse;
-import com.storage.models.dto.externals.postcode.Result;
+import com.storage.models.dto.postcode.PostcodeDTO;
+import com.storage.models.dto.postcode.PostcodeResultDTO;
 import com.storage.models.enums.StorageSize;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+//TODO
+// rename utility class, make it more specific
 public interface Util {
 
     /**
@@ -27,8 +29,8 @@ public interface Util {
     }
 
 
-    static double calculateDistance(Result postcode1, PostcodeResponse postcode2) {
-        return calculateDistance(postcode1.getLatitude(), postcode1.getLongitude(), postcode2.getResult().getLatitude(), postcode2.getResult().getLongitude());
+    static double calculateDistance(PostcodeResultDTO postcode1, PostcodeDTO postcode2) {
+        return calculateDistance(postcode1.getLatitude(), postcode1.getLongitude(), postcode2.getPostcodeResultDTO().getLatitude(), postcode2.getPostcodeResultDTO().getLongitude());
     }
 
     /**

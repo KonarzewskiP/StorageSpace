@@ -20,6 +20,9 @@ import java.util.List;
 @Table(name = "warehouses")
 public class Warehouse extends AbstractObject {
 
+    @Column(name = "name", nullable = false)
+    private String name;
+
     @OneToOne
     @JoinColumn(name = "address_id")
     private Address address;

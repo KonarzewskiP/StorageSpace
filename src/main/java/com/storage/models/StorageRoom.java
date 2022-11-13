@@ -8,6 +8,12 @@ import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDate;
 
+//TODO improve identification of specific storage rooms.
+// For example, allow adding unique codes for specific rooms to
+// ease search for them in the Warehouse.
+// What if there will be a need for a warehouse to resize and reorganize rooms.
+
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -17,13 +23,16 @@ import java.time.LocalDate;
 public class StorageRoom extends AbstractObject {
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "storage_size", nullable = false)
     private StorageSize storageSize;
 
     //TODO improve reservation systems
     private boolean reserved;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @Column(name = "start_date")
     private LocalDate startDate;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @Column(name = "end_date", nullable = false)
     private LocalDate endDate;
 
     @ManyToOne(fetch = FetchType.LAZY)

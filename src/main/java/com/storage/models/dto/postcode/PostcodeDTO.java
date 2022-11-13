@@ -1,4 +1,4 @@
-package com.storage.models.dto.externals.postcode;
+package com.storage.models.dto.postcode;
 
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -12,8 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @JsonDeserialize
-public class PostcodeResponse {
-
+public class PostcodeDTO {
     private int status;
-    private Result result;
+    private PostcodeResultDTO postcodeResultDTO;
 }

@@ -9,8 +9,7 @@ import lombok.Data;
 @AllArgsConstructor
 @Builder
 public class WarehouseDto {
-
-    private Long id;
+    private String uuid;
     private String name;
     private AddressDto address;
 }

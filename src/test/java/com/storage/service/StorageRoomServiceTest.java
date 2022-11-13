@@ -1,7 +1,7 @@
 package com.storage.service;
 
 import com.storage.builders.Fixtures;
-import com.storage.exceptions.ResourceNotFoundException;
+import com.storage.exceptions.NotFoundException;
 import com.storage.exceptions.StorageRoomException;
 import com.storage.models.StorageRoom;
 import com.storage.models.dto.StorageRoomDto;
@@ -69,7 +69,7 @@ public class StorageRoomServiceTest {
         var thrown = catchThrowable(() -> service.updateStorageRoom(storageRoomDto));
         //then
         assertThat(thrown)
-                .isInstanceOf(ResourceNotFoundException.class)
+                .isInstanceOf(NotFoundException.class)
                 .hasMessageContaining("StorageRoom not found with id: 999");
     }
 
@@ -95,7 +95,7 @@ public class StorageRoomServiceTest {
         var storageRoom = createStorageRoom();
         when(storageRoomRepository.findById(anyLong())).thenReturn(Optional.of(storageRoom));
         //when
-        var result = service.findStorageRoomById(999L);
+        var result = service.findByUuid(999L);
         //then
         assertThat(result.getId()).isEqualTo(3L);
     }
@@ -106,10 +106,10 @@ public class StorageRoomServiceTest {
         //given
         var id = 999L;
         //when
-        var thrown = catchThrowable(() -> service.findStorageRoomById(id));
+        var thrown = catchThrowable(() -> service.findByUuid(id));
         //then
         assertThat(thrown)
-                .isInstanceOf(ResourceNotFoundException.class)
+                .isInstanceOf(NotFoundException.class)
                 .hasMessageContaining("StorageRoom not found with id: 999");
     }
 
@@ -119,10 +119,10 @@ public class StorageRoomServiceTest {
         //given
         Long id = null;
         //when
-        var thrown = catchThrowable(() -> service.findStorageRoomById(id));
+        var thrown = catchThrowable(() -> service.findByUuid(id));
         //then
         assertThat(thrown)
-                .isInstanceOf(ResourceNotFoundException.class)
+                .isInstanceOf(NotFoundException.class)
                 .hasMessageContaining("StorageRoom not found with id: null");
     }
 

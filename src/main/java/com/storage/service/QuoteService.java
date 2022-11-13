@@ -79,8 +79,8 @@ public class QuoteService {
 //        BigDecimal price = quote.quote();
 
         return String.format("Hi %s, here is your price.\n\n" +
-                        "Move-in: %s\nAnticipated stay: %s\nRoom size: %s sq ft\nRoom type: %s\n\n%s:\n£%.2f per week.",
-                firstName, date, duration, size, roomType, warehouseName, price);
+                        "Move-in: %s\nAnticipated stay: %s\nRoom size: %s sq ft\nRoom type: %s\n\n%s:\n£s.2ef per week.",
+                firstName, date, duration, size, roomType, warehouseName);
     }
 
     private QuoteResponseDto sendEmail(Quote quote) {

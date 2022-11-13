@@ -1,40 +1,41 @@
 package com.storage.service;
 
-import com.storage.exceptions.ResourceNotFoundException;
+import com.storage.exceptions.BadRequestException;
+import com.storage.exceptions.NotFoundException;
 import com.storage.exceptions.StorageRoomException;
+import com.storage.models.StorageRoom;
 import com.storage.models.dto.StorageRoomDto;
 import com.storage.models.mapper.ModelMapper;
+import com.storage.models.requests.StorageRoomUpdateRequest;
 import com.storage.repositories.StorageRoomRepository;
 import com.storage.validators.StorageRoomDtoValidator;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.stream.Collectors;
 
 import static com.storage.models.mapper.ModelMapper.fromStorageRoomToStorageRoomDto;
 
 @Slf4j
 @Service
-@Transactional
-@RequiredArgsConstructor
-public class StorageRoomService {
-
-    public static final String STORAGE_ROOM = "StorageRoom";
-    public static final String ID = "id";
-
+public class StorageRoomService extends AbstractService<StorageRoom> {
     private final StorageRoomRepository storageRoomRepository;
 
-    public StorageRoomDto updateStorageRoom(StorageRoomDto storageRoomDto) {
-        log.info("Enter StorageRoomService -> updateStorageRoom() with: " + storageRoomDto);
+    public StorageRoomService(StorageRoomRepository storageRoomRepository) {
+        super(StorageRoom.class, storageRoomRepository);
+        this.storageRoomRepository = storageRoomRepository;
+    }
+
+
+    public StorageRoomDto updateStorageRoom(StorageRoom storageRoom, StorageRoomUpdateRequest request) {
         isStorageRoomDtoValid(storageRoomDto);
         var storageRoom =
                 storageRoomRepository
                         .findById(storageRoomDto.getId())
-                        .orElseThrow(() -> new ResourceNotFoundException(STORAGE_ROOM, ID, storageRoomDto.getId()));
+                        .orElseThrow(() -> new NotFoundException(STORAGE_ROOM, ID, storageRoomDto.getId()));
 
-        if (storageRoomDto.getReserved()){
+        if (storageRoomDto.getReserved()) {
             storageRoom.setStartDate(storageRoomDto.getStartDate());
             storageRoom.setEndDate(storageRoomDto.getEndDate());
         }
@@ -57,10 +58,14 @@ public class StorageRoomService {
         }
     }
 
-    public StorageRoomDto findStorageRoomById(Long id) {
-        log.info("Enter StorageRoomService -> findStorageRoomById() with: " + id);
+    public StorageRoomDto findByUuid(String uuid) {
+        if (StringUtils.isBlank(uuid))
+            throw new BadRequestException("Uuid can not be null or empty");
+
         var storageRoom =
-                storageRoomRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(STORAGE_ROOM, ID, id));
+                storageRoomRepository.findByUuid(uuid)
+                        .orElseThrow(() -> new NotFoundException(String.format("Storage room not found by [UUID:%s]", uuid)));
+
         return ModelMapper.fromStorageRoomToStorageRoomDto(storageRoom);
     }
 }

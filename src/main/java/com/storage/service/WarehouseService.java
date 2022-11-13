@@ -1,20 +1,22 @@
 package com.storage.service;
 
 import com.storage.exceptions.AddressException;
-import com.storage.exceptions.ResourceNotFoundException;
+import com.storage.exceptions.BadRequestException;
+import com.storage.exceptions.NotFoundException;
 import com.storage.exceptions.WarehouseServiceException;
 import com.storage.models.dto.AddressDto;
 import com.storage.models.dto.StorageRoomDto;
 import com.storage.models.dto.WarehouseDto;
+import com.storage.models.dto.postcode.PostcodeDetailsManyDTO;
 import com.storage.models.mapper.ModelMapper;
 import com.storage.repositories.AddressRepository;
 import com.storage.repositories.StorageRoomRepository;
 import com.storage.repositories.WarehouseRepository;
-import com.storage.service.postcodes_api.PostcodeService;
 import com.storage.validators.AddressDtoValidator;
 import com.storage.validators.WarehouseDtoValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -71,6 +73,7 @@ public class WarehouseService {
      * The method checks if the address passed inside WarehouseDto is in a valid format.
      * If the address is not valid, it throws an exception.
      * <p>
+     *
      * @param addressDto object to be saved.
      * @throws AddressException if the address details are not valid.
      */
@@ -90,6 +93,7 @@ public class WarehouseService {
      * The method checks if the warehouseDto is valid.
      * If warehouseDto is not valid, it throws an exception.
      * <p>
+     *
      * @param warehouseDto object to be saved.
      * @throws WarehouseServiceException if the warehouse details are not valid.
      */
@@ -110,24 +114,29 @@ public class WarehouseService {
     /**
      * The method retrieves the warehouse by id from the database.
      * <p>
+     *
      * @param id of the warehouse to be searched for.
-     * @throws ResourceNotFoundException if the id of the warehouse does not exist.
      * @return WarehouseDto with details about the specific warehouse.
+     * @throws NotFoundException if the id of the warehouse does not exist.
      */
 
-    public WarehouseDto getWarehouseById(Long id) {
-        log.info("Enter WarehouseService -> addWarehouse() with id: " + id);
-        var warehouse = warehouseRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(WAREHOUSE, ID, id));
+    public WarehouseDto getByUuid(String uuid) {
+        if (StringUtils.isBlank(uuid))
+            throw new BadRequestException("Uuid can not be null or empty");
+
+        var warehouse = warehouseRepository.findByUuid(uuid)
+                .orElseThrow(() -> new NotFoundException(String.format("Warehouse not found by [UUID:%s]", uuid)));
+
         return fromWarehouseToWarehouseDto(warehouse);
     }
 
     /**
      * The method retrieves all warehouses from the database.
      * <p>
+     *
      * @return List of warehouses from the database with details.
      */
     public List<WarehouseDto> getAllWarehouses() {
-        log.info("Enter WarehouseService -> getAllWarehouses()");
         return fromWarehouseListToWarehouseDtoList(warehouseRepository.findAll());
     }
 
@@ -137,17 +146,47 @@ public class WarehouseService {
      * for all available storage rooms and map it to dto object.
      * <p>
      * @param id of the warehouse to be searched for and to retrieves available storage rooms from.
-     * @throws ResourceNotFoundException if the id of the warehouse does not exist.
      * @return List of available storage rooms with details from the specific warehouse.
+     * @throws NotFoundException if the id of the warehouse does not exist.
      */
 
     public List<StorageRoomDto> getNotReservedStorageRoomsByWarehouseId(Long id) {
         log.info("Enter WarehouseService -> getAvailableStorageRoomsByWarehouseId() with id: " + id);
-        var warehouse = warehouseRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(WAREHOUSE, ID, id));
+        var warehouse = warehouseRepository.findById(id).orElseThrow(() -> new NotFoundException(WAREHOUSE, ID, id));
         return warehouse.getStorageRooms()
                 .stream()
                 .filter(storage -> !storage.isReserved())
                 .map(ModelMapper::fromStorageRoomToStorageRoomDto)
                 .collect(Collectors.toList());
     }
+
+    /**
+     * The method that sort all warehouses from the database in ascending order by distance from
+     * the postcode given by user in call to the controller method- getNearestWarehouses().
+     *
+     * @param postcode postcode given by the user.
+     * @return list of ordered warehouses in descending order. From the closest to the most further away,
+     * according to the postcode given by the user.
+     */
+    public List<WarehouseDto> getOrderedByDistanceFromPostcode(String postcode) {
+        if (StringUtils.isBlank(postcode))
+            throw new BadRequestException("Postcode can not be null or empty");
+
+
+        var warehousesList = warehouseRepository.findAll();
+        var listOfPostcodesFromEachWarehouse = warehousesList
+                .stream()
+                .map(warehouse -> warehouse.getAddress().getPostcode())
+                .collect(Collectors.toList());
+
+        PostcodeDetailsManyDTO coordinatesOfWarehouses = postcodeService.getMultipleCoordinates(listOfPostcodesFromEachWarehouse);
+        var userPostcodeCoordinates = postcodeService.getSingleCoordinates(postcode);
+
+//        var map = getWarehousePostcodeByDistanceFromUserPostcode(userPostcodeCoordinates, coordinatesOfWarehouses);
+//        var sortedMap = sortPostcodesByDistance(map);
+//        var orderedList = getOrderedListOfWarehouses(warehousesList, sortedMap);
+//        return ModelMapper.fromWarehouseListToWarehouseDtoList(orderedList);
+        return null;
+    }
+
 }

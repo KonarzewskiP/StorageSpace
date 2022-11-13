@@ -1,7 +1,7 @@
 package com.storage.validators;
 
 import com.storage.models.dto.AddressDto;
-import com.storage.service.postcodes_api.PostcodeService;
+import com.storage.service.PostcodeService;
 import com.storage.validators.base.Validator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
