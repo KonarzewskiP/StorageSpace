@@ -3,21 +3,21 @@ package com.storage.validators;
 import com.storage.models.dto.StorageRoomDto;
 import com.storage.models.requests.StorageRoomUpdateRequest;
 import com.storage.validators.base.Validator;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static java.util.Objects.isNull;
 
-public class StorageRoomDtoValidator implements Validator<StorageRoomUpdateRequest> {
+//TODO StorageRoom
+public class StorageRoomUpdateReqValidator implements Validator<StorageRoomUpdateRequest> {
 
     @Override
     public Map<String, String> validate(StorageRoomUpdateRequest storageRoom) {
         Map<String, String> errors = new HashMap<>();
 
         if (isNull(storageRoom)) {
-            errors.put("StorageRoomDto", "Can not be null");
+            errors.put("Update request", "Can not be null");
             return errors;
         }
 
@@ -26,23 +26,19 @@ public class StorageRoomDtoValidator implements Validator<StorageRoomUpdateReque
             return errors;
         }
 
-        if (StringUtils.isBlank(storageRoom.getUuid())) {
-            errors.put("UUID", "Can not be null or empty");
-            return errors;
-        }
+//        if (isStorageNotReserved(storageRoom)){
+//            return errors;
+//        }
 
-        if (isStorageNotReserved(storageRoom)){
-            return errors;
-        }
 
-        if (isNull(storageRoom.getStartDate())){
-            errors.put("StartDate", "Can not be null");
-            return errors;
-
-        } else if (isNull(storageRoom.getEndDate())){
-            errors.put("EndDate", "Can not be null");
-            return errors;
-        }
+//        if (isNull(storageRoom.getStartDate())){
+//            errors.put("StartDate", "Can not be null");
+//            return errors;
+//
+//        } else if (isNull(storageRoom.getEndDate())){
+//            errors.put("EndDate", "Can not be null");
+//            return errors;
+//        }
 
         if (!isStartDateAfterEndDate(storageRoom)){
             errors.put("Invalid Date","Start date must be before end date");

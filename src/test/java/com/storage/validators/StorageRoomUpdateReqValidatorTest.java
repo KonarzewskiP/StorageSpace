@@ -7,11 +7,11 @@ import org.junit.jupiter.api.Test;
 import static com.storage.builders.Fixtures.START_DATE;
 import static com.storage.builders.Fixtures.createStorageRoomDto;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
-public class StorageRoomDtoValidatorTest {
+public class StorageRoomUpdateReqValidatorTest {
 
-    private final StorageRoomDtoValidator validator = new StorageRoomDtoValidator();
+    private final StorageRoomUpdateReqValidator validator = new StorageRoomUpdateReqValidator();
 
     @Test
     @DisplayName("valid storageRoomDto should trigger no errors")

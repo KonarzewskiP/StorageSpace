@@ -1,6 +1,7 @@
 package com.storage.controllers;
 
 import com.storage.models.dto.UserDto;
+import com.storage.models.mapper.ModelMapper;
 import com.storage.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,14 +18,16 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<UserDto> addUser(@RequestBody UserDto userDto) {
+    public ResponseEntity<UserDto> create(@RequestBody UserDto userDto) {
         log.info("Enter UserController -> addUser() with: " + userDto);
         return new ResponseEntity<>(userService.addUser(userDto), HttpStatus.CREATED);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
-        return new ResponseEntity<>(userService.getUserById(id), HttpStatus.OK);
+    @GetMapping("/{uuid}")
+    public ResponseEntity<UserDto> getByUuid(@PathVariable String uuid) {
+        var user = userService.findByUuid(uuid);
+        var userDTO = ModelMapper.fromUserToUserDto(user);
+        return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
 }
 

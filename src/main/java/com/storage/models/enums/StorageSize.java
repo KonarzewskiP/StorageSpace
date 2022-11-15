@@ -17,11 +17,11 @@ public enum StorageSize {
     TWO_DOUBLE_GARAGES("Two double garage", 37.5f),
     TWO_SHIPPING_CONTAINERS("Two shipping containers", 46.5f);
 
-    private final String type;
+    private final String description;
     private final float sizeInSqMeters;
 
-    StorageSize(String type, float sizeInSqMeters) {
-        this.type = type;
+    StorageSize(String description, float sizeInSqMeters) {
+        this.description = description;
         this.sizeInSqMeters = sizeInSqMeters;
     }
 }

@@ -2,6 +2,7 @@ package com.storage.controllers;
 
 import com.storage.models.dto.StorageRoomDto;
 import com.storage.models.dto.WarehouseDto;
+import com.storage.models.mapper.ModelMapper;
 import com.storage.service.WarehouseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,8 +29,9 @@ public class WarehouseController {
     @GetMapping("/{uuid}")
     public ResponseEntity<WarehouseDto> getWarehouseByUuid(@PathVariable String uuid) {
         log.info("Enter WarehouseController -> getWarehouseByUuid() [UUID:{}] ", uuid);
-
-        return new ResponseEntity<>(warehouseService.getByUuid(uuid), HttpStatus.OK);
+        var warehouse = warehouseService.findByUuid(uuid);
+        var warehouseDto = ModelMapper.fromWarehouseToWarehouseDto(warehouse);
+        return new ResponseEntity<>(warehouseDto,HttpStatus.OK);
     }
 
     @GetMapping

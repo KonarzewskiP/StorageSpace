@@ -5,6 +5,7 @@ import com.storage.exceptions.NotFoundException;
 import com.storage.models.base.AbstractObject;
 import com.storage.repositories.UuidRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 
 @RequiredArgsConstructor
 public abstract class AbstractService<T extends AbstractObject> {
@@ -13,11 +14,19 @@ public abstract class AbstractService<T extends AbstractObject> {
     private final UuidRepository<T, Long> repository;
 
     public T findByUuidForUpdate(String uuid) {
-        if (uuid == null || uuid.length() == 0)
+        if (StringUtils.isBlank(uuid))
             throw new BadRequestException("UUID can't be null or empty.");
 
         return repository.findByUuidForUpdate(uuid)
-                .orElseThrow(() -> new NotFoundException(clazz.getSimpleName() + " not found with uuid " + uuid));
+                .orElseThrow(() -> new NotFoundException(clazz.getSimpleName() + " not found with uuid: " + uuid));
+    }
+
+    public T findByUuid(String uuid) {
+        if (StringUtils.isBlank(uuid))
+            throw new BadRequestException("UUID can't be null or empty.");
+
+        return repository.findByUuid(uuid)
+                .orElseThrow(() -> new NotFoundException(clazz.getSimpleName() + " not found with uuid: " + uuid));
     }
 
 }

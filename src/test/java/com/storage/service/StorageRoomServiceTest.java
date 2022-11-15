@@ -95,7 +95,7 @@ public class StorageRoomServiceTest {
         var storageRoom = createStorageRoom();
         when(storageRoomRepository.findById(anyLong())).thenReturn(Optional.of(storageRoom));
         //when
-        var result = service.findByUuid(999L);
+        var result = service.findByUuid("999L");
         //then
         assertThat(result.getId()).isEqualTo(3L);
     }

@@ -4,6 +4,7 @@ import com.storage.exceptions.AddressException;
 import com.storage.exceptions.BadRequestException;
 import com.storage.exceptions.NotFoundException;
 import com.storage.exceptions.WarehouseServiceException;
+import com.storage.models.Warehouse;
 import com.storage.models.dto.AddressDto;
 import com.storage.models.dto.StorageRoomDto;
 import com.storage.models.dto.WarehouseDto;
@@ -14,7 +15,6 @@ import com.storage.repositories.StorageRoomRepository;
 import com.storage.repositories.WarehouseRepository;
 import com.storage.validators.AddressDtoValidator;
 import com.storage.validators.WarehouseDtoValidator;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -34,8 +34,7 @@ import static com.storage.utils.Util.createStorageRoomsList;
 @Slf4j
 @Service
 @Transactional
-@RequiredArgsConstructor
-public class WarehouseService {
+public class WarehouseService extends AbstractService<Warehouse> {
 
     public static final String WAREHOUSE = "Warehouse";
     public static final String ID = "id";
@@ -46,10 +45,24 @@ public class WarehouseService {
     private final PostcodeService postcodeService;
     private final AddressDtoValidator addressDtoValidator;
 
+    public WarehouseService(WarehouseRepository warehouseRepository,
+                            StorageRoomRepository storageRoomRepository,
+                            AddressRepository addressRepository,
+                            PostcodeService postcodeService,
+                            AddressDtoValidator addressDtoValidator) {
+        super(Warehouse.class, warehouseRepository);
+        this.warehouseRepository = warehouseRepository;
+        this.storageRoomRepository = storageRoomRepository;
+        this.addressRepository = addressRepository;
+        this.postcodeService = postcodeService;
+        this.addressDtoValidator = addressDtoValidator;
+    }
+
     /**
      * The method add the warehouse to the database.
      * If the address is not valid, it throws an exception.
      * <p>
+     *
      * @param warehouseDto object to be saved.
      * @return Saved warehouse to the database as dto object.
      */
@@ -110,26 +123,6 @@ public class WarehouseService {
         }
     }
 
-
-    /**
-     * The method retrieves the warehouse by id from the database.
-     * <p>
-     *
-     * @param id of the warehouse to be searched for.
-     * @return WarehouseDto with details about the specific warehouse.
-     * @throws NotFoundException if the id of the warehouse does not exist.
-     */
-
-    public WarehouseDto getByUuid(String uuid) {
-        if (StringUtils.isBlank(uuid))
-            throw new BadRequestException("Uuid can not be null or empty");
-
-        var warehouse = warehouseRepository.findByUuid(uuid)
-                .orElseThrow(() -> new NotFoundException(String.format("Warehouse not found by [UUID:%s]", uuid)));
-
-        return fromWarehouseToWarehouseDto(warehouse);
-    }
-
     /**
      * The method retrieves all warehouses from the database.
      * <p>
@@ -145,6 +138,7 @@ public class WarehouseService {
      * First retrieves the warehouse by id, if id does not exist it throws an exception. Then search
      * for all available storage rooms and map it to dto object.
      * <p>
+     *
      * @param id of the warehouse to be searched for and to retrieves available storage rooms from.
      * @return List of available storage rooms with details from the specific warehouse.
      * @throws NotFoundException if the id of the warehouse does not exist.

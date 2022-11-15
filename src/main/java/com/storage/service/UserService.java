@@ -2,14 +2,14 @@ package com.storage.service;
 
 import com.storage.exceptions.NotFoundException;
 import com.storage.exceptions.UserServiceException;
+import com.storage.models.User;
 import com.storage.models.dto.UserDto;
 import com.storage.repositories.UserRepository;
 import com.storage.validators.UserDtoValidator;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.stream.Collectors;
 
 import static com.storage.models.mapper.ModelMapper.fromUserDtoToUser;
@@ -17,14 +17,18 @@ import static com.storage.models.mapper.ModelMapper.fromUserToUserDto;
 
 @Slf4j
 @Service
-@Transactional
-@RequiredArgsConstructor
-public class UserService {
+public class UserService extends AbstractService<User>{
 
     public static final String USER = "User";
     public static final String ID = "id";
 
     private final UserRepository userRepository;
+
+    @Autowired
+    public UserService(UserRepository userRepository) {
+        super(User.class, userRepository);
+        this.userRepository = userRepository;
+    }
 
     /**
      * The method that saves an user in the database

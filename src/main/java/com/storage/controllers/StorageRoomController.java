@@ -2,6 +2,7 @@ package com.storage.controllers;
 
 
 import com.storage.models.dto.StorageRoomDto;
+import com.storage.models.mapper.ModelMapper;
 import com.storage.models.requests.StorageRoomUpdateRequest;
 import com.storage.service.StorageRoomService;
 import lombok.RequiredArgsConstructor;
@@ -15,13 +16,13 @@ import javax.transaction.Transactional;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/storages")
+@RequestMapping("/storage-rooms")
 public class StorageRoomController {
 
     private final StorageRoomService storageRoomService;
 
     /**
-     * The method that updates StorageRoom entity
+     * Updates StorageRoom entity
      * <p>
      * Params: StorageRoomDto object with information to update.
      * Returns: ResponseEntity with <code>StorageRoomDto</code> object
@@ -30,11 +31,10 @@ public class StorageRoomController {
      */
     @Transactional
     @PutMapping("/{uuid}")
-    public ResponseEntity<StorageRoomDto> updateByUuid(@PathVariable String uuid,@RequestBody StorageRoomUpdateRequest request) {
-        log.info("Enter StorageRoomController -> updateStorageRoomByWarehouseId() with: [UUID:{}], [request:{}] ",uuid, request);
-
-        var storageRoom = storageRoomService.findByUuidForUpdate(uuid);
-        return new ResponseEntity<>(storageRoomService.updateStorageRoom(storageRoom, request), HttpStatus.CREATED);
+    public ResponseEntity<StorageRoomDto> updateByUuid(@PathVariable String uuid, @RequestBody StorageRoomUpdateRequest request) {
+        log.info("Enter StorageRoomController -> updateStorageRoomByWarehouseId() with: [UUID:{}], [request:{}] ", uuid, request);
+        var storageRoomDto = storageRoomService.updateStorageRoom(uuid, request);
+        return new ResponseEntity<>(storageRoomDto, HttpStatus.OK);
     }
 
     /**
@@ -48,7 +48,9 @@ public class StorageRoomController {
     @GetMapping("/{uuid}")
     public ResponseEntity<StorageRoomDto> findByUuid(@PathVariable String uuid) {
         log.info("Enter StorageRoomController -> findByUuid() with [UUID:{}] ", uuid);
-        return new ResponseEntity<>(storageRoomService.findByUuid(uuid), HttpStatus.OK);
+        var storageRoom = storageRoomService.findByUuid(uuid);
+        var storageRoomDto = ModelMapper.fromStorageRoomToStorageRoomDto(storageRoom);
+        return new ResponseEntity<>(storageRoomDto, HttpStatus.OK);
     }
 
 }
