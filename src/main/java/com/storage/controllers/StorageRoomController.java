@@ -3,7 +3,7 @@ package com.storage.controllers;
 
 import com.storage.models.dto.StorageRoomDto;
 import com.storage.models.mapper.ModelMapper;
-import com.storage.models.requests.StorageRoomUpdateRequest;
+import com.storage.models.requests.StorageUpdateRequest;
 import com.storage.service.StorageRoomService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +31,7 @@ public class StorageRoomController {
      */
     @Transactional
     @PutMapping("/{uuid}")
-    public ResponseEntity<StorageRoomDto> updateByUuid(@PathVariable String uuid, @RequestBody StorageRoomUpdateRequest request) {
+    public ResponseEntity<StorageRoomDto> updateByUuid(@PathVariable String uuid, @RequestBody StorageUpdateRequest request) {
         log.info("Enter StorageRoomController -> updateStorageRoomByWarehouseId() with: [UUID:{}], [request:{}] ", uuid, request);
         var storageRoomDto = storageRoomService.updateStorageRoom(uuid, request);
         return new ResponseEntity<>(storageRoomDto, HttpStatus.OK);

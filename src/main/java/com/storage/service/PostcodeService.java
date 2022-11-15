@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import javax.transaction.Transactional;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -100,13 +101,12 @@ public class PostcodeService {
 
     public PostcodeDetailsManyDTO getMultipleCoordinates(List<String> postcodes) {
         log.info("Enter PostcodeService -> getCoordinatesPostcodes() with: " + postcodes);
-        var map = Map.of("postcodes", postcodes);
-
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        var json = objectMapper.valueToTree(map);
-        HttpEntity<Object> request = new HttpEntity<>(json, headers);
+        Map<String, List<String>> body = new HashMap<>();
+        body.put("postcodes", postcodes);
+        HttpEntity<Object> request = new HttpEntity<>(body, headers);
 
         return restTemplate.postForObject(postcodeUrl, request, PostcodeDetailsManyDTO.class);
     }
@@ -165,11 +165,11 @@ public class PostcodeService {
      * @return map of postcodes as a key and distance from the postcode given by the user as a value.
      */
 
-    private Map<String, Double> getWarehousePostcodeByDistanceFromUserPostcode(PostcodeDTO coordinatesForPostcode, PostcodeResponseMany coordinatesOfWarehouses) {
-        return coordinatesOfWarehouses.getResult().stream()
-                .collect(Collectors.toMap((ResultMany resultMany) -> resultMany.getResult().getPostcode(),
-                        storage -> Util.calculateDistance(storage.getResult(), coordinatesForPostcode)));
-    }
+//    private Map<String, Double> getWarehousePostcodeByDistanceFromUserPostcode(PostcodeDTO coordinatesForPostcode, PostcodeResponseMany coordinatesOfWarehouses) {
+//        return coordinatesOfWarehouses.getResult().stream()
+//                .collect(Collectors.toMap((ResultMany resultMany) -> resultMany.getResult().getPostcode(),
+//                        storage -> Util.calculateDistance(storage.getResult(), coordinatesForPostcode)));
+//    }
 
 
 }

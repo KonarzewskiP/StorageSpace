@@ -17,7 +17,6 @@ public interface ModelMapper {
 
     static UserDto fromUserToUserDto(User user) {
         return user == null ? null : UserDto.builder()
-                .id(user.getId())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .email(user.getEmail())
@@ -28,7 +27,6 @@ public interface ModelMapper {
 
     static User fromUserDtoToUser(UserDto userDto) {
         return userDto == null ? null : User.builder()
-                .id(userDto.getId())
                 .firstName(userDto.getFirstName())
                 .lastName(userDto.getLastName())
                 .email(userDto.getEmail())
@@ -39,7 +37,6 @@ public interface ModelMapper {
 
     static WarehouseDto fromWarehouseToWarehouseDto(Warehouse warehouse) {
         return warehouse == null ? null : WarehouseDto.builder()
-                .id(warehouse.getId())
                 .name(warehouse.getName())
                 .address(fromAddressToAddressDto(warehouse.getAddress()))
                 .build();
@@ -78,7 +75,6 @@ public interface ModelMapper {
 
     static StorageRoomDto fromStorageRoomToStorageRoomDto(StorageRoom storageRoom) {
         return storageRoom == null ? null : StorageRoomDto.builder()
-                .id(storageRoom.getId())
                 .storageSize(storageRoom.getStorageSize())
                 .reserved(storageRoom.isReserved())
                 .startDate(storageRoom.getStartDate())

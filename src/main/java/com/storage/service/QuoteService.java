@@ -73,7 +73,7 @@ public class QuoteService {
         var dateFormatter = DateTimeFormatter.ofPattern("yyyy-MMMM-dd");
         String date = quote.getStartDate().format(dateFormatter);
         float size = quote.getStorageSize().getSizeInSqMeters();
-        String roomType = quote.getStorageSize().getType();
+        String roomType = quote.getStorageSize().getDescription();
         String duration = quote.getDuration().getDuration();
         String warehouseName = quote.getWarehouseName();
 //        BigDecimal price = quote.quote();

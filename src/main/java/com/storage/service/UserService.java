@@ -1,6 +1,5 @@
 package com.storage.service;
 
-import com.storage.exceptions.NotFoundException;
 import com.storage.exceptions.UserServiceException;
 import com.storage.models.User;
 import com.storage.models.dto.UserDto;
@@ -78,12 +77,5 @@ public class UserService extends AbstractService<User>{
     private void checkEmailAvailability(String email) {
         userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserServiceException("Invalid UserDto! Email already exist in database"));
-    }
-
-    public UserDto getUserById(Long id) {
-        log.info("Enter UserService -> getUserById() with: " + id);
-        var director =
-                userRepository.findById(id).orElseThrow(() -> new NotFoundException(USER, ID, id));
-        return fromUserToUserDto(director);
     }
 }

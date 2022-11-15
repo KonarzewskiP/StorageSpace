@@ -146,7 +146,7 @@ public class WarehouseService extends AbstractService<Warehouse> {
 
     public List<StorageRoomDto> getNotReservedStorageRoomsByWarehouseId(Long id) {
         log.info("Enter WarehouseService -> getAvailableStorageRoomsByWarehouseId() with id: " + id);
-        var warehouse = warehouseRepository.findById(id).orElseThrow(() -> new NotFoundException(WAREHOUSE, ID, id));
+        var warehouse = findById(id);
         return warehouse.getStorageRooms()
                 .stream()
                 .filter(storage -> !storage.isReserved())

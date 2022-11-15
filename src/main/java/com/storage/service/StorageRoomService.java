@@ -1,15 +1,12 @@
 package com.storage.service;
 
-import com.storage.exceptions.StorageRoomException;
+import com.storage.exceptions.BadRequestException;
 import com.storage.models.StorageRoom;
 import com.storage.models.dto.StorageRoomDto;
-import com.storage.models.requests.StorageRoomUpdateRequest;
+import com.storage.models.requests.StorageUpdateRequest;
 import com.storage.repositories.StorageRoomRepository;
-import com.storage.validators.StorageRoomUpdateReqValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.util.stream.Collectors;
 
 import static com.storage.models.mapper.ModelMapper.fromStorageRoomToStorageRoomDto;
 
@@ -23,36 +20,25 @@ public class StorageRoomService extends AbstractService<StorageRoom> {
         this.storageRoomRepository = storageRoomRepository;
     }
 
-
-    public StorageRoomDto updateStorageRoom(String uuid, StorageRoomUpdateRequest request) {
+    public StorageRoomDto updateStorageRoom(String uuid, StorageUpdateRequest request) {
         isUpdateRequestValid(request);
+        var storage = findByUuidForUpdate(uuid);
 
-        var storageRoom = findByUuidForUpdate(uuid);
+        if (request.getStatus() != storage.getStatus())
+            storage.setStatus(request.getStatus());
 
-        if (storageRoomDto.getReserved()) {
-            storageRoom.setStartDate(storageRoomDto.getStartDate());
-            storageRoom.setEndDate(storageRoomDto.getEndDate());
-        }
-        storageRoom.setReserved(storageRoomDto.getReserved());
+        if (request.getStorageSize() != storage.getStorageSize())
+            storage.setStorageSize(request.getStorageSize());
 
-        log.info("StorageRoom: " + storageRoom);
-        var addedStorageRoom = storageRoomRepository.save(storageRoom);
-        return fromStorageRoomToStorageRoomDto(addedStorageRoom);
+        var updatedStorage = storageRoomRepository.save(storage);
+        return fromStorageRoomToStorageRoomDto(updatedStorage);
     }
 
-    private void isUpdateRequestValid(StorageRoomUpdateRequest request) {
-        var validator = new StorageRoomUpdateReqValidator();
-        var errors = validator.validate(request);
-
-        if (!errors.isEmpty()) {
-            throw new StorageRoomException("Invalid StorageRoomDto! errors: " + errors
-                    .entrySet()
-                    .stream()
-                    .map(err -> err.getKey() + " - " + err.getValue())
-                    .collect(Collectors.joining(", ")));
-        }
-
+    private void isUpdateRequestValid(StorageUpdateRequest request) {
+        if (request == null)
+            throw new BadRequestException("Storage Update Request is NULL!");
     }
+
 }
 
 
