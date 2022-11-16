@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 
+import static com.storage.models.mapper.ModelMapper.fromStorageRoomToStorageRoomDto;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -32,9 +34,9 @@ public class StorageRoomController {
     @Transactional
     @PutMapping("/{uuid}")
     public ResponseEntity<StorageRoomDto> updateByUuid(@PathVariable String uuid, @RequestBody StorageUpdateRequest request) {
-        log.info("Enter StorageRoomController -> updateStorageRoomByWarehouseId() with: [UUID:{}], [request:{}] ", uuid, request);
-        var storageRoomDto = storageRoomService.updateStorageRoom(uuid, request);
-        return new ResponseEntity<>(storageRoomDto, HttpStatus.OK);
+        var storage = storageRoomService.updateStorageRoom(uuid, request);
+        var storageDto = fromStorageRoomToStorageRoomDto(storage);
+        return new ResponseEntity<>(storageDto, HttpStatus.OK);
     }
 
     /**
@@ -47,7 +49,6 @@ public class StorageRoomController {
      */
     @GetMapping("/{uuid}")
     public ResponseEntity<StorageRoomDto> findByUuid(@PathVariable String uuid) {
-        log.info("Enter StorageRoomController -> findByUuid() with [UUID:{}] ", uuid);
         var storageRoom = storageRoomService.findByUuid(uuid);
         var storageRoomDto = ModelMapper.fromStorageRoomToStorageRoomDto(storageRoom);
         return new ResponseEntity<>(storageRoomDto, HttpStatus.OK);

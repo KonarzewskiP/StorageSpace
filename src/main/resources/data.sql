@@ -3,28 +3,29 @@ VALUES ('U1000', NOW(), NOW(), 'Rick', 'Sanchez', 'rick@sanchez.com', 'ADMIN', '
        ('U1001', NOW(), NOW(), 'Morty', 'Smith', 'morty@smith.com', 'CUSTOMER', 'MALE'),
        ('U1002', NOW(), NOW(), 'Summer', 'Smith', 'summer@smith.com', 'CUSTOMER', 'FEMALE');
 
-INSERT INTO warehouses (uuid, created_at, updated_at, name, spec_type, address_id)
-VALUES ('WH1', NOW(), NOW(), 'Byfleet', 'REGULAR', 1),
-       ('WH2', NOW(), NOW(), 'Bromley ', 'REGULAR', 2),
-       ('WH3', NOW(), NOW(), 'Bow ', 'PREMIUM', 3),
-       ('WH4', NOW(), NOW(), 'Beckenham ', 'PREMIUM', 4),
-       ('WH5', NOW(), NOW(), 'Battersea ', 'PREMIUM', 5),
-       ('WH6', NOW(), NOW(), 'Barking ', 'PREMIUM', 6),
-       ('WH10', NOW(), NOW(), 'Camberwell', 'PREMIUM', 7),
-       ('WH11', NOW(), NOW(), 'Enfield ', 'PREMIUM', 8),
-       ('WH27', NOW(), NOW(), 'North Kensington ', 'REGULAR', 9),
-       ('WH29', NOW(), NOW(), 'New Malden ', 'REGULAR', 10),
-       ('WH30', NOW(), NOW(), 'New Cross ', 'REGULAR', 11),
-       ('WH32', NOW(), NOW(), 'Kingston ', 'REGULAR', 12),
-       ('WH33', NOW(), NOW(), 'Kennington ', 'REGULAR', 13),
-       ('WH34', NOW(), NOW(), 'West Norwood ', 'REGULAR', 14),
-       ('WH35', NOW(), NOW(), 'West Molesey ', 'REGULAR', 15),
-       ('WH36', NOW(), NOW(), 'Watford ', 'REGULAR', 16),
-       ('WH38', NOW(), NOW(), 'Wandsworth ', 'REGULAR', 17),
-       ('WH39', NOW(), NOW(), 'Twickenham ', 'REGULAR', 18),
-       ('WH40', NOW(), NOW(), 'Tolworth ', 'REGULAR', 19),
-       ('WH41', NOW(), NOW(), 'Sutton ', 'REGULAR', 20),
-       ('WH42', NOW(), NOW(), 'Staples Corner', 'REGULAR', 21);
+INSERT INTO warehouses (lat, lng, uuid, created_at, updated_at, name, spec_type, address_id)
+VALUES (51.346915, -0.481226, 'WH1', NOW(), NOW(), 'Byfleet', 'REGULAR', 1),
+       (51.410732, 0.011502, 'WH2', NOW(), NOW(), 'Bromley ', 'REGULAR', 2),
+       (51.53624, -0.022016, 'WH3', NOW(), NOW(), 'Bow ', 'PREMIUM', 3),
+       (51.396705, -0.04818, 'WH4', NOW(), NOW(), 'Beckenham ', 'PREMIUM', 4),
+       (51.470125, -0.176813, 'WH5', NOW(), NOW(), 'Battersea ', 'PREMIUM', 5),
+       (51.539173, 0.068501, 'WH6', NOW(), NOW(), 'Barking ', 'PREMIUM', 6),
+       (51.480068, -0.087975, 'WH10', NOW(), NOW(), 'Camberwell', 'PREMIUM', 7),
+       (51.64215, -0.058921, 'WH11', NOW(), NOW(), 'Enfield ', 'PREMIUM', 8),
+       (51.523919, -0.232178, 'WH27', NOW(), NOW(), 'North Kensington ', 'REGULAR', 9),
+       (51.401071, -0.242833, 'WH29', NOW(), NOW(), 'New Malden ', 'REGULAR', 10),
+       (51.47176, -0.029992, 'WH30', NOW(), NOW(), 'New Cross ', 'REGULAR', 11),
+       (51.412528, -0.289619, 'WH32', NOW(), NOW(), 'Kingston ', 'REGULAR', 12),
+       (51.486203, -0.119346, 'WH33', NOW(), NOW(), 'Kennington ', 'REGULAR', 13),
+       (51.426975, -0.104606, 'WH34', NOW(), NOW(), 'West Norwood ', 'REGULAR', 14),
+       (51.397467, -0.379596, 'WH35', NOW(), NOW(), 'West Molesey ', 'REGULAR', 15),
+       (51.65079, -0.42407, 'WH36', NOW(), NOW(), 'Watford ', 'REGULAR', 16),
+       (51.45124, -0.191335, 'WH38', NOW(), NOW(), 'Wandsworth ', 'REGULAR', 17),
+       (51.455904, -0.338801, 'WH39', NOW(), NOW(), 'Twickenham ', 'REGULAR', 18),
+       (51.372357, -0.29146, 'WH40', NOW(), NOW(), 'Tolworth ', 'REGULAR', 19),
+       (51.377318, -0.20697, 'WH41', NOW(), NOW(), 'Sutton ', 'REGULAR', 20),
+       (51.569753, -0.234358, 'WH42', NOW(), NOW(), 'Staples Corner', 'REGULAR', 21);
+
 
 INSERT INTO address (city, street, postcode)
 VALUES ('Surrey', '113-115 Oyster Lane', 'KT14 7JZ'),

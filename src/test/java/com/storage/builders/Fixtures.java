@@ -7,12 +7,12 @@ import com.storage.models.Warehouse;
 import com.storage.models.businessObject.Quote;
 import com.storage.models.dto.AddressDto;
 import com.storage.models.dto.StorageRoomDto;
-import com.storage.models.dto.UserDto;
 import com.storage.models.dto.WarehouseDto;
 import com.storage.models.dto.postcode.PostcodeDTO;
 import com.storage.models.dto.postcode.PostcodeResultDTO;
 import com.storage.models.dto.postcode.PostcodeValidateDTO;
 import com.storage.models.enums.*;
+import com.storage.models.requests.createUserRequest;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -33,16 +33,14 @@ public class Fixtures {
 
     public static User createUser() {
         return User.builder()
-                .id(1L)
                 .firstName("Veronica")
                 .lastName("Jobs")
                 .gender(Gender.FEMALE)
                 .build();
     }
 
-    public static UserDto createUserDto() {
-        return UserDto.builder()
-                .id(10L)
+    public static createUserRequest createUserDto() {
+        return createUserRequest.builder()
                 .firstName("John")
                 .lastName("Orange")
                 .email("storageRooms@fakeEmail.com")
@@ -65,7 +63,6 @@ public class Fixtures {
 
     public static WarehouseDto createWarehouseDto() {
         return WarehouseDto.builder()
-                .id(2L)
                 .name("Big Yellow")
                 .address(AddressDto.builder()
                         .city("London")
@@ -86,7 +83,6 @@ public class Fixtures {
 
     public static StorageRoomDto createStorageRoomDto() {
         return StorageRoomDto.builder()
-                .id(30L)
                 .storageSize(StorageSize.GARDEN_SHED)
                 .reserved(false)
                 .startDate(null)

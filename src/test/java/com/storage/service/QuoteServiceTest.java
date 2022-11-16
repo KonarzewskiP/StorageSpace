@@ -31,7 +31,7 @@ public class QuoteServiceTest {
         //given
         var quote = createQuote();
         //when
-        var result = service.sendQuote(quote);
+        var result = service.estimate(quote);
         //then
         assertThat(result.getStatus()).isEqualTo(DeliveryStatus.OK);
         assertThat(result.getEmail()).isEqualTo("johnBravo@gmail.com");
@@ -43,7 +43,7 @@ public class QuoteServiceTest {
         //given
         Quote quote = null;
         //when
-        var result = catchThrowable(() -> service.sendQuote(quote));
+        var result = catchThrowable(() -> service.estimate(quote));
         //then
         assertThat(result)
                 .isInstanceOf(QuoteDetailsException.class)
@@ -59,7 +59,7 @@ public class QuoteServiceTest {
         quote.setEmail("");
         quote.setSurname("");
         //when
-        var result = catchThrowable(() -> service.sendQuote(quote));
+        var result = catchThrowable(() -> service.estimate(quote));
         //then
         assertThat(result)
                 .isInstanceOf(QuoteDetailsException.class)

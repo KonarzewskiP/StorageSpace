@@ -1,12 +1,15 @@
 package com.storage.controllers;
 
-import com.storage.exceptions.BadRequestException;
-import com.storage.models.requests.ValidatePostcodesRequest;
+import com.storage.models.dto.postcode.PostcodeValidateDTO;
 import com.storage.service.PostcodeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
@@ -14,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/postcodes")
 public class PostcodeController {
     private final PostcodeService postcodeService;
-
 
     /**
      * Check if postcode is valid
@@ -24,24 +26,9 @@ public class PostcodeController {
      *
      * @author Pawel Konarzewski
      */
-    @GetMapping("/{postcode}")
-    public boolean isValid(@PathVariable String postcode) {
-        log.info("Start postcode validation: {}", postcode);
-        if (StringUtils.isBlank(postcode))
-            throw new BadRequestException("Postcode can not be empty or null");
-
+    @GetMapping("/{postcode}/valid")
+    public ResponseEntity<PostcodeValidateDTO> isValid(@PathVariable String postcode) {
         var isPostcodeValid = postcodeService.isValid(postcode);
-        log.info("Start postcode validation: {}", postcode);
-//        return new ResponseEntity<>(isPostcodeValid, HttpStatus.OK);
-        return true;
+        return new ResponseEntity<>(isPostcodeValid, HttpStatus.OK);
     }
-
-    @GetMapping("/validate")
-    public boolean isValidMultiple(@RequestBody ValidatePostcodesRequest request) {
-        var isPostcodeValid = postcodeService.getMultipleCoordinates(request.getPostcodes());
-//        return new ResponseEntity<>(isPostcodeValid, HttpStatus.OK);
-        return true;
-    }
-
-
 }

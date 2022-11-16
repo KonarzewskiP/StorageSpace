@@ -6,8 +6,8 @@ import com.storage.models.User;
 import com.storage.models.Warehouse;
 import com.storage.models.dto.AddressDto;
 import com.storage.models.dto.StorageRoomDto;
-import com.storage.models.dto.UserDto;
 import com.storage.models.dto.WarehouseDto;
+import com.storage.models.requests.createUserRequest;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,8 +15,8 @@ import java.util.stream.Collectors;
 //TODO split all model mappers to separate classes and improve mapping. (ModelMapper)
 public interface ModelMapper {
 
-    static UserDto fromUserToUserDto(User user) {
-        return user == null ? null : UserDto.builder()
+    static createUserRequest fromUserToUserDto(User user) {
+        return user == null ? null : createUserRequest.builder()
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .email(user.getEmail())
@@ -25,13 +25,13 @@ public interface ModelMapper {
                 .build();
     }
 
-    static User fromUserDtoToUser(UserDto userDto) {
-        return userDto == null ? null : User.builder()
-                .firstName(userDto.getFirstName())
-                .lastName(userDto.getLastName())
-                .email(userDto.getEmail())
-                .gender(userDto.getGender())
-                .role(userDto.getRole())
+    static User fromUserDtoToUser(createUserRequest createUserRequest) {
+        return createUserRequest == null ? null : User.builder()
+                .firstName(createUserRequest.getFirstName())
+                .lastName(createUserRequest.getLastName())
+                .email(createUserRequest.getEmail())
+                .gender(createUserRequest.getGender())
+                .role(createUserRequest.getRole())
                 .build();
     }
 

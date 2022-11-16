@@ -4,6 +4,7 @@ import com.storage.exceptions.QuoteDetailsException;
 import com.storage.models.businessObject.Quote;
 import com.storage.models.dto.QuoteResponseDto;
 import com.storage.models.enums.DeliveryStatus;
+import com.storage.models.requests.QuoteEstimateRequest;
 import com.storage.validators.QuoteValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,7 +46,9 @@ public class QuoteService {
      * @since 02/03/2021
      */
 
-    public QuoteResponseDto sendQuote(Quote quote) {
+    public QuoteResponseDto estimate(QuoteEstimateRequest estimate) {
+        estimate.isValid();
+// to be continued!
         log.info("Enter QuoteService -> sendQuote() with: " + quote);
         var validator = new QuoteValidator();
         var errors = validator.validate(quote);

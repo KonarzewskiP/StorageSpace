@@ -1,6 +1,6 @@
 package com.storage.validators;
 
-import com.storage.models.dto.UserDto;
+import com.storage.models.requests.createUserRequest;
 import com.storage.validators.base.Validator;
 
 import java.util.HashMap;
@@ -9,14 +9,14 @@ import java.util.regex.Pattern;
 
 import static java.util.Objects.isNull;
 
-public class UserDtoValidator implements Validator<UserDto> {
+public class UserDtoValidator implements Validator<createUserRequest> {
 
     @Override
-    public Map<String, String> validate(UserDto user) {
+    public Map<String, String> validate(createUserRequest user) {
         Map<String, String> errors = new HashMap<>();
 
         if (isNull(user)) {
-            errors.put("UserDto", "Can not be null");
+            errors.put("Create request", "Can not be null");
             return errors;
         }
         if (isNull(user.getFirstName())) {
@@ -40,47 +40,37 @@ public class UserDtoValidator implements Validator<UserDto> {
             return errors;
         }
 
-
         if (!isFirstNameEmpty(user)) {
             errors.put("FirstName", "Can not be empty");
-        } else if (!isFirstNameStartsFromUppercase(user)) {
-            errors.put("FirstName", "Should start from uppercase");
         }
 
         if (!isLastNameEmpty(user)) {
             errors.put("LastName", "Can not be empty");
-        } else if (!isLastNameStartsFromUppercase(user)) {
-            errors.put("LastName", "Should start from uppercase");
         }
 
         if (!isEmailEmpty(user)) {
             errors.put("Email", "Can not be empty");
-        } else if (!isEmailFormatValid(user)) {
+        } else if (!isEmailFormatValid(user.getEmail())) {
             errors.put("Email", "Has incorrect format");
         }
         return errors;
     }
-    private boolean isFirstNameEmpty(UserDto userDto) {
-        return !userDto.getFirstName().isBlank();
+
+    private boolean isFirstNameEmpty(createUserRequest createUserRequest) {
+        return !createUserRequest.getFirstName().isBlank();
     }
 
-    private boolean isLastNameEmpty(UserDto userDto) {
-        return !userDto.getLastName().isBlank();
+    private boolean isLastNameEmpty(createUserRequest createUserRequest) {
+        return !createUserRequest.getLastName().isBlank();
     }
 
-    private boolean isEmailEmpty(UserDto userDto) {
-        return !userDto.getEmail().isBlank();
+    private boolean isEmailEmpty(createUserRequest createUserRequest) {
+        return !createUserRequest.getEmail().isBlank();
     }
 
-    private boolean isFirstNameStartsFromUppercase(UserDto userDto) {
-        return userDto.getFirstName().matches("([A-Z][a-z]+)");
-    }
-    private boolean isLastNameStartsFromUppercase(UserDto userDto) {
-        return userDto.getLastName().matches("([A-Z][a-z]+)");
-    }
-    private boolean isEmailFormatValid(UserDto userDto) {
+    private boolean isEmailFormatValid(String  email) {
         var pattern = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
-        var matcher = pattern.matcher(userDto.getEmail());
+        var matcher = pattern.matcher(email);
         return matcher.find();
     }
 

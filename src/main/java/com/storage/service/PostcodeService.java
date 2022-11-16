@@ -2,28 +2,26 @@
 package com.storage.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.storage.exceptions.BadRequestException;
 import com.storage.exceptions.PostcodeException;
 import com.storage.models.Warehouse;
 import com.storage.models.dto.postcode.PostcodeDTO;
-import com.storage.models.dto.postcode.PostcodeDetailsManyDTO;
 import com.storage.models.dto.postcode.PostcodeValidateDTO;
 import com.storage.repositories.WarehouseRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import javax.transaction.Transactional;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
  * Service Class that communicate with postcodes.io API and
@@ -59,8 +57,11 @@ public class PostcodeService {
      */
 
     public PostcodeValidateDTO isValid(String postcode) {
+        if (isBlank(postcode))
+            throw new BadRequestException("Postcode can not be empty or null");
 
         String validPostcode = postcode.toUpperCase().replaceAll(" ", "").concat("/validate");
+
         ResponseEntity<PostcodeValidateDTO> response =
                 restTemplate.getForEntity(postcodeUrl + "/" + validPostcode, PostcodeValidateDTO.class);
 
@@ -87,30 +88,6 @@ public class PostcodeService {
                 restTemplate.getForEntity(postcodeUrl + "/" + validPostcode, PostcodeDTO.class);
         return response.getBody();
     }
-
-    /**
-     * The method that calls external API and returns longitudes and latitudes of each postcode.
-     * If a postcode is invalid, then returns null values, otherwise it returns data for
-     * specific postcode.
-     * <p>
-     * Only postcodes from the UK can be verified.
-     *
-     * @param postcodes list of postcodes.
-     * @return object holding list of the data containing longitudes and latitudes of each postcode.
-     */
-
-    public PostcodeDetailsManyDTO getMultipleCoordinates(List<String> postcodes) {
-        log.info("Enter PostcodeService -> getCoordinatesPostcodes() with: " + postcodes);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        Map<String, List<String>> body = new HashMap<>();
-        body.put("postcodes", postcodes);
-        HttpEntity<Object> request = new HttpEntity<>(body, headers);
-
-        return restTemplate.postForObject(postcodeUrl, request, PostcodeDetailsManyDTO.class);
-    }
-
 
     /**
      * The method is to convert the list of warehouses from the database and

@@ -27,6 +27,11 @@ public class Warehouse extends AbstractObject {
     @JoinColumn(name = "address_id")
     private Address address;
 
+    @Column(name = "lat", nullable = false)
+    private float lat;
+    @Column(name = "lng", nullable = false)
+    private float lng;
+
     @OneToMany(
             cascade = {CascadeType.ALL}
     )

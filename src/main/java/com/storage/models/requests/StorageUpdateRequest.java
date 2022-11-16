@@ -11,5 +11,4 @@ import lombok.NoArgsConstructor;
 public class StorageUpdateRequest {
     private StorageSize storageSize;
     private StorageRoomStatus status;
-
 }

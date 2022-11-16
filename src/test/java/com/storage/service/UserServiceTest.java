@@ -3,8 +3,8 @@ package com.storage.service;
 import com.storage.exceptions.NotFoundException;
 import com.storage.exceptions.UserServiceException;
 import com.storage.models.User;
-import com.storage.models.dto.UserDto;
 import com.storage.models.enums.Gender;
+import com.storage.models.requests.createUserRequest;
 import com.storage.repositories.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -41,7 +41,7 @@ public class UserServiceTest {
         when(userRepository.save(any(User.class))).thenReturn(user);
         var testUserDto = createUserDto();
         //when
-        var result = service.addUser(testUserDto);
+        var result = service.createUser(testUserDto);
         //then
         assertAll(
                 () -> assertThat(result).isNotNull(),
@@ -56,9 +56,9 @@ public class UserServiceTest {
     @DisplayName("should throw UserServiceException when UserDto is null")
     void shouldThrowUserServiceExceptionWhenUserDtoIsNull() {
         //given
-        UserDto userDto = null;
+        createUserRequest createUserRequest = null;
         //when
-        Throwable thrown = catchThrowable(() -> service.addUser(userDto));
+        Throwable thrown = catchThrowable(() -> service.createUser(createUserRequest));
         //then
         assertThat(thrown)
                 .isInstanceOf(UserServiceException.class)
@@ -73,7 +73,7 @@ public class UserServiceTest {
         userDto.setFirstName("roger");
         userDto.setLastName("");
         //when
-        Throwable thrown = catchThrowable(() -> service.addUser(userDto));
+        Throwable thrown = catchThrowable(() -> service.createUser(userDto));
         //then
         assertThat(thrown)
                 .isInstanceOf(UserServiceException.class)

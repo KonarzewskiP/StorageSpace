@@ -1,17 +1,16 @@
 package com.storage.validators;
 
-import com.storage.models.dto.UserDto;
-import org.junit.jupiter.api.Test;
+import com.storage.models.requests.createUserRequest;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-
 import static com.storage.builders.Fixtures.createUserDto;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
-public class UserDtoValidatorTest {
+public class createUserRequestValidatorTest {
 
     private final UserDtoValidator validator = new UserDtoValidator();
 
@@ -32,9 +31,9 @@ public class UserDtoValidatorTest {
     @DisplayName("should return error when userDto is null")
     void shouldReturnErrorWhenUserDtoIsNull() {
         //given
-        UserDto userDto = null;
+        createUserRequest createUserRequest = null;
         //when
-        var result = validator.validate(userDto);
+        var result = validator.validate(createUserRequest);
         //then
         assertAll(
                 () -> assertThat(result).containsKey("UserDto"),

@@ -1,8 +1,9 @@
 package com.storage.service;
 
+import com.storage.exceptions.BadRequestException;
 import com.storage.exceptions.UserServiceException;
 import com.storage.models.User;
-import com.storage.models.dto.UserDto;
+import com.storage.models.requests.createUserRequest;
 import com.storage.repositories.UserRepository;
 import com.storage.validators.UserDtoValidator;
 import lombok.extern.slf4j.Slf4j;
@@ -12,14 +13,11 @@ import org.springframework.stereotype.Service;
 import java.util.stream.Collectors;
 
 import static com.storage.models.mapper.ModelMapper.fromUserDtoToUser;
-import static com.storage.models.mapper.ModelMapper.fromUserToUserDto;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @Slf4j
 @Service
-public class UserService extends AbstractService<User>{
-
-    public static final String USER = "User";
-    public static final String ID = "id";
+public class UserService extends AbstractService<User> {
 
     private final UserRepository userRepository;
 
@@ -37,33 +35,16 @@ public class UserService extends AbstractService<User>{
      *
      * @author Pawel Konarzewski
      */
-    public UserDto addUser(UserDto request) {
-        log.info("Adding user with req: {} ", request);
+    public User createUser(createUserRequest request) {
+        log.info("Creating new user with req: {} ", request);
         isRequestValid(request);
-        checkEmailAvailability(request.getEmail());
-        var addedUser = userRepository.save(fromUserDtoToUser(request));
-        log.info("Added user");
-        return fromUserToUserDto(addedUser);
-    }
 
-    /**
-     * The method that validates userDto
-     * <p>
-     * Params: UserDto.
-     * Throws: UserServiceException if userDto is not valid
-     *
-     * @author Pawel Konarzewski
-     */
-    private void isRequestValid(UserDto userDto) {
-        var validator = new UserDtoValidator();
-        var errors = validator.validate(userDto);
-        if (!errors.isEmpty()) {
-            throw new UserServiceException("Invalid UserDto!, errors: " + errors
-                    .entrySet()
-                    .stream()
-                    .map(err -> err.getKey() + " -> " + err.getValue())
-                    .collect(Collectors.joining(", ")));
-        }
+        if (isEmailTaken(request.getEmail()))
+            throw new BadRequestException(String.format("Email [%s] is already taken!", request.getEmail()));
+
+        var newUser = userRepository.save(fromUserDtoToUser(request));
+        log.info("Created new user with UUID [{}] and name: [{}]", newUser.getUuid(), getFullName(newUser));
+        return newUser;
     }
 
     /**
@@ -74,8 +55,63 @@ public class UserService extends AbstractService<User>{
      *
      * @author Pawel Konarzewski
      */
-    private void checkEmailAvailability(String email) {
-        userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserServiceException("Invalid UserDto! Email already exist in database"));
+    private boolean isEmailTaken(String email) {
+        if (isBlank(email))
+            throw new BadRequestException("Email can not be null or empty!");
+
+        return userRepository.existsByEmail(email);
+    }
+
+
+    public String getFullName(User user) {
+        if (user == null)
+            throw new BadRequestException("User can not be null!");
+        return getFullName(user.getFirstName(), user.getLastName());
+    }
+
+    public String getFullName(String firstName, String lastName) {
+        if (isBlank(firstName) && isBlank(lastName))
+            return "";
+        if (isBlank(firstName))
+            return lastName;
+        if (isBlank(lastName))
+            return firstName;
+        return firstName + " " + lastName;
+    }
+
+    /**
+     * The method that validates userDto
+     * <p>
+     * Params: UserDto.
+     * Throws: UserServiceException if userDto is not valid
+     *
+     * @author Pawel Konarzewski
+     */
+
+    private void isRequestValid(createUserRequest createUserRequest) {
+        var validator = new UserDtoValidator();
+        var errors = validator.validate(createUserRequest);
+        if (!errors.isEmpty()) {
+            throw new UserServiceException("Invalid UserDto!, errors: " + errors
+                    .entrySet()
+                    .stream()
+                    .map(err -> err.getKey() + " -> " + err.getValue())
+                    .collect(Collectors.joining(", ")));
+        }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
