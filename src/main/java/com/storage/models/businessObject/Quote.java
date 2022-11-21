@@ -1,7 +1,9 @@
 package com.storage.models.businessObject;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.storage.models.enums.*;
+import com.storage.models.enums.ExtraServices;
+import com.storage.models.enums.StorageDuration;
+import com.storage.models.enums.StorageSize;
 import lombok.Builder;
 import lombok.Data;
 
@@ -12,25 +14,27 @@ import java.util.Set;
 /**
  * Object used to send a replay to an
  * enquiry about specific warehouse
- * */
+ */
 @Builder
 @Data
 public class Quote {
 
-    String firstName;
-    String surname;
-    String email;
-    String postcode;
-    String warehouseName;
+    private String firstName;
+    private String surname;
+    private String email;
+    private String postcode;
+    private String warehouseName;
+    private String city;
+    private String street;
 
-    StorageSize storageSize;
-    TypeOfStorage type;
+    private BigDecimal price;
+    private BigDecimal actualPrice;
+
+    private StorageSize storageSize;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    LocalDate startDate;
-    StorageDuration duration;
-    Boolean needMoreThanOneLocation;
-    Set<ExtraServices> extraServices;
-    Reason reason;
+    private LocalDate startDate;
+    private StorageDuration duration;
+    private Set<ExtraServices> extraServices;
 
     private BigDecimal calculatePriceWithDiscount(BigDecimal price, double discount) {
         return price.multiply(BigDecimal.valueOf(7)).multiply(BigDecimal.valueOf(discount));

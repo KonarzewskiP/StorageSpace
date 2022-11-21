@@ -1,22 +1,23 @@
 package com.storage.service;
 
-import com.storage.exceptions.QuoteDetailsException;
+import com.storage.models.Warehouse;
 import com.storage.models.businessObject.Quote;
 import com.storage.models.dto.QuoteResponseDto;
 import com.storage.models.enums.DeliveryStatus;
 import com.storage.models.requests.QuoteEstimateRequest;
-import com.storage.validators.QuoteValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.time.format.DateTimeFormatter;
-import java.util.stream.Collectors;
 
 //TODO create separate Email Service class
+// integration with 3rd party Email API gateway?
 
 /**
  * Class that provides methods for sending email with quotation
@@ -33,6 +34,9 @@ import java.util.stream.Collectors;
 public class QuoteService {
 
     private final JavaMailSender javaMailSender;
+    private final WarehouseService warehouseService;
+    private final PriceService priceService;
+    private final ModelMapper modelMapper;
 
     private static final String SUBJECT = "Your storage space quotation";
 
@@ -47,19 +51,22 @@ public class QuoteService {
      */
 
     public QuoteResponseDto estimate(QuoteEstimateRequest estimate) {
+        log.info("Start quote estimation with request: [{}]", estimate);
         estimate.isValid();
-// to be continued!
-        log.info("Enter QuoteService -> sendQuote() with: " + quote);
-        var validator = new QuoteValidator();
-        var errors = validator.validate(quote);
-        if (!errors.isEmpty()) {
-            throw new QuoteDetailsException("Invalid Quote! errors: " + errors
-                    .entrySet()
-                    .stream()
-                    .map(err -> err.getKey() + " - " + err.getValue())
-                    .collect(Collectors.joining(", ")));
-        }
+
+        var warehouse = warehouseService.findByUuid(estimate.getWarehouseUuid());
+
+        BigDecimal price = priceService.calculatePrice(estimate);
+        Quote quote = generateQuote(estimate, warehouse, price);
+
         return sendEmail(quote);
+    }
+
+    private Quote generateQuote(QuoteEstimateRequest estimate, Warehouse warehouse, BigDecimal price) {
+        Quote quote = modelMapper.map(estimate, Quote.class);
+
+        //TODO finish method
+
     }
 
     private SimpleMailMessage createSimpleMailMessage(String recipientAddress, String message) {
