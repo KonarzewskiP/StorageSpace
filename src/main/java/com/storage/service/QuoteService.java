@@ -50,23 +50,27 @@ public class QuoteService {
      * @since 02/03/2021
      */
 
-    public QuoteResponseDto estimate(QuoteEstimateRequest estimate) {
+    public Quote estimate(QuoteEstimateRequest estimate) {
         log.info("Start quote estimation with request: [{}]", estimate);
         estimate.isValid();
-
         var warehouse = warehouseService.findByUuid(estimate.getWarehouseUuid());
-
-        BigDecimal price = priceService.calculatePrice(estimate);
-        Quote quote = generateQuote(estimate, warehouse, price);
-
-        return sendEmail(quote);
+        Quote quote = generateQuote(estimate, warehouse);
+        //TODO send email to user
+        return quote;
     }
 
-    private Quote generateQuote(QuoteEstimateRequest estimate, Warehouse warehouse, BigDecimal price) {
+    private Quote generateQuote(QuoteEstimateRequest estimate, Warehouse warehouse) {
         Quote quote = modelMapper.map(estimate, Quote.class);
 
-        //TODO finish method
+        BigDecimal price = priceService.calculatePrice(estimate);
+        BigDecimal actualPrice = priceService.priceAfterDiscount(estimate);
+        quote.setPrice(price);
+        quote.setActualPrice(actualPrice);
 
+        quote.setWarehouseName(warehouse.getName());
+        quote.setCity(warehouse.getAddress().getCity());
+        quote.setStreet(warehouse.getAddress().getStreet());
+        return quote;
     }
 
     private SimpleMailMessage createSimpleMailMessage(String recipientAddress, String message) {

@@ -23,4 +23,9 @@ public class PriceService extends AbstractService<Price>{
     public BigDecimal calculatePrice(QuoteEstimateRequest estimate) {
         return BigDecimal.TEN;
     }
+
+    //TODO add discount calculation logic
+    public BigDecimal priceAfterDiscount(QuoteEstimateRequest estimate) {
+        return BigDecimal.TEN;
+    }
 }

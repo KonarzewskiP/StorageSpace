@@ -15,7 +15,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 @Data
 public class QuoteEstimateRequest {
     private String warehouseUuid;
-    private LocalDate startAt;
+    private LocalDate startDate;
     private String firstName;
     private String lastName;
     private String email;
@@ -26,7 +26,7 @@ public class QuoteEstimateRequest {
     public void isValid() {
         if (isBlank(warehouseUuid))
             throw new BadRequestException("Quote Estimate Request is mandatory!");
-        if (startAt == null)
+        if (startDate == null)
             throw new BadRequestException("Start At is mandatory!");
         if (isBlank(firstName))
             throw new BadRequestException("First Name is mandatory!");

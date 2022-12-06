@@ -1,7 +1,7 @@
 package com.storage.models;
 
 import com.storage.models.base.AbstractObject;
-import com.storage.models.enums.StorageDuration;
+import com.storage.models.enums.StorageSize;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,13 +19,9 @@ import java.math.BigDecimal;
 public class Price extends AbstractObject {
     @Column(name = "price", nullable = false)
     private BigDecimal price;
-    @Column(name = "actual_price", nullable = false)
-    private BigDecimal actualPrice;
-    @Column(name = "discount")
-    private BigDecimal discount;
-    @Column(name = "discount_id")
-    private Long discountId;
     @Enumerated(EnumType.STRING)
-    @Column(name = "duration", nullable = false)
-    private StorageDuration duration;
+    @Column(name = "storage_size", nullable = false)
+    private StorageSize storageSize;
+    @Column(name = "warehouse_id", nullable = false)
+    protected Long warehouseId;
 }
