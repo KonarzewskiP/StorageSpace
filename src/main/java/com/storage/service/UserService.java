@@ -3,7 +3,7 @@ package com.storage.service;
 import com.storage.exceptions.BadRequestException;
 import com.storage.exceptions.UserServiceException;
 import com.storage.models.User;
-import com.storage.models.requests.createUserRequest;
+import com.storage.models.requests.CreateUserRequest;
 import com.storage.repositories.UserRepository;
 import com.storage.validators.UserDtoValidator;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +35,7 @@ public class UserService extends AbstractService<User> {
      *
      * @author Pawel Konarzewski
      */
-    public User createUser(createUserRequest request) {
+    public User createUser(CreateUserRequest request) {
         log.info("Creating new user with req: {} ", request);
         isRequestValid(request);
 
@@ -88,7 +88,7 @@ public class UserService extends AbstractService<User> {
      * @author Pawel Konarzewski
      */
 
-    private void isRequestValid(createUserRequest createUserRequest) {
+    private void isRequestValid(CreateUserRequest createUserRequest) {
         var validator = new UserDtoValidator();
         var errors = validator.validate(createUserRequest);
         if (!errors.isEmpty()) {

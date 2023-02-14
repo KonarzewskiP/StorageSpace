@@ -1,6 +1,6 @@
 package com.storage.validators;
 
-import com.storage.models.requests.createUserRequest;
+import com.storage.models.requests.CreateUserRequest;
 import com.storage.validators.base.Validator;
 
 import java.util.HashMap;
@@ -9,10 +9,10 @@ import java.util.regex.Pattern;
 
 import static java.util.Objects.isNull;
 
-public class UserDtoValidator implements Validator<createUserRequest> {
+public class UserDtoValidator implements Validator<CreateUserRequest> {
 
     @Override
-    public Map<String, String> validate(createUserRequest user) {
+    public Map<String, String> validate(CreateUserRequest user) {
         Map<String, String> errors = new HashMap<>();
 
         if (isNull(user)) {
@@ -56,15 +56,15 @@ public class UserDtoValidator implements Validator<createUserRequest> {
         return errors;
     }
 
-    private boolean isFirstNameEmpty(createUserRequest createUserRequest) {
+    private boolean isFirstNameEmpty(CreateUserRequest createUserRequest) {
         return !createUserRequest.getFirstName().isBlank();
     }
 
-    private boolean isLastNameEmpty(createUserRequest createUserRequest) {
+    private boolean isLastNameEmpty(CreateUserRequest createUserRequest) {
         return !createUserRequest.getLastName().isBlank();
     }
 
-    private boolean isEmailEmpty(createUserRequest createUserRequest) {
+    private boolean isEmailEmpty(CreateUserRequest createUserRequest) {
         return !createUserRequest.getEmail().isBlank();
     }
 

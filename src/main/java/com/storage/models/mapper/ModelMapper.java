@@ -1,13 +1,11 @@
 package com.storage.models.mapper;
 
-import com.storage.models.Address;
 import com.storage.models.StorageRoom;
 import com.storage.models.User;
 import com.storage.models.Warehouse;
-import com.storage.models.dto.AddressDto;
 import com.storage.models.dto.StorageRoomDto;
 import com.storage.models.dto.WarehouseDto;
-import com.storage.models.requests.createUserRequest;
+import com.storage.models.requests.CreateUserRequest;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,8 +13,8 @@ import java.util.stream.Collectors;
 //TODO split all model mappers to separate classes and improve mapping. (ModelMapper)
 public interface ModelMapper {
 
-    static createUserRequest fromUserToUserDto(User user) {
-        return user == null ? null : createUserRequest.builder()
+    static CreateUserRequest fromUserToUserDto(User user) {
+        return user == null ? null : CreateUserRequest.builder()
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .email(user.getEmail())
@@ -25,7 +23,7 @@ public interface ModelMapper {
                 .build();
     }
 
-    static User fromUserDtoToUser(createUserRequest createUserRequest) {
+    static User fromUserDtoToUser(CreateUserRequest createUserRequest) {
         return createUserRequest == null ? null : User.builder()
                 .firstName(createUserRequest.getFirstName())
                 .lastName(createUserRequest.getLastName())
@@ -38,31 +36,12 @@ public interface ModelMapper {
     static WarehouseDto fromWarehouseToWarehouseDto(Warehouse warehouse) {
         return warehouse == null ? null : WarehouseDto.builder()
                 .name(warehouse.getName())
-                .address(fromAddressToAddressDto(warehouse.getAddress()))
                 .build();
     }
 
     static Warehouse fromWarehouseDtoToWarehouse(WarehouseDto warehouseDto) {
         return warehouseDto == null ? null : Warehouse.builder()
-//                .id(warehouseDto.getId())
                 .name(warehouseDto.getName())
-                .address(fromAddressDtoToAddress(warehouseDto.getAddress()))
-                .build();
-    }
-
-    static AddressDto fromAddressToAddressDto(Address address) {
-        return address == null ? null : AddressDto.builder()
-                .postcode(address.getPostcode())
-                .city(address.getCity())
-                .street(address.getStreet())
-                .build();
-    }
-
-    static Address fromAddressDtoToAddress(AddressDto addressDto) {
-        return addressDto == null ? null : Address.builder()
-                .postcode(addressDto.getPostcode())
-                .city(addressDto.getCity())
-                .street(addressDto.getStreet())
                 .build();
     }
 

@@ -1,24 +1,21 @@
 package com.storage.validators;
 
 import com.storage.models.dto.WarehouseDto;
-import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 
 import static com.storage.builders.Fixtures.createWarehouseDto;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-class WarehouseDtoValidatorTest {
+class WarehouseCreateRequestValidatorTest {
 
-    private WarehouseDtoValidator warehouseValidator;
+    private WarehouseCreateRequestValidator warehouseValidator;
 
     @BeforeEach
     public void setUp(){
-        warehouseValidator = new WarehouseDtoValidator();
+        warehouseValidator = new WarehouseCreateRequestValidator();
     }
 
     @Test

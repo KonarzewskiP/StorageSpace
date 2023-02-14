@@ -4,7 +4,7 @@ import com.storage.exceptions.NotFoundException;
 import com.storage.exceptions.UserServiceException;
 import com.storage.models.User;
 import com.storage.models.enums.Gender;
-import com.storage.models.requests.createUserRequest;
+import com.storage.models.requests.CreateUserRequest;
 import com.storage.repositories.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -56,7 +56,7 @@ public class UserServiceTest {
     @DisplayName("should throw UserServiceException when UserDto is null")
     void shouldThrowUserServiceExceptionWhenUserDtoIsNull() {
         //given
-        createUserRequest createUserRequest = null;
+        CreateUserRequest createUserRequest = null;
         //when
         Throwable thrown = catchThrowable(() -> service.createUser(createUserRequest));
         //then

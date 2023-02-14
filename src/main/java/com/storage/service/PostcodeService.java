@@ -105,7 +105,7 @@ public class PostcodeService {
         log.info("Enter PostcodeService -> getOrderedListOfWarehouses()");
         return sortedPostcodesByDistance.keySet().stream().map(postcode -> {
             for (Warehouse warehouse : warehousesList) {
-                if (postcode.equals(warehouse.getAddress().getPostcode())) {
+                if (postcode.equals(warehouse.getPostcode())) {
                     return warehouse;
                 }
             }

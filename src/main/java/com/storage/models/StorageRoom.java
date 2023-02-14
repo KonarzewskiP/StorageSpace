@@ -4,14 +4,17 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.storage.models.base.AbstractObject;
 import com.storage.models.enums.StorageRoomStatus;
 import com.storage.models.enums.StorageSize;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
 //TODO improve identification of specific storage rooms.
 // For example, allow adding unique codes for specific rooms to
-// ease search for them in the Warehouse.
+// make them easier to serach in the Warehouse.
 // What if there will be a need for a warehouse to resize and reorganize rooms.
 
 
@@ -39,8 +42,6 @@ public class StorageRoom extends AbstractObject {
     @Column(name = "end_date")
     private LocalDate endDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private Warehouse warehouse;
+    @Column(name = "warehouse_id", nullable = false)
+    private Long warehouseId;
 }

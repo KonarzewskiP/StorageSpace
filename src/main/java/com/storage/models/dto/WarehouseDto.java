@@ -11,5 +11,9 @@ import lombok.Data;
 public class WarehouseDto {
     private String uuid;
     private String name;
-    private AddressDto address;
+    private String city;
+    private String postcode;
+    private String street;
+    private float lat;
+    private float lng;
 }

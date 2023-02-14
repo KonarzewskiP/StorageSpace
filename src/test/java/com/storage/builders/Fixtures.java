@@ -1,18 +1,19 @@
 package com.storage.builders;
 
-import com.storage.models.Address;
 import com.storage.models.StorageRoom;
 import com.storage.models.User;
 import com.storage.models.Warehouse;
 import com.storage.models.businessObject.Quote;
-import com.storage.models.dto.AddressDto;
 import com.storage.models.dto.StorageRoomDto;
 import com.storage.models.dto.WarehouseDto;
 import com.storage.models.dto.postcode.PostcodeDTO;
 import com.storage.models.dto.postcode.PostcodeResultDTO;
 import com.storage.models.dto.postcode.PostcodeValidateDTO;
-import com.storage.models.enums.*;
-import com.storage.models.requests.createUserRequest;
+import com.storage.models.enums.Gender;
+import com.storage.models.enums.Role;
+import com.storage.models.enums.StorageDuration;
+import com.storage.models.enums.StorageSize;
+import com.storage.models.requests.CreateUserRequest;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -39,8 +40,8 @@ public class Fixtures {
                 .build();
     }
 
-    public static createUserRequest createUserDto() {
-        return createUserRequest.builder()
+    public static CreateUserRequest createUserDto() {
+        return CreateUserRequest.builder()
                 .firstName("John")
                 .lastName("Orange")
                 .email("storageRooms@fakeEmail.com")
@@ -52,23 +53,18 @@ public class Fixtures {
     public static Warehouse createWarehouse() {
         return Warehouse.builder()
                 .name("Big Yellow")
-                .address(Address.builder()
-                        .city("London")
-                        .street("289 Kennington Ln")
-                        .postcode("SE11 5QY")
-                        .build())
-                .storageRooms(createStorageRoomsList())
+                .city("London")
+                .street("289 Kennington Ln")
+                .postcode("SE11 5QY")
                 .build();
     }
 
     public static WarehouseDto createWarehouseDto() {
         return WarehouseDto.builder()
                 .name("Big Yellow")
-                .address(AddressDto.builder()
-                        .city("London")
-                        .street("289 Kennington Ln")
-                        .postcode("SE11 5QY")
-                        .build())
+                .city("London")
+                .street("289 Kennington Ln")
+                .postcode("SE11 5QY")
                 .build();
     }
 
@@ -105,11 +101,11 @@ public class Fixtures {
         AtomicInteger count = new AtomicInteger(1);
         return Arrays.stream(StorageSize.values())
                 .flatMap(size -> IntStream.range(0, count.getAndIncrement())
-                        .mapToObj(i -> StorageRoom.builder()
+                                .mapToObj(i -> StorageRoom.builder()
 //                                .id(index.getAndIncrement())
-                                .storageSize(size)
-                                .build()
-                        )
+                                                .storageSize(size)
+                                                .build()
+                                )
                 )
                 .collect(Collectors.toList());
     }
@@ -122,7 +118,6 @@ public class Fixtures {
                 .postcode("SE11 5QY")
                 .warehouseName("Big Yellow")
                 .storageSize(StorageSize.THREE_SINGLE_GARAGES)
-                .type(TypeOfStorage.HOME)
                 .startDate(LocalDate.now().plusDays(1))
                 .duration(StorageDuration.UP_TO_6_MONTHS)
                 .build();
@@ -145,35 +140,18 @@ public class Fixtures {
                 .build();
     }
 
-    public static PostcodeValidateDTO createPositivePostcodeValidationResponse(){
+    public static PostcodeValidateDTO createPositivePostcodeValidationResponse() {
         return PostcodeValidateDTO.builder()
                 .status(200)
                 .result(true)
                 .build();
 
     }
-    public static PostcodeValidateDTO createNegativePostcodeValidationResponse(){
+    public static PostcodeValidateDTO createNegativePostcodeValidationResponse() {
         return PostcodeValidateDTO.builder()
                 .status(200)
                 .result(false)
                 .build();
 
-    }
-
-    public static AddressDto createAddressDto(){
-        return AddressDto.builder()
-                .city("London")
-                .postcode("NW1 9PA")
-                .street("Camden St")
-                .build();
-    }
-
-    public static Address createAddress(){
-        return Address.builder()
-                .id(1L)
-                .city("London")
-                .postcode("NW1 9PA")
-                .street("Camden St")
-                .build();
     }
 }

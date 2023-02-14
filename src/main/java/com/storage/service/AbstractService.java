@@ -29,11 +29,10 @@ public abstract class AbstractService<T extends AbstractObject> {
                 .orElseThrow(() -> new NotFoundException(clazz.getSimpleName() + " not found with uuid: " + uuid));
     }
 
-    public T findById(Long id) {
-        if (id == null || id <= 0)
-            throw new BadRequestException("Id can't be null or negative.");
-
-        return repository.findById(id)
-                .orElseThrow(() -> new NotFoundException(clazz.getSimpleName() + " not found with id: " + id));
+    public long findIdByUuid(String uuid) {
+        if (StringUtils.isBlank(uuid))
+            throw new BadRequestException("UUID can not be null or empty!");
+        return repository.findIdByUuid(uuid)
+                .orElseThrow(() -> new NotFoundException(clazz.getSimpleName() + " not found with uuid " + uuid));
     }
 }

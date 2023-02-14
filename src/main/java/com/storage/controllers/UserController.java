@@ -1,7 +1,7 @@
 package com.storage.controllers;
 
 import com.storage.models.mapper.ModelMapper;
-import com.storage.models.requests.createUserRequest;
+import com.storage.models.requests.CreateUserRequest;
 import com.storage.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,14 +20,14 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<createUserRequest> create(@RequestBody createUserRequest createUserRequest) {
+    public ResponseEntity<CreateUserRequest> create(@RequestBody CreateUserRequest createUserRequest) {
         var newUser = userService.createUser(createUserRequest);
         var userDto = fromUserToUserDto(newUser);
         return new ResponseEntity<>(userDto, HttpStatus.CREATED);
     }
 
     @GetMapping("/{uuid}")
-    public ResponseEntity<createUserRequest> getByUuid(@PathVariable String uuid) {
+    public ResponseEntity<CreateUserRequest> getByUuid(@PathVariable String uuid) {
         var user = userService.findByUuid(uuid);
         var userDTO = ModelMapper.fromUserToUserDto(user);
         return new ResponseEntity<>(userDTO, HttpStatus.OK);

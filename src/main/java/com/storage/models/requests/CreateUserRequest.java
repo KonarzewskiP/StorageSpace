@@ -9,7 +9,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 @Builder
-public class createUserRequest {
+public class CreateUserRequest {
     private String firstName;
     private String lastName;
     private String email;

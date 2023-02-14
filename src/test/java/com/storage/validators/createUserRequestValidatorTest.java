@@ -1,6 +1,6 @@
 package com.storage.validators;
 
-import com.storage.models.requests.createUserRequest;
+import com.storage.models.requests.CreateUserRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -31,7 +31,7 @@ public class createUserRequestValidatorTest {
     @DisplayName("should return error when userDto is null")
     void shouldReturnErrorWhenUserDtoIsNull() {
         //given
-        createUserRequest createUserRequest = null;
+        CreateUserRequest createUserRequest = null;
         //when
         var result = validator.validate(createUserRequest);
         //then
