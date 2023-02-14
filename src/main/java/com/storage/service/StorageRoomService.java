@@ -1,6 +1,5 @@
 package com.storage.service;
 
-import com.storage.exceptions.BadRequestException;
 import com.storage.exceptions.NotFoundException;
 import com.storage.models.StorageRoom;
 import com.storage.models.dto.StorageRoomDto;
@@ -13,7 +12,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
 
 @Slf4j
 @Service
@@ -30,7 +28,6 @@ public class StorageRoomService extends AbstractService<StorageRoom> {
 
     public StorageRoom updateStorageRoom(String uuid, StorageUpdateRequest request) {
         log.info("Updating warehouse with uuid [{}] ", request);
-        isUpdateRequestValid(request);
         var storage = findByUuidForUpdate(uuid);
 
         if (request.getStatus() != storage.getStatus())
@@ -45,11 +42,6 @@ public class StorageRoomService extends AbstractService<StorageRoom> {
         return storage;
     }
 
-    private void isUpdateRequestValid(StorageUpdateRequest request) {
-        if (request == null)
-            throw new BadRequestException("Storage Update Request is NULL!");
-    }
-
     /**
      * The method retrieves all available storage rooms to rent from the specific warehouse.
      * First retrieves the warehouse by id, if id does not exist it throws an exception. Then search
@@ -61,19 +53,15 @@ public class StorageRoomService extends AbstractService<StorageRoom> {
      * @throws NotFoundException if the id of the warehouse does not exist.
      */
 
-    public Page<StorageRoomDto> getByWarehouseUuidAndStatus(String warehouseUuid, StorageRoomStatus status, Pageable pageable) {
-        if (status == null)
-            throw new BadRequestException("Status is mandatory!");
-
+    public Page<StorageRoomDto> getAvailableByWarehouseUuid(String warehouseUuid, Pageable pageable) {
         Long warehouseId = warehouseService.findIdByUuid(warehouseUuid);
 
         Specification<StorageRoom> specification =
                 Specification.where((root, cq, cb) -> cb.equal(root.get("warehouseId"), warehouseId));
 
-        specification = specification.and(Specification.where((root, cq, cb) -> cb.equal(root.get("status"), status)));
+        specification = specification.and(Specification.where((root, cq, cb) -> cb.equal(root.get("status"), StorageRoomStatus.AVAILABLE)));
 
-
-        return storageRoomRepository.findAll(specification,pageable).map(ModelMapper::fromStorageRoomToStorageRoomDto);
+        return storageRoomRepository.findAll(specification, pageable).map(ModelMapper::fromStorageRoomToStorageRoomDto);
     }
 
 }

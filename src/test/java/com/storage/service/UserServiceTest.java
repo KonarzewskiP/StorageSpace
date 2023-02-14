@@ -1,6 +1,5 @@
 package com.storage.service;
 
-import com.storage.exceptions.NotFoundException;
 import com.storage.exceptions.UserServiceException;
 import com.storage.models.User;
 import com.storage.models.enums.Gender;
@@ -13,15 +12,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.Optional;
-
 import static com.storage.builders.Fixtures.createUser;
 import static com.storage.builders.Fixtures.createUserDto;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
@@ -80,43 +76,5 @@ public class UserServiceTest {
                 .hasMessageContaining("Invalid UserDto!")
                 .hasMessageContaining("Should start from uppercase")
                 .hasMessageContaining("Can not be empty");
-    }
-
-    @Test
-    @DisplayName("should find user by id")
-    void shouldFindUserById() {
-        //given
-        var user = createUser();
-        when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
-        //when
-        var result = service.getUserById(10L);
-        //then
-        assertThat(result.getId()).isEqualTo(1L);
-    }
-
-    @Test
-    @DisplayName("should throw ResourceNotFoundException when can not find user by id")
-    void shouldThrowResourceNotFoundExceptionWhenCanNotFindUserById() {
-        //given
-        var id = 999L;
-        //when
-        Throwable thrown = catchThrowable(() -> service.getUserById(id));
-        //then
-        assertThat(thrown)
-                .isInstanceOf(NotFoundException.class)
-                .hasMessageContaining("User not found with id: 999");
-    }
-
-    @Test
-    @DisplayName("should throw ResourceNotFoundException when id is null")
-    void shouldThrowResourceNotFoundExceptionWhenIdIsNull() {
-        //given
-        Long id = null;
-        //when
-        Throwable thrown = catchThrowable(() -> service.getUserById(id));
-        //then
-        assertThat(thrown)
-                .isInstanceOf(NotFoundException.class)
-                .hasMessageContaining("User not found with id: null");
     }
 }

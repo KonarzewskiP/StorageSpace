@@ -6,9 +6,12 @@ import com.storage.models.requests.CreateWarehouseRequest;
 import com.storage.service.WarehouseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -32,16 +35,14 @@ public class WarehouseController {
         log.info("Enter WarehouseController -> getWarehouseByUuid() [UUID:{}] ", uuid);
         var warehouse = warehouseService.findByUuid(uuid);
         var warehouseDto = ModelMapper.fromWarehouseToWarehouseDto(warehouse);
-        return new ResponseEntity<>(warehouseDto,HttpStatus.OK);
+        return new ResponseEntity<>(warehouseDto, HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseEntity<List<WarehouseDto>> getAllWarehouses() {
+    public ResponseEntity<Page<WarehouseDto>> getAllWarehouses(@ApiIgnore Pageable pageable) {
         log.info("Enter WarehouseController -> getAllWarehouses()");
-        return new ResponseEntity<>(warehouseService.getAllWarehouses(), HttpStatus.OK);
+        return new ResponseEntity<>(warehouseService.getAllWarehouses(pageable), HttpStatus.OK);
     }
-
-
 
     /**
      * Search for nearest Warehouses according to given postcode.

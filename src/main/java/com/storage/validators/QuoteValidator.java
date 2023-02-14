@@ -40,10 +40,6 @@ public class QuoteValidator implements Validator<Quote> {
             errors.put("Size", "Can not be null");
             return errors;
         }
-        if (isNull(quotation.getType())) {
-            errors.put("TypeOfAccount", "Can not be null");
-            return errors;
-        }
         if (isNull(quotation.getStartDate())) {
             errors.put("StartDate", "Can not be null");
             return errors;
@@ -74,6 +70,11 @@ public class QuoteValidator implements Validator<Quote> {
         }
 
         return errors;
+    }
+
+    @Override
+    public void throwException(Map<String, String> errors) {
+
     }
 
     private boolean isFirstNameEmpty(Quote quotation) {

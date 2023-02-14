@@ -69,7 +69,7 @@ public class WarehouseCreateRequestValidator implements Validator<CreateWarehous
 
 
     @Override
-    public void throwError(Map<String, String> errors) {
+    public void throwException(Map<String, String> errors) {
         throw new WarehouseServiceException("Invalid Create Warehouse Request!, errors: " + errors
                 .entrySet()
                 .stream()

@@ -1,23 +1,21 @@
 package com.storage.service;
 
-import com.storage.exceptions.BadRequestException;
 import com.storage.exceptions.WarehouseServiceException;
 import com.storage.models.Warehouse;
 import com.storage.models.dto.WarehouseDto;
-import com.storage.models.dto.postcode.PostcodeDetailsManyDTO;
+import com.storage.models.mapper.ModelMapper;
 import com.storage.models.requests.CreateWarehouseRequest;
 import com.storage.repositories.StorageRoomRepository;
 import com.storage.repositories.WarehouseRepository;
 import com.storage.validators.WarehouseCreateRequestValidator;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import static com.storage.models.mapper.ModelMapper.fromWarehouseListToWarehouseDtoList;
 import static com.storage.models.mapper.ModelMapper.fromWarehouseToWarehouseDto;
 import static com.storage.utils.Util.createStorageRoomsList;
 
@@ -30,9 +28,6 @@ import static com.storage.utils.Util.createStorageRoomsList;
 @Service
 @Transactional
 public class WarehouseService extends AbstractService<Warehouse> {
-
-    public static final String WAREHOUSE = "Warehouse";
-    public static final String ID = "id";
 
     private final WarehouseRepository warehouseRepository;
     private final StorageRoomRepository storageRoomRepository;
@@ -64,8 +59,8 @@ public class WarehouseService extends AbstractService<Warehouse> {
         var warehouse = createNew(warehouseRequest);
         var list = createStorageRoomsList();
         storageRoomRepository.saveAll(list);
-        warehouse.setStorageRooms(list);
-        warehouse.setAddress(address);
+//        warehouse.setStorageRooms(list);
+//        warehouse.setAddress(address);
         var addedWarehouse = warehouseRepository.save(warehouse);
         return fromWarehouseToWarehouseDto(addedWarehouse);
     }
@@ -92,7 +87,7 @@ public class WarehouseService extends AbstractService<Warehouse> {
         var validator = new WarehouseCreateRequestValidator();
         var errors = validator.validate(warehouseRequest);
         if (!errors.isEmpty())
-            validator.throwError(errors);
+            validator.throwException(errors);
     }
 
     /**
@@ -101,8 +96,8 @@ public class WarehouseService extends AbstractService<Warehouse> {
      *
      * @return List of warehouses from the database with details.
      */
-    public List<WarehouseDto> getAllWarehouses() {
-        return fromWarehouseListToWarehouseDtoList(warehouseRepository.findAll());
+    public Page<WarehouseDto> getAllWarehouses(Pageable pageable) {
+        return warehouseRepository.findAll(pageable).map(ModelMapper::fromWarehouseToWarehouseDto);
     }
 
 
@@ -116,18 +111,18 @@ public class WarehouseService extends AbstractService<Warehouse> {
      * according to the postcode given by the user.
      */
     public List<WarehouseDto> getOrderedByDistanceFromPostcode(String postcode) {
-        if (StringUtils.isBlank(postcode))
-            throw new BadRequestException("Postcode can not be null or empty");
-
-
-        var warehousesList = warehouseRepository.findAll();
-        var listOfPostcodesFromEachWarehouse = warehousesList
-                .stream()
-                .map(warehouse -> warehouse.getAddress().getPostcode())
-                .collect(Collectors.toList());
-
-        PostcodeDetailsManyDTO coordinatesOfWarehouses = postcodeService.getMultipleCoordinates(listOfPostcodesFromEachWarehouse);
-        var userPostcodeCoordinates = postcodeService.getSingleCoordinates(postcode);
+//        if (StringUtils.isBlank(postcode))
+//            throw new BadRequestException("Postcode can not be null or empty");
+//
+//
+//        var warehousesList = warehouseRepository.findAll();
+//        var listOfPostcodesFromEachWarehouse = warehousesList
+//                .stream()
+//                .map(warehouse -> warehouse.getAddress().getPostcode())
+//                .collect(Collectors.toList());
+//
+//        PostcodeDetailsManyDTO coordinatesOfWarehouses = postcodeService.getMultipleCoordinates(listOfPostcodesFromEachWarehouse);
+//        var userPostcodeCoordinates = postcodeService.getSingleCoordinates(postcode);
 
 //        var map = getWarehousePostcodeByDistanceFromUserPostcode(userPostcodeCoordinates, coordinatesOfWarehouses);
 //        var sortedMap = sortPostcodesByDistance(map);

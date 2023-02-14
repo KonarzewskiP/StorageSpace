@@ -56,6 +56,11 @@ public class UserDtoValidator implements Validator<CreateUserRequest> {
         return errors;
     }
 
+    @Override
+    public void throwException(Map<String, String> errors) {
+
+    }
+
     private boolean isFirstNameEmpty(CreateUserRequest createUserRequest) {
         return !createUserRequest.getFirstName().isBlank();
     }

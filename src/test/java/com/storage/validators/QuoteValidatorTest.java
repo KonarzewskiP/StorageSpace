@@ -118,21 +118,7 @@ public class QuoteValidatorTest {
                 () -> assertThat(result).hasSize(1)
         );
     }
-    @Test
-    @DisplayName("should return error when typeOfAccount is null")
-    void shouldReturnErrorWhenTypeOfAccountIsNull() {
-        //given
-        var quote = createQuote();
-        quote.setType(null);
-        //when
-        var result = validator.validate(quote);
-        //then
-        assertAll(
-                () -> assertThat(result).containsKey("TypeOfAccount"),
-                () -> assertThat(result).containsValue("Can not be null"),
-                () -> assertThat(result).hasSize(1)
-        );
-    }
+
     @Test
     @DisplayName("should return error when startDate is null")
     void shouldReturnErrorWhenStartDateIsNull() {

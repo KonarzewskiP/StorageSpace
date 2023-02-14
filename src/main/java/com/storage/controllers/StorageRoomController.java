@@ -2,7 +2,6 @@ package com.storage.controllers;
 
 
 import com.storage.models.dto.StorageRoomDto;
-import com.storage.models.enums.StorageRoomStatus;
 import com.storage.models.mapper.ModelMapper;
 import com.storage.models.requests.StorageUpdateRequest;
 import com.storage.service.StorageRoomService;
@@ -64,7 +63,7 @@ public class StorageRoomController {
     public ResponseEntity<Page<StorageRoomDto>> getAvailableByWarehouseUuid(@PathVariable String warehouseUuid,
                                                                             @ApiIgnore Pageable pageable) {
         log.info("Find all available storage rooms in Warehouse with UUID:[{}]", warehouseUuid);
-        return new ResponseEntity<>(storageRoomService.getByWarehouseUuidAndStatus(warehouseUuid, StorageRoomStatus.AVAILABLE, pageable), HttpStatus.OK);
+        return new ResponseEntity<>(storageRoomService.getAvailableByWarehouseUuid(warehouseUuid, pageable), HttpStatus.OK);
     }
 
 }
