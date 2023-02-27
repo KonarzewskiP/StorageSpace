@@ -2,7 +2,7 @@ package com.storage.service;
 
 import com.storage.exceptions.BadRequestException;
 import com.storage.exceptions.NotFoundException;
-import com.storage.models.base.AbstractObject;
+import com.storage.models.AbstractObject;
 import com.storage.repositories.UuidRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;

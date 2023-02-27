@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.storage.models.enums.ExtraServices;
 import com.storage.models.enums.StorageDuration;
 import com.storage.models.enums.StorageSize;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
@@ -17,6 +18,7 @@ import java.util.Set;
  */
 @Builder
 @Data
+@AllArgsConstructor
 public class Quote {
 
     private String firstName;

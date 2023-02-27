@@ -70,7 +70,6 @@ public class WarehouseService extends AbstractService<Warehouse> {
                 .name(req.getName())
                 .city(req.getCity())
                 .postcode(req.getPostcode())
-                .specType(req.getSpecType())
                 .build();
     }
 

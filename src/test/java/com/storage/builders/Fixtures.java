@@ -71,9 +71,6 @@ public class Fixtures {
     public static StorageRoom createStorageRoom() {
         return StorageRoom.builder()
                 .storageSize(StorageSize.GARDEN_SHED)
-                .reserved(true)
-                .startDate(START_DATE)
-                .endDate(END_DATE)
                 .build();
     }
 

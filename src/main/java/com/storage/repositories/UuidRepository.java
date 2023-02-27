@@ -1,6 +1,6 @@
 package com.storage.repositories;
 
-import com.storage.models.base.AbstractObject;
+import com.storage.models.AbstractObject;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.query.Param;

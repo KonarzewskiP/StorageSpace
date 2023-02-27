@@ -1,6 +1,5 @@
 package com.storage.models;
 
-import com.storage.models.base.AbstractObject;
 import com.storage.models.enums.StorageSize;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

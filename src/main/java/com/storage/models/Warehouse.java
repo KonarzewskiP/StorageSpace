@@ -1,13 +1,13 @@
 package com.storage.models;
 
-import com.storage.models.base.AbstractObject;
-import com.storage.models.enums.SpecType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 
 @Entity
@@ -29,9 +29,6 @@ public class Warehouse extends AbstractObject {
     private float lat;
     @Column(name = "lng", nullable = false)
     private float lng;
-    @Enumerated(EnumType.STRING)
-    @Builder.Default
-    private SpecType specType = SpecType.REGULAR;
     @Column(name = "total_rental_area_in_m2", nullable = false)
     private BigDecimal totalRentalAreaInM2;
 }

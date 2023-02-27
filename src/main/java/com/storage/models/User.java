@@ -1,20 +1,19 @@
 package com.storage.models;
 
-import com.storage.models.base.AbstractObject;
 import com.storage.models.enums.Gender;
 import com.storage.models.enums.Role;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 
 @Entity
-@Data
+@EqualsAndHashCode(callSuper = true)
+@Getter
+@Setter
+@SuperBuilder
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@ToString(callSuper = true)
 @Table(name = "users")
 public class User extends AbstractObject {
     @Column(name = "first_name", nullable = false)

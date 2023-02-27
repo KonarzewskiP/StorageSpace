@@ -55,18 +55,12 @@ public interface ModelMapper {
     static StorageRoomDto fromStorageRoomToStorageRoomDto(StorageRoom storageRoom) {
         return storageRoom == null ? null : StorageRoomDto.builder()
                 .storageSize(storageRoom.getStorageSize())
-                .reserved(storageRoom.isReserved())
-                .startDate(storageRoom.getStartDate())
-                .endDate(storageRoom.getEndDate())
                 .build();
     }
 
     static StorageRoom fromStorageRoomDtoToStorageRoom(StorageRoomDto storageRoomDto) {
         return storageRoomDto == null ? null : StorageRoom.builder()
                 .storageSize(storageRoomDto.getStorageSize())
-                .reserved(storageRoomDto.getReserved())
-                .startDate(storageRoomDto.getStartDate())
-                .endDate(storageRoomDto.getEndDate())
                 .build();
     }
 
