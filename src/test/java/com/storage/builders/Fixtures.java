@@ -77,9 +77,6 @@ public class Fixtures {
     public static StorageRoomDto createStorageRoomDto() {
         return StorageRoomDto.builder()
                 .storageSize(StorageSize.GARDEN_SHED)
-                .reserved(false)
-                .startDate(null)
-                .endDate(null)
                 .build();
     }
 

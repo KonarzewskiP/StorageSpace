@@ -1,6 +1,7 @@
 package com.storage.controllers;
 
 
+import com.storage.models.StorageRoom;
 import com.storage.models.dto.StorageRoomDto;
 import com.storage.models.mapper.ModelMapper;
 import com.storage.models.requests.StorageUpdateRequest;
@@ -38,8 +39,8 @@ public class StorageRoomController {
     @Transactional
     @PutMapping("/{uuid}")
     public ResponseEntity<StorageRoomDto> updateByUuid(@PathVariable String uuid, @RequestBody StorageUpdateRequest request) {
-        var storage = storageRoomService.updateStorageRoom(uuid, request);
-        var storageDto = fromStorageRoomToStorageRoomDto(storage);
+        StorageRoom storage = storageRoomService.updateStorageRoom(uuid, request);
+        StorageRoomDto storageDto = fromStorageRoomToStorageRoomDto(storage);
         return new ResponseEntity<>(storageDto, HttpStatus.OK);
     }
 

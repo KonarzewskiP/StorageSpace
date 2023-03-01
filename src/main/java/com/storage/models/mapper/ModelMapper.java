@@ -54,7 +54,9 @@ public interface ModelMapper {
 
     static StorageRoomDto fromStorageRoomToStorageRoomDto(StorageRoom storageRoom) {
         return storageRoom == null ? null : StorageRoomDto.builder()
+                .uuid(storageRoom.getUuid())
                 .storageSize(storageRoom.getStorageSize())
+                .status(storageRoom.getStatus())
                 .build();
     }
 

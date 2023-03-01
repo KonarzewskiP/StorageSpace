@@ -3,6 +3,7 @@ package com.storage.models;
 import com.storage.models.enums.StorageRoomStatus;
 import com.storage.models.enums.StorageSize;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 
@@ -12,12 +13,13 @@ import javax.persistence.*;
 // What if there will be a need for a warehouse to resize and reorganize rooms.
 
 
-@Entity
-@Data
+@Getter
+@Setter
+@SuperBuilder
+@ToString(callSuper = true)
 @NoArgsConstructor
-@AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@Builder
+@Entity
 @Table(name = "storage_rooms")
 public class StorageRoom extends AbstractObject {
 
