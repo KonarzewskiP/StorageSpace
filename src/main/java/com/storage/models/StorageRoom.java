@@ -2,10 +2,10 @@ package com.storage.models;
 
 import com.storage.models.enums.StorageRoomStatus;
 import com.storage.models.enums.StorageSize;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-import javax.persistence.*;
 
 //TODO improve identification of specific storage rooms.
 // For example, allow adding unique codes for specific rooms to

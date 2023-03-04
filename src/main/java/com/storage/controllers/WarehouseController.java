@@ -4,6 +4,7 @@ import com.storage.models.dto.WarehouseDto;
 import com.storage.models.mapper.ModelMapper;
 import com.storage.models.requests.CreateWarehouseRequest;
 import com.storage.service.WarehouseService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -13,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @Slf4j

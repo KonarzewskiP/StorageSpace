@@ -3,11 +3,11 @@ package com.storage.models.requests;
 import com.storage.models.enums.ExtraServices;
 import com.storage.models.enums.StorageDuration;
 import com.storage.models.enums.StorageSize;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Value;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.Set;
 

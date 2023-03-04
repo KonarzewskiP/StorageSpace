@@ -1,12 +1,12 @@
 package com.storage.models;
 
 import com.storage.models.enums.StorageSize;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
 import java.math.BigDecimal;
 
 @Entity

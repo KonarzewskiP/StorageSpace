@@ -2,10 +2,9 @@ package com.storage.models;
 
 import com.storage.models.enums.Gender;
 import com.storage.models.enums.Role;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-
-import javax.persistence.*;
 
 @Entity
 @EqualsAndHashCode(callSuper = true)

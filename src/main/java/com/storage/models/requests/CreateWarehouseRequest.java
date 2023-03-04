@@ -1,10 +1,10 @@
 package com.storage.models.requests;
 
 import com.storage.models.enums.SpecType;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
 import java.math.BigDecimal;
 
 @Builder

@@ -1,13 +1,13 @@
 package com.storage.repositories;
 
 import com.storage.models.AbstractObject;
+import jakarta.persistence.LockModeType;
+import jakarta.persistence.QueryHint;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.LockModeType;
-import javax.persistence.QueryHint;
-import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Transactional
