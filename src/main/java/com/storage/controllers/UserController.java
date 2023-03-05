@@ -1,5 +1,7 @@
 package com.storage.controllers;
 
+import com.storage.models.User;
+import com.storage.models.dto.UserDTO;
 import com.storage.models.mapper.ModelMapper;
 import com.storage.models.requests.CreateUserRequest;
 import com.storage.service.UserService;
@@ -20,16 +22,16 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<CreateUserRequest> create(@RequestBody CreateUserRequest createUserRequest) {
-        var newUser = userService.createUser(createUserRequest);
-        var userDto = fromUserToUserDto(newUser);
+    public ResponseEntity<UserDTO> create(@RequestBody CreateUserRequest createUserRequest) {
+        User newUser = userService.createUser(createUserRequest);
+        UserDTO userDto = fromUserToUserDto(newUser);
         return new ResponseEntity<>(userDto, HttpStatus.CREATED);
     }
 
     @GetMapping("/{uuid}")
-    public ResponseEntity<CreateUserRequest> getByUuid(@PathVariable String uuid) {
-        var user = userService.findByUuid(uuid);
-        var userDTO = ModelMapper.fromUserToUserDto(user);
+    public ResponseEntity<UserDTO> getByUuid(@PathVariable String uuid) {
+        User user = userService.findByUuid(uuid);
+        UserDTO userDTO = ModelMapper.fromUserToUserDto(user);
         return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
 }

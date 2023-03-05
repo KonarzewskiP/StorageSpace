@@ -2,12 +2,16 @@ package com.storage.models.requests;
 
 import com.storage.models.enums.SpecType;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 public class CreateWarehouseRequest {
     @NotBlank

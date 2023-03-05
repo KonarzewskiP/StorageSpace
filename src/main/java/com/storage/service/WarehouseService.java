@@ -95,7 +95,7 @@ public class WarehouseService extends AbstractService<Warehouse> {
      *
      * @return List of warehouses from the database with details.
      */
-    public Page<WarehouseDto> getAllWarehouses(Pageable pageable) {
+    public Page<WarehouseDto> getAll(Pageable pageable) {
         return warehouseRepository.findAll(pageable).map(ModelMapper::fromWarehouseToWarehouseDto);
     }
 

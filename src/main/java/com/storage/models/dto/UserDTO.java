@@ -1,17 +1,15 @@
-package com.storage.models.requests;
+package com.storage.models.dto;
 
 import com.storage.models.enums.Gender;
 import com.storage.models.enums.Role;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
-public class CreateUserRequest {
+@Getter
+@AllArgsConstructor
+@ToString
+@EqualsAndHashCode
+public class UserDTO {
     private String firstName;
     private String lastName;
     private String email;

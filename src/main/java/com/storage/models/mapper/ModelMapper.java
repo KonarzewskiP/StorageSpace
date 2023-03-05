@@ -4,6 +4,7 @@ import com.storage.models.StorageRoom;
 import com.storage.models.User;
 import com.storage.models.Warehouse;
 import com.storage.models.dto.StorageRoomDto;
+import com.storage.models.dto.UserDTO;
 import com.storage.models.dto.WarehouseDto;
 import com.storage.models.requests.CreateUserRequest;
 
@@ -13,8 +14,8 @@ import java.util.stream.Collectors;
 //TODO split all model mappers to separate classes and improve mapping. (ModelMapper)
 public interface ModelMapper {
 
-    static CreateUserRequest fromUserToUserDto(User user) {
-        return user == null ? null : CreateUserRequest.builder()
+    static UserDTO fromUserToUserDto(User user) {
+        return user == null ? null : UserDTO.builder()
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .email(user.getEmail())
@@ -35,7 +36,13 @@ public interface ModelMapper {
 
     static WarehouseDto fromWarehouseToWarehouseDto(Warehouse warehouse) {
         return warehouse == null ? null : WarehouseDto.builder()
+                .uuid(warehouse.getUuid())
                 .name(warehouse.getName())
+                .city(warehouse.getCity())
+                .postcode(warehouse.getPostcode())
+                .street(warehouse.getStreet())
+                .lat(warehouse.getLat())
+                .lng(warehouse.getLng())
                 .build();
     }
 
