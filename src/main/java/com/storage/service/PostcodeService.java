@@ -1,17 +1,14 @@
 
 package com.storage.service;
 
+import com.storage.client.PostcodeClient;
 import com.storage.exceptions.BadRequestException;
 import com.storage.exceptions.PostcodeException;
-import com.storage.models.dto.postcode.PostcodeDTO;
 import com.storage.models.dto.postcode.PostcodeValidateDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
@@ -30,10 +27,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 @RequiredArgsConstructor
 public class PostcodeService {
 
-    @Value("${postcode.api.url}")
-    private String postcodeUrl;
-
-    private final RestTemplate restTemplate;
+    private final PostcodeClient postcodeClient;
 
     /**
      * Method that calls external API to check if postcode given by the user is valid.
@@ -50,12 +44,9 @@ public class PostcodeService {
         if (isBlank(postcode))
             throw new BadRequestException("Postcode can not be empty or null");
 
-        String validPostcode = postcode.toUpperCase().replaceAll(" ", "").concat("/validate");
+        String validPostcode = postcode.toUpperCase().replaceAll(" ", "");
 
-        ResponseEntity<PostcodeValidateDTO> response =
-                restTemplate.getForEntity(postcodeUrl + "/" + validPostcode, PostcodeValidateDTO.class);
-
-        return response.getBody();
+        return postcodeClient.isValid(validPostcode);
     }
 
     /**
@@ -70,14 +61,15 @@ public class PostcodeService {
      * @throws PostcodeException if the postcode is invalid.
      */
 
-    public PostcodeDTO getSingleCoordinates(String postcode) {
-        log.info("Enter PostcodeService -> getCoordinatesPostcode() with: {}", postcode);
-
-        String validPostcode = postcode.toUpperCase().replaceAll(" ", "");
-        ResponseEntity<PostcodeDTO> response =
-                restTemplate.getForEntity(postcodeUrl + "/" + validPostcode, PostcodeDTO.class);
-        return response.getBody();
-    }
+    //TODO to implement
+//    public PostcodeDTO getSingleCoordinates(String postcode) {
+//        log.info("Enter PostcodeService -> getCoordinatesPostcode() with: {}", postcode);
+//
+//        String validPostcode = postcode.toUpperCase().replaceAll(" ", "");
+//        ResponseEntity<PostcodeDTO> response =
+//                restTemplate.getForEntity(postcodeUrl + "/" + validPostcode, PostcodeDTO.class);
+//        return response.getBody();
+//    }
 
 }
 
