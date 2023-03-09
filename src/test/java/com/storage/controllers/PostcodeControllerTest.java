@@ -1,6 +1,5 @@
 package com.storage.controllers;
 
-import com.storage.models.dto.postcode.PostcodeValidateDTO;
 import com.storage.service.PostcodeService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,10 +28,7 @@ class PostcodeControllerTest {
     void itShouldValidatePostcode() throws Exception {
         //Given
         String postcode = "SW1 3PL";
-        PostcodeValidateDTO postcodeValidateDTO = new PostcodeValidateDTO();
-        postcodeValidateDTO.setResult(true);
-
-        given(postcodeService.isValid(postcode)).willReturn(postcodeValidateDTO);
+        given(postcodeService.isValid(postcode)).willReturn(true);
         //When
         //Then
         mockMvc.perform(get("/postcodes/{postcode}/valid", postcode)

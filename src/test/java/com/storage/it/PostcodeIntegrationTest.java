@@ -1,6 +1,6 @@
 package com.storage.it;
 
-import com.storage.exceptions.PostcodeException;
+import com.storage.exceptions.PostcodeClientException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +47,7 @@ public class PostcodeIntegrationTest {
                 .andDo(print())
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.errorMessage").value("Invalid postcode"))
-                .andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(PostcodeException.class));
+                .andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(PostcodeClientException.class));
     }
     }
 

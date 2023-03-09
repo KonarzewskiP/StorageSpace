@@ -1,7 +1,6 @@
 package com.storage.exceptions;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.DefaultResponseErrorHandler;
@@ -27,6 +26,6 @@ public class RestTemplateErrorHandler extends DefaultResponseErrorHandler {
         }
         String error = new String(response.getBody().readAllBytes(), StandardCharsets.UTF_8);
 
-        throw new PostcodeException((HttpStatus) response.getStatusCode(), error);
+        throw new PostcodeClientException(error);
     }
 }

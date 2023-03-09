@@ -1,8 +1,6 @@
 package com.storage.utils;
 
 import com.storage.models.StorageRoom;
-import com.storage.models.dto.postcode.PostcodeDTO;
-import com.storage.models.dto.postcode.PostcodeResultDTO;
 import com.storage.models.enums.StorageSize;
 
 import java.util.Arrays;
@@ -29,9 +27,9 @@ public interface Util {
     }
 
 
-    static double calculateDistance(PostcodeResultDTO postcode1, PostcodeDTO postcode2) {
-        return calculateDistance(postcode1.getLatitude(), postcode1.getLongitude(), postcode2.getPostcodeResultDTO().getLatitude(), postcode2.getPostcodeResultDTO().getLongitude());
-    }
+//    static double calculateDistance(PostcodeResultDTO postcode1, PostcodeDTO postcode2) {
+//        return calculateDistance(postcode1.getLatitude(), postcode1.getLongitude(), postcode2.getPostcodeResultDTO().getLatitude(), postcode2.getPostcodeResultDTO().getLongitude());
+//    }
 
     /**
      * Calculates the distance in km between two points with

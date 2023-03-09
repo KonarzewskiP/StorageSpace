@@ -3,8 +3,7 @@ package com.storage.service;
 
 import com.storage.client.PostcodeClient;
 import com.storage.exceptions.BadRequestException;
-import com.storage.exceptions.PostcodeException;
-import com.storage.models.dto.postcode.PostcodeValidateDTO;
+import com.storage.exceptions.PostcodeClientException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -40,7 +39,7 @@ public class PostcodeService {
      * If postcode exist, returns true, otherwise false.
      */
 
-    public PostcodeValidateDTO isValid(String postcode) {
+    public boolean isValid(String postcode) {
         if (isBlank(postcode))
             throw new BadRequestException("Postcode can not be empty or null");
 
@@ -58,7 +57,7 @@ public class PostcodeService {
      *
      * @param postcode postcode given by the user.
      * @return object with the longitude and latitude for postcode.
-     * @throws PostcodeException if the postcode is invalid.
+     * @throws PostcodeClientException if the postcode is invalid.
      */
 
     //TODO to implement
