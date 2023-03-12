@@ -18,7 +18,7 @@ public class PostcodeClient {
 
     private final RestTemplate restTemplate;
 
-    public boolean isValid(String postcode) {
+    public PostcodeValidateDTO isValid(String postcode) {
         String url = String.format("%s/%s/validate", postcodeUrl, postcode);
 
         PostcodeValidateDTO postcodeValidateDTO;
@@ -29,7 +29,7 @@ public class PostcodeClient {
         }
         validate(postcodeValidateDTO);
 
-        return postcodeValidateDTO.getResult();
+        return postcodeValidateDTO;
     }
 
     public PostcodeDTO getDetails(String postcode) {

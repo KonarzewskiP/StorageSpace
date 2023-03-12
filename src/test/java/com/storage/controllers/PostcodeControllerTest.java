@@ -1,5 +1,8 @@
 package com.storage.controllers;
 
+import com.storage.models.dto.postcode.PostcodeDTO;
+import com.storage.models.dto.postcode.PostcodeDetails;
+import com.storage.models.dto.postcode.PostcodeValidateDTO;
 import com.storage.service.PostcodeService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +30,11 @@ class PostcodeControllerTest {
     @Test
     void itShouldValidatePostcode() throws Exception {
         //Given
-        String postcode = "SW1 3PL";
-        given(postcodeService.isValid(postcode)).willReturn(true);
+        String postcode = "SW13PL";
+        PostcodeValidateDTO postcodeValidateDTO = PostcodeValidateDTO.builder()
+                .result(true)
+                .build();
+        given(postcodeService.isValid(postcode)).willReturn(postcodeValidateDTO);
         //When
         //Then
         mockMvc.perform(get("/postcodes/{postcode}/valid", postcode)
@@ -37,4 +43,30 @@ class PostcodeControllerTest {
                 .andExpect(jsonPath("$.result").value(Boolean.TRUE));
     }
 
+    @Test
+    void itShouldReturnPostcodeDetails() throws Exception {
+        //Given
+        String postcode = "SW13PL";
+        float lat = 51.4627f;
+        float lng = -0.169f;
+        // ... service return details of the postcode
+        PostcodeDTO postcodeDTO = PostcodeDTO.builder()
+                .status(200)
+                .result(PostcodeDetails.builder()
+                        .postcode(postcode)
+                        .lat(lat)
+                        .lng(lng)
+                        .build())
+                .build();
+        given(postcodeService.getDetails(postcode)).willReturn(postcodeDTO);
+        //When
+        //Then
+        mockMvc.perform(get("/postcodes/{postcode}/details", postcode)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value(200))
+                .andExpect(jsonPath("$.result.postcode").value(postcode))
+                .andExpect(jsonPath("$.result.latitude").value(lat))
+                .andExpect(jsonPath("$.result.longitude").value(lng));
+    }
 }

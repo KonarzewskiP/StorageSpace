@@ -170,9 +170,10 @@ class PostcodeClientTest {
                     .expect(requestTo(url))
                     .andRespond(withSuccess(responseJson, MediaType.APPLICATION_JSON));
             //When
-            var result = underTest.isValid(POSTCODE);
+            PostcodeValidateDTO result = underTest.isValid(POSTCODE);
             //Then
-            assertThat(result).isTrue();
+            assertThat(result).isNotNull();
+            assertThat(result).usingRecursiveComparison().isEqualTo(response);
         }
     }
 

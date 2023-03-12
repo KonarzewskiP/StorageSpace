@@ -5,6 +5,7 @@ import com.storage.client.PostcodeClient;
 import com.storage.exceptions.BadRequestException;
 import com.storage.exceptions.PostcodeClientException;
 import com.storage.models.dto.postcode.PostcodeDTO;
+import com.storage.models.dto.postcode.PostcodeValidateDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -41,9 +42,9 @@ public class PostcodeService {
      * @throws PostcodeClientException
      */
 
-    public boolean isValid(String postcode) {
+    public PostcodeValidateDTO isValid(String postcode) {
         log.info("Validating postcode: {}", postcode);
-//        postcode = formatAndValidate(postcode);
+        postcode = formatAndValidate(postcode);
 
         return postcodeClient.isValid(postcode);
     }
@@ -72,15 +73,15 @@ public class PostcodeService {
     private String formatAndValidate(String postcode) {
         if (isBlank(postcode))
             throw new BadRequestException("Postcode can not be empty or null");
-        postcode = postcode.replaceAll(" ", "");
+        String formattedPostcode = postcode.replaceAll(" ", "");
 
         Pattern pattern = Pattern.compile("^[A-Z]{1,2}[0-9R][0-9A-Z]?[0-9][ABD-HJLNP-UW-Z]{2}$", Pattern.CASE_INSENSITIVE);
-        Matcher matcher = pattern.matcher(postcode);
+        Matcher matcher = pattern.matcher(formattedPostcode);
 
         if (!matcher.find())
             throw new BadRequestException(String.format("Postcode format is invalid! Invalid postcode: [%s]. Only UK postcodes can be validate!", postcode));
 
-        return postcode;
+        return formattedPostcode;
     }
 }
 
