@@ -1,5 +1,6 @@
 package com.storage.controllers;
 
+import com.storage.models.dto.postcode.PostcodeDTO;
 import com.storage.models.dto.postcode.PostcodeValidateDTO;
 import com.storage.service.PostcodeService;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +29,13 @@ public class PostcodeController {
      */
     @GetMapping("/{postcode}/valid")
     public ResponseEntity<PostcodeValidateDTO> isValid(@PathVariable String postcode) {
-        var isPostcodeValid = postcodeService.isValid(postcode);
-        return new ResponseEntity<>(isPostcodeValid, HttpStatus.OK);
+        PostcodeValidateDTO postcodeValidateDTO = postcodeService.isValid(postcode);
+        return new ResponseEntity<>(postcodeValidateDTO, HttpStatus.OK);
+    }
+
+    @GetMapping("/{postcode}/details")
+    public ResponseEntity<PostcodeDTO> getDetails(@PathVariable String postcode) {
+        PostcodeDTO postcodeDTO = postcodeService.getDetails(postcode);
+        return new ResponseEntity<>(postcodeDTO, HttpStatus.OK);
     }
 }

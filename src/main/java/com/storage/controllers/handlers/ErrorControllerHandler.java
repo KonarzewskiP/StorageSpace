@@ -1,6 +1,5 @@
 package com.storage.controllers.handlers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.storage.exceptions.*;
 import com.storage.models.dto.CustomErrorResponseDto;
@@ -120,9 +119,9 @@ public class ErrorControllerHandler {
      *
      * @author Pawel Konarzewski
      */
-    @ExceptionHandler(value = PostcodeException.class)
+/*    @ExceptionHandler(value = PostcodeClientException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public CustomErrorResponseDto handleNotFoundException(PostcodeException e) throws JsonProcessingException {
+    public CustomErrorResponseDto handleNotFoundException(PostcodeClientException e) throws JsonProcessingException {
         log.error("Enter ErrorControllerHandler -> handleNotFoundException() PostcodeException with: " + e);
 
         var error = objectMapper
@@ -131,7 +130,7 @@ public class ErrorControllerHandler {
                 .asText();
 
         return createCustomErrorResponse(error, e.getStatusCode().getReasonPhrase(), e.getStatusCode().value());
-    }
+    }*/
 
     /**
      * The method throw custom error object for EnumParsingException

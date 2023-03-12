@@ -1,16 +1,15 @@
 package com.storage.models.dto.postcode;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
-@Builder
-@Data
-@NoArgsConstructor
+@SuperBuilder
+@Getter
 @AllArgsConstructor
-public class PostcodeValidateDTO {
-    private int status;
+@ToString
+@EqualsAndHashCode
+@NoArgsConstructor
+public class PostcodeValidateDTO extends PostcodeResponse {
     private Boolean result;
 }
 

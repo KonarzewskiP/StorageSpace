@@ -6,8 +6,6 @@ import com.storage.models.Warehouse;
 import com.storage.models.businessObject.Quote;
 import com.storage.models.dto.StorageRoomDto;
 import com.storage.models.dto.WarehouseDto;
-import com.storage.models.dto.postcode.PostcodeDTO;
-import com.storage.models.dto.postcode.PostcodeResultDTO;
 import com.storage.models.dto.postcode.PostcodeValidateDTO;
 import com.storage.models.enums.Gender;
 import com.storage.models.enums.Role;
@@ -121,29 +119,14 @@ public class Fixtures {
         return Map.of("postcodes", List.of("SE11 5QY", "SW19 3BE", "TW9 2JX"));
     }
 
-    public static PostcodeDTO createPostcodeResponse() {
-        var postcodeResult = PostcodeResultDTO.builder()
-                .postcode("SW178EF")
-                .latitude(51.431047)
-                .longitude(-0.155261)
-                .build();
-
-        return PostcodeDTO.builder()
-                .status(200)
-                .postcodeResultDTO(postcodeResult)
-                .build();
-    }
-
     public static PostcodeValidateDTO createPositivePostcodeValidationResponse() {
         return PostcodeValidateDTO.builder()
-                .status(200)
                 .result(true)
                 .build();
 
     }
     public static PostcodeValidateDTO createNegativePostcodeValidationResponse() {
         return PostcodeValidateDTO.builder()
-                .status(200)
                 .result(false)
                 .build();
 
