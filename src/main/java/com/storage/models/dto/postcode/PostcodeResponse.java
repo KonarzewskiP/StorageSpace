@@ -9,7 +9,7 @@ import lombok.experimental.SuperBuilder;
 @ToString
 @EqualsAndHashCode
 @NoArgsConstructor
-public class PostcodeValidateDTO extends PostcodeResponse {
-    private Boolean result;
+public class PostcodeResponse {
+    private Integer status;
+    private String error;
 }
-

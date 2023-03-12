@@ -121,14 +121,12 @@ public class Fixtures {
 
     public static PostcodeValidateDTO createPositivePostcodeValidationResponse() {
         return PostcodeValidateDTO.builder()
-                .status(200)
                 .result(true)
                 .build();
 
     }
     public static PostcodeValidateDTO createNegativePostcodeValidationResponse() {
         return PostcodeValidateDTO.builder()
-                .status(200)
                 .result(false)
                 .build();
 

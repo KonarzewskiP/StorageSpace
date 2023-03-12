@@ -4,10 +4,14 @@ package com.storage.service;
 import com.storage.client.PostcodeClient;
 import com.storage.exceptions.BadRequestException;
 import com.storage.exceptions.PostcodeClientException;
+import com.storage.models.dto.postcode.PostcodeDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
@@ -29,46 +33,54 @@ public class PostcodeService {
     private final PostcodeClient postcodeClient;
 
     /**
-     * Method that calls external API to check if postcode given by the user is valid.
-     * <p>
-     * NOTE: Only postcodes from the UK can be verified.
+     * Method that calls external API to verify if postcode is valid and exist.
      * <p>
      *
      * @param postcode postcode given by the user.
-     * @return PostcodeValidation object with status code and result.
-     * If postcode exist, returns true, otherwise false.
+     * @return boolean. If postcode exist, returns true, otherwise false.
+     * @throws PostcodeClientException
      */
 
     public boolean isValid(String postcode) {
-        if (isBlank(postcode))
-            throw new BadRequestException("Postcode can not be empty or null");
+        log.info("Validating postcode: {}", postcode);
+//        postcode = formatAndValidate(postcode);
 
-        String validPostcode = postcode.toUpperCase().replaceAll(" ", "");
-
-        return postcodeClient.isValid(validPostcode);
+        return postcodeClient.isValid(postcode);
     }
 
     /**
-     * Calls external API and returns coordinates for postcode.
-     * In case of invalid postcode restTemplate will throw an RestClientException which is
-     * handled by RestTemplateErrorHandler class.
+     * Calls external API and returns details of the postcode.
      * <p>
-     * NOTE: Only postcodes from the UK can be verified.
      *
      * @param postcode postcode given by the user.
      * @return object with the longitude and latitude for postcode.
-     * @throws PostcodeClientException if the postcode is invalid.
+     * @throws PostcodeClientException
      */
 
-    //TODO to implement
-//    public PostcodeDTO getSingleCoordinates(String postcode) {
-//        log.info("Enter PostcodeService -> getCoordinatesPostcode() with: {}", postcode);
-//
-//        String validPostcode = postcode.toUpperCase().replaceAll(" ", "");
-//        ResponseEntity<PostcodeDTO> response =
-//                restTemplate.getForEntity(postcodeUrl + "/" + validPostcode, PostcodeDTO.class);
-//        return response.getBody();
-//    }
+    public PostcodeDTO getDetails(String postcode) {
+        log.info("Getting details of postcode: {}", postcode);
+        formatAndValidate(postcode);
 
+        return postcodeClient.getDetails(postcode);
+    }
+
+    /**
+     * Helper method to validate if postcode is in valid format
+     * <p>
+     * NOTE: Only postcodes from the UK can be verified.
+     */
+    private String formatAndValidate(String postcode) {
+        if (isBlank(postcode))
+            throw new BadRequestException("Postcode can not be empty or null");
+        postcode = postcode.replaceAll(" ", "");
+
+        Pattern pattern = Pattern.compile("^[A-Z]{1,2}[0-9R][0-9A-Z]?[0-9][ABD-HJLNP-UW-Z]{2}$", Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(postcode);
+
+        if (!matcher.find())
+            throw new BadRequestException(String.format("Postcode format is invalid! Invalid postcode: [%s]. Only UK postcodes can be validate!", postcode));
+
+        return postcode;
+    }
 }
 

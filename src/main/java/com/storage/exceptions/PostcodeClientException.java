@@ -5,10 +5,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 public class PostcodeClientException extends RuntimeException {
-    private String error;
 
     public PostcodeClientException(String error) {
         super(error);
-        this.error = error;
+    }
+
+    public PostcodeClientException(String error, Throwable throwable) {
+        super(error, throwable);
     }
 }

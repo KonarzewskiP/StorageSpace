@@ -22,7 +22,7 @@ public abstract class AbstractObject implements Serializable, Cloneable  {
     @Column(updatable = false, nullable = false)
     protected Long id;
 
-    @Column(name = "uuid", updatable = false, nullable = false, unique = true)
+    @Column(name = "uuid", updatable = false, nullable = false, unique = true, length = 100)
     protected String uuid;
 
     @Column(name = "created_at", updatable = false, nullable = false)
