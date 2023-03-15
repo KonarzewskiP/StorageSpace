@@ -35,4 +35,11 @@ public abstract class AbstractService<T extends AbstractObject> {
         return repository.findIdByUuid(uuid)
                 .orElseThrow(() -> new NotFoundException(clazz.getSimpleName() + " not found with uuid " + uuid));
     }
+
+    public String findUuidById(Long id) {
+        if (id == null || id < 0)
+            throw new BadRequestException("Id can not be null or negative!");
+        return repository.findUuidById(id)
+                .orElseThrow(() -> new NotFoundException(clazz.getSimpleName() + " not found with id " + id));
+    }
 }

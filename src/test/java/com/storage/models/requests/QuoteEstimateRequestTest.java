@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import java.util.Set;
 
 import static com.storage.models.enums.StorageDuration.PLUS_1_YEAR;
-import static com.storage.models.enums.StorageSize.LARGE_DOUBLE_GARAGE;
+import static com.storage.models.enums.StorageSize.LARGE_GARDEN_SHED;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
@@ -34,7 +34,7 @@ class QuoteEstimateRequestTest {
                 firstName,
                 lastName,
                 email,
-                LARGE_DOUBLE_GARAGE,
+                LARGE_GARDEN_SHED,
                 PLUS_1_YEAR,
                 null);
         //When

@@ -19,7 +19,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import static com.storage.models.enums.StorageDuration.PLUS_1_YEAR;
-import static com.storage.models.enums.StorageSize.LARGE_DOUBLE_GARAGE;
+import static com.storage.models.enums.StorageSize.LARGE_GARDEN_SHED;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -41,7 +41,7 @@ class QuoteControllerTest {
     private static final String FIRST_NAME = "Tony";
     private static final String LAST_NAME = "Hawk";
     private static final String EMAIL = "tony@hawk.com";
-    private static final StorageSize STORAGE_SIZE = LARGE_DOUBLE_GARAGE;
+    private static final StorageSize STORAGE_SIZE = LARGE_GARDEN_SHED;
     private static final StorageDuration DURATION = PLUS_1_YEAR;
 
     @Test
@@ -62,20 +62,20 @@ class QuoteControllerTest {
     }
 
     private Quote createQuote() {
-        return new Quote(
-                FIRST_NAME,
-                LAST_NAME,
-                EMAIL,
-                "123",
-                "PURPLE",
-                "NEW YORK",
-                "Queens 12",
-                BigDecimal.TEN,
-                BigDecimal.TEN,
-                STORAGE_SIZE,
-                START_DATE,
-                DURATION,
-                null);
+        return Quote.builder()
+                .firstName(FIRST_NAME)
+                .surname(LAST_NAME)
+                .email(EMAIL)
+                .postcode("123")
+                .warehouseName("PURPLE")
+                .city("NEW YORK")
+                .street("Queens 12")
+                .price(BigDecimal.TEN)
+                .storageSize(STORAGE_SIZE)
+                .startDate(START_DATE)
+                .duration(DURATION)
+                .extraServices(null)
+                .build();
     }
 
     private QuoteEstimateRequest createQuoteEstimateRequest() {
