@@ -21,7 +21,7 @@ public class QuoteController {
     private final QuoteService quoteService;
 
     @PostMapping("/estimation")
-    public ResponseEntity<Quote> sendQuote(@RequestBody QuoteEstimateRequest estimation) {
+    public ResponseEntity<Quote> generateQuote(@RequestBody QuoteEstimateRequest estimation) {
         var estimationDTO = quoteService.estimate(estimation);
         //TODO save user in db
         //TODO send email to user

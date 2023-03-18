@@ -38,19 +38,18 @@ public class QuoteService {
      * @since 02/03/2021
      */
 
-    public Quote estimate(QuoteEstimateRequest estimate) {
-        log.info("Start quote estimation with request: [{}]", estimate);
-        estimate.isValid();
-        var warehouse = warehouseService.findByUuid(estimate.getWarehouseUuid());
+    public Quote estimate(QuoteEstimateRequest request) {
+        log.info("Start quote estimation with request: [{}]", request);
+        request.isValid();
+        Warehouse warehouse = warehouseService.findByUuid(request.getWarehouseUuid());
         // calculate price
-        Quote quote = generateQuote(estimate, warehouse);
-        return quote;
+        return generateQuote(request, warehouse);
     }
 
-    private Quote generateQuote(QuoteEstimateRequest estimate, Warehouse warehouse) {
+    private Quote generateQuote(QuoteEstimateRequest request, Warehouse warehouse) {
         BigDecimal price = priceService.calculatePrice(
-                estimate.getStorageSize(),
-                estimate.getDuration(),
+                request.getStorageSize(),
+                request.getDuration(),
                 warehouse.getId());
 
 

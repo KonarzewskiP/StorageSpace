@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 import java.util.Optional;
 
 @Service
-public class PriceService extends AbstractService<Price> {
+public class PriceService {
 
     private final PriceRepository priceRepository;
     private final WarehouseService warehouseService;
@@ -21,7 +21,6 @@ public class PriceService extends AbstractService<Price> {
     @Autowired
     public PriceService(PriceRepository priceRepository,
                         WarehouseService warehouseService) {
-        super(Price.class, priceRepository);
         this.priceRepository = priceRepository;
         this.warehouseService = warehouseService;
     }

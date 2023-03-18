@@ -5,6 +5,7 @@ import com.storage.models.enums.StorageDuration;
 import com.storage.models.enums.StorageSize;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Value;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -14,6 +15,7 @@ import java.util.Set;
 import static com.storage.utils.StringUtils.isEmailFormatValid;
 
 @Value
+@Builder
 public class QuoteEstimateRequest {
     @NotBlank
     String warehouseUuid;

@@ -45,7 +45,7 @@ class QuoteControllerTest {
     private static final StorageDuration DURATION = PLUS_1_YEAR;
 
     @Test
-    void itShouldValidatePostcode() throws Exception {
+    void itShouldGenerateQuote() throws Exception {
         //Given
         QuoteEstimateRequest estimation = createQuoteEstimateRequest();
         Quote quote = createQuote();
@@ -79,15 +79,16 @@ class QuoteControllerTest {
     }
 
     private QuoteEstimateRequest createQuoteEstimateRequest() {
-        return new QuoteEstimateRequest(
-                WAREHOUSE_UUID,
-                START_DATE,
-                FIRST_NAME,
-                LAST_NAME,
-                EMAIL,
-                STORAGE_SIZE,
-                DURATION,
-                null);
+        return QuoteEstimateRequest.builder()
+                .warehouseUuid(WAREHOUSE_UUID)
+                .startDate(START_DATE)
+                .firstName(FIRST_NAME)
+                .lastName(LAST_NAME)
+                .email(EMAIL)
+                .storageSize(STORAGE_SIZE)
+                .duration(DURATION)
+                .extraServices(null)
+                .build();
     }
 
     private <T> String toJson(T t) {
