@@ -2,11 +2,13 @@ package com.storage.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.storage.client.EmailClient;
 import com.storage.models.businessObject.Quote;
 import com.storage.models.enums.StorageDuration;
 import com.storage.models.enums.StorageSize;
 import com.storage.models.requests.QuoteEstimateRequest;
 import com.storage.service.QuoteService;
+import com.storage.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -35,6 +37,10 @@ class QuoteControllerTest {
 
     @MockBean
     private QuoteService quoteService;
+    @MockBean
+    private UserService userService;
+    @MockBean
+    private EmailClient emailClient;
 
     private static final String WAREHOUSE_UUID = "warehouseUuid";
     private static final LocalDate START_DATE = LocalDate.of(2020, 10, 12);

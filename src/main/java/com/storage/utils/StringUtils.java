@@ -16,4 +16,6 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
         if (!matcher.find())
             throw new EmailException(String.format("Email [%s] has invalid format!", email));
     }
+
+
 }

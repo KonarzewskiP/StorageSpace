@@ -1,6 +1,6 @@
 package com.storage.config;
 
-import com.storage.models.mapper.TypeStringToEnumConverter;
+import com.storage.utils.mapper.TypeStringToEnumConverter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;

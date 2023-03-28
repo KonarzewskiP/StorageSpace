@@ -3,7 +3,6 @@ package com.storage.service;
 import com.storage.exceptions.WarehouseServiceException;
 import com.storage.models.Warehouse;
 import com.storage.models.dto.WarehouseDto;
-import com.storage.models.mapper.ModelMapper;
 import com.storage.models.requests.CreateWarehouseRequest;
 import com.storage.repositories.StorageRoomRepository;
 import com.storage.repositories.WarehouseRepository;
@@ -16,8 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.storage.models.mapper.ModelMapper.fromWarehouseToWarehouseDto;
 import static com.storage.utils.Util.createStorageRoomsList;
+import static com.storage.utils.mapper.ModelMapper.fromWarehouseToWarehouseDto;
 
 /**
  * @author Pawel Konarzewski
@@ -96,9 +95,20 @@ public class WarehouseService extends AbstractService<Warehouse> {
      * @return List of warehouses from the database with details.
      */
     public Page<WarehouseDto> getAll(Pageable pageable) {
-        return warehouseRepository.findAll(pageable).map(ModelMapper::fromWarehouseToWarehouseDto);
+        return warehouseRepository.findAll(pageable).map(this::map);
     }
 
+    private WarehouseDto map(Warehouse warehouse) {
+        return warehouse == null ? null : WarehouseDto.builder()
+                .uuid(warehouse.getUuid())
+                .name(warehouse.getName())
+                .city(warehouse.getCity())
+                .postcode(warehouse.getPostcode())
+                .street(warehouse.getStreet())
+                .lat(warehouse.getLat())
+                .lng(warehouse.getLng())
+                .build();
+    }
 
 
     /**

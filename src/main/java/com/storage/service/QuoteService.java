@@ -47,17 +47,17 @@ public class QuoteService {
     }
 
     private Quote generateQuote(QuoteEstimateRequest request, Warehouse warehouse) {
-        BigDecimal price = priceService.calculatePrice(
+ /*       BigDecimal price = priceService.calculatePrice(
                 request.getStorageSize(),
                 request.getDuration(),
-                warehouse.getId());
+                warehouse.getId());*/
 
 
         return Quote.builder()
                 .warehouseName(warehouse.getName())
                 .city(warehouse.getCity())
                 .street(warehouse.getStreet())
-                .price(price)
+                .price(BigDecimal.TEN)
                 .build();
     }
 

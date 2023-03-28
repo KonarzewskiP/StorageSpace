@@ -4,15 +4,18 @@ import com.storage.exceptions.BadRequestException;
 import com.storage.exceptions.UserServiceException;
 import com.storage.models.User;
 import com.storage.models.requests.CreateUserRequest;
+import com.storage.models.requests.QuoteEstimateRequest;
 import com.storage.repositories.UserRepository;
+import com.storage.utils.UuidGenerator;
 import com.storage.validators.UserDtoValidator;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.stream.Collectors;
 
-import static com.storage.models.mapper.ModelMapper.fromUserDtoToUser;
+import static com.storage.utils.mapper.ModelMapper.fromUserDtoToUser;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @Slf4j
@@ -98,6 +101,19 @@ public class UserService extends AbstractService<User> {
                     .map(err -> err.getKey() + " -> " + err.getValue())
                     .collect(Collectors.joining(", ")));
         }
+    }
+
+
+    @Transactional
+    public User saveNewCustomer(QuoteEstimateRequest request) {
+        User newUser = User.builder()
+                .uuid(UuidGenerator.next())
+                .firstName(request.getFirstName())
+                .lastName(request.getLastName())
+                .email(request.getEmail())
+                .build();
+
+        return userRepository.save(newUser);
     }
 }
 
