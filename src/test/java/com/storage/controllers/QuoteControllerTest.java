@@ -22,7 +22,10 @@ import java.time.LocalDate;
 
 import static com.storage.models.enums.StorageDuration.PLUS_1_YEAR;
 import static com.storage.models.enums.StorageSize.LARGE_GARDEN_SHED;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.times;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -34,7 +37,6 @@ class QuoteControllerTest {
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
-
     @MockBean
     private QuoteService quoteService;
     @MockBean
@@ -51,20 +53,22 @@ class QuoteControllerTest {
     private static final StorageDuration DURATION = PLUS_1_YEAR;
 
     @Test
-    void itShouldGenerateQuote() throws Exception {
+    void itShouldGenerateQuoteAndSaveANewUser() throws Exception {
         //Given
-        QuoteEstimateRequest estimation = createQuoteEstimateRequest();
+        QuoteEstimateRequest request = createQuoteEstimateRequest();
         Quote quote = createQuote();
 
         // ... return quote
-        given(quoteService.estimate(estimation)).willReturn(quote);
+        given(quoteService.estimate(request)).willReturn(quote);
+        given(userService.isEmailTaken(request.getEmail())).willReturn(false);
 
-        //When
-        //Then
+        //When + Then
         mockMvc.perform(post("/quote/estimation")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(toJson(estimation)))
+                        .content(toJson(request)))
                 .andExpect(status().isCreated());
+
+        then(userService).should(times(1)).saveNewCustomer(any());
     }
 
     private Quote createQuote() {

@@ -35,11 +35,10 @@ class PriceServiceTest {
     @Mock
     private WarehouseService warehouseService;
 
-
     private static final Long WAREHOUSE_ID = 100L;
 
     @Nested
-    class PriceTest {
+    class CalculatePriceTest {
         @Test
         void itShouldThrowErrorWhenNoPriceForSpecificWarehouse() {
             //Given

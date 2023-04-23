@@ -58,7 +58,7 @@ public class UserService extends AbstractService<User> {
      *
      * @author Pawel Konarzewski
      */
-    private boolean isEmailTaken(String email) {
+    public boolean isEmailTaken(String email) {
         if (isBlank(email))
             throw new BadRequestException("Email can not be null or empty!");
 

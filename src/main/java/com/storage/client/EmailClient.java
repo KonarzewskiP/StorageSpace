@@ -5,9 +5,7 @@ import com.sendgrid.Request;
 import com.sendgrid.Response;
 import com.sendgrid.SendGrid;
 import com.sendgrid.helpers.mail.Mail;
-import com.sendgrid.helpers.mail.objects.Content;
-import com.sendgrid.helpers.mail.objects.Email;
-import com.sendgrid.helpers.mail.objects.Personalization;
+import com.sendgrid.helpers.mail.objects.*;
 import com.storage.exceptions.EmailException;
 import com.storage.exceptions.SendGridException;
 import com.storage.models.EmailRequest;
@@ -16,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.List;
 
 @Slf4j
 @Component
@@ -26,6 +25,9 @@ public class EmailClient {
     @Value("${sengrid.email.from}")
     private String fromEmail;
 
+    @Value("${sengrid.sandbox.enable:true}")
+    private boolean enableSandbox;
+
 
     public EmailClient(SendGrid sendGrid) {
         this.sendGrid = sendGrid;
@@ -35,19 +37,25 @@ public class EmailClient {
         log.info("Sending email with request: [{}]", request);
         Personalization personalization = new Personalization();
 
-        Email recipient = new Email(request.getTo(), request.getRecipientName());
+        Email recipient = new Email(request.to(), request.recipientName());
         personalization.addTo(recipient);
         Email from = new Email(fromEmail);
 
         Content content = new Content();
         content.setType("text/plain");
-        content.setValue(request.getContent());
+        content.setValue(request.content());
 
         Mail mail = new Mail();
-        mail.setSubject(request.getSubject());
+        mail.setSubject(request.subject());
         mail.addPersonalization(personalization);
         mail.addContent(content);
         mail.setFrom(from);
+
+        Setting setting = new Setting();
+        setting.setEnable(enableSandbox);
+        MailSettings mailSettings = new MailSettings();
+        mailSettings.setSandboxMode(setting);
+        mail.setMailSettings(mailSettings);
 
         send(mail);
         log.info("Sent email with request: [{}]", request);
@@ -64,15 +72,23 @@ public class EmailClient {
             throw new EmailException("Failed to build email body, mail " + mail, e);
         }
 
+        Response response;
         try {
-            Response response = sendGrid.api(request);
-
-            if (response.getStatusCode() < 200 || response.getStatusCode() >= 300) {
-                throw new SendGridException(String.format("SendGrid response error,status %d, body %s",
-                        response.getStatusCode(), response.getBody()));
-            }
+            response = sendGrid.api(request);
         } catch (Exception e) {
-            throw new SendGridException("Failed to send HTTP request to SendGrid, request: " + request, e);
+            List<String> recipientEmails = mail.getPersonalization()
+                    .stream()
+                    .flatMap(p -> p.getTos()
+                            .stream()
+                            .map(Email::getEmail))
+                    .toList();
+            throw new SendGridException(String.format(
+                    "Failed to send HTTP request to SendGrid, to: [%s], subject: [%s]", String.join(", ", recipientEmails), mail.getSubject()), e);
+        }
+
+        if (response.getStatusCode() < 200 || response.getStatusCode() >= 300) {
+            throw new SendGridException(String.format("SendGrid response error,status %d, body %s",
+                    response.getStatusCode(), response.getBody()));
         }
     }
 }

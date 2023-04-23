@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -17,14 +16,9 @@ public class QuoteServiceTest {
 
     @InjectMocks
     private QuoteService underTest;
-    @Mock
-    private  WarehouseService warehouseService;
-    @Mock
-    private  PriceService priceService;
 
     @Nested
     class EstimateTest {
-
         @Test
         void itShouldThrowErrorWhenEmailFormatIsInvalid() {
             //Given

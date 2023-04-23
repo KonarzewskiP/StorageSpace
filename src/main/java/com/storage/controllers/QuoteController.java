@@ -21,6 +21,21 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/quote")
 public class QuoteController {
 
+    private final String EMAIL_SUBJECT = "Your Storage Space reservation";
+    private final String EMAIL_BODY = """
+            Hi %s
+                                                    
+            It means a lot to us that you have chosen Storage Space as your storage provider!
+            We want you to know that we value your trust and will do everything we can to ensure 
+            you have a positive experience with us. Our team is committed to maintaining 
+            the highest standards and providing the best quality service to meet all your storage needs.
+                                                    
+            You can easily complete the check-in process by visiting our website %s. 
+            It's a straightforward process, and you can save your progress and return 
+            to it as many times as you need.
+                                                                            
+            """;
+
     private final QuoteService quoteService;
     private final UserService userService;
     private final EmailClient emailClient;
@@ -29,27 +44,16 @@ public class QuoteController {
     public ResponseEntity<Quote> generateQuote(@RequestBody QuoteEstimateRequest request) {
         var estimationDTO = quoteService.estimate(request);
         // save user in db
-        userService.saveNewCustomer(request);
+        if (!userService.isEmailTaken(request.getEmail()))
+            userService.saveNewCustomer(request);
 
         // send email to user
-        EmailRequest emailRequest = EmailRequest.builder()
-                .to(request.getEmail())
-                .recipientName(String.format("%s %s ", request.getFirstName(), request.getLastName()))
-                .subject("Your Storage Space reservation")
-                .content(String.format("""
-                        Hi %s
-                                                                
-                        It means a lot to us that you have chosen Storage Space as your storage provider!
-                        We want you to know that we value your trust and will do everything we can to ensure 
-                        you have a positive experience with us. Our team is committed to maintaining 
-                        the highest standards and providing the best quality service to meet all your storage needs.
-                                                                
-                        You can easily complete the check-in process by visiting our website %s. 
-                        It's a straightforward process, and you can save your progress and return 
-                        to it as many times as you need.
-                                                                                        
-                        """, request.getFirstName(),"www.once-upon-a-time"))
-                .build();
+        EmailRequest emailRequest = new EmailRequest(
+                request.getEmail(),
+                String.format("%s %s ", request.getFirstName(), request.getLastName()),
+                EMAIL_SUBJECT,
+                String.format(EMAIL_BODY, request.getFirstName(), "www.once-upon-a-time")
+        );
         emailClient.sendEmail(emailRequest);
 
         return new ResponseEntity<>(estimationDTO, HttpStatus.CREATED);
