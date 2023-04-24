@@ -3,9 +3,9 @@ package com.storage.controllers;
 
 import com.storage.models.StorageRoom;
 import com.storage.models.dto.StorageRoomDto;
-import com.storage.models.mapper.ModelMapper;
 import com.storage.models.requests.StorageUpdateRequest;
 import com.storage.service.StorageRoomService;
+import com.storage.utils.mapper.ModelMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import static com.storage.models.mapper.ModelMapper.fromStorageRoomToStorageRoomDto;
+import static com.storage.utils.mapper.ModelMapper.fromStorageRoomToStorageRoomDto;
 
 @Slf4j
 @RestController

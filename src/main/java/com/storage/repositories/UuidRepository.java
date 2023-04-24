@@ -27,5 +27,5 @@ public interface UuidRepository<T extends AbstractObject, ID> extends JpaReposit
     Optional<Long> findIdByUuid(@Param("uuid") String uuid);
 
     @Query("SELECT t.uuid FROM #{#entityName} t WHERE t.id=:id")
-    String findUuidById(@Param("id") ID id);
+    Optional<String> findUuidById(@Param("id") ID id);
 }

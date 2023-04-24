@@ -68,13 +68,13 @@ public class Fixtures {
 
     public static StorageRoom createStorageRoom() {
         return StorageRoom.builder()
-                .storageSize(StorageSize.GARDEN_SHED)
+                .storageSize(StorageSize.LARGE_GARDEN_SHED)
                 .build();
     }
 
     public static StorageRoomDto createStorageRoomDto() {
         return StorageRoomDto.builder()
-                .storageSize(StorageSize.GARDEN_SHED)
+                .storageSize(StorageSize.LARGE_GARDEN_SHED)
                 .build();
     }
 

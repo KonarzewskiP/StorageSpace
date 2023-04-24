@@ -1,4 +1,4 @@
-package com.storage.models.mapper;
+package com.storage.utils.mapper;
 
 import com.storage.exceptions.EnumParsingException;
 import com.storage.models.enums.SpecType;

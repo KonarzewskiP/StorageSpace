@@ -1,4 +1,4 @@
-INSERT INTO users (uuid, created_at, updated_at, first_name, last_name, email, role, gender)
+INSERT INTO USERS (uuid, created_at, updated_at, first_name, last_name, email, role, gender)
 VALUES ('U1000', NOW(), NOW(), 'Rick', 'Sanchez', 'rick@sanchez.com', 'ADMIN', 'MALE'),
        ('U1001', NOW(), NOW(), 'Morty', 'Smith', 'morty@smith.com', 'CUSTOMER', 'MALE'),
        ('U1002', NOW(), NOW(), 'Summer', 'Smith', 'summer@smith.com', 'CUSTOMER', 'FEMALE');
@@ -61,6 +61,5 @@ VALUES ('SR1000', NOW(), NOW(), 'TELEPHONE_BOX', 'AVAILABLE', 1),
        ('SR1043', NOW(), NOW(), 'LARGE_DOUBLE_GARAGE', 'AVAILABLE', 2),
        ('SR1044', NOW(), NOW(), 'THREE_SINGLE_GARAGES', 'AVAILABLE', 2),
        ('SR1045', NOW(), NOW(), 'TWO_DOUBLE_GARAGES', 'AVAILABLE', 2),
-
        ('SR1046', NOW(), NOW(), 'TWO_SHIPPING_CONTAINERS', 'AVAILABLE', 2);
 

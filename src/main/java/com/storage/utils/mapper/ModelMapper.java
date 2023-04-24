@@ -1,4 +1,4 @@
-package com.storage.models.mapper;
+package com.storage.utils.mapper;
 
 import com.storage.models.StorageRoom;
 import com.storage.models.User;

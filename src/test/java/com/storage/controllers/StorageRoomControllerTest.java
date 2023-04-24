@@ -45,7 +45,7 @@ class StorageRoomControllerTest {
             // ... storageRoom is successfully updated and returned by storageRoomService
             StorageRoom storageRoom = StorageRoom.builder()
                     .uuid(STORAGE_ROOM_UUID)
-                    .storageSize(StorageSize.GARDEN_SHED)
+                    .storageSize(StorageSize.LARGE_GARDEN_SHED)
                     .status(StorageRoomStatus.AVAILABLE)
                     .build();
             given(storageRoomService.updateStorageRoom(STORAGE_ROOM_UUID, request)).willReturn(storageRoom);
@@ -57,7 +57,7 @@ class StorageRoomControllerTest {
             //Then
             result.andExpect(status().isOk())
                     .andExpect(jsonPath("$.uuid").value(STORAGE_ROOM_UUID))
-                    .andExpect(jsonPath("$.storageSize").value(StorageSize.GARDEN_SHED.toString()))
+                    .andExpect(jsonPath("$.storageSize").value(StorageSize.LARGE_GARDEN_SHED.toString()))
                     .andExpect(jsonPath("$.status").value(StorageRoomStatus.AVAILABLE.toString()));
         }
     }
@@ -70,7 +70,7 @@ class StorageRoomControllerTest {
             // ... returned room
             StorageRoom storageRoom = StorageRoom.builder()
                     .uuid(STORAGE_ROOM_UUID)
-                    .storageSize(StorageSize.GARDEN_SHED)
+                    .storageSize(StorageSize.LARGE_GARDEN_SHED)
                     .status(StorageRoomStatus.AVAILABLE)
                     .build();
             given(storageRoomService.findByUuid(STORAGE_ROOM_UUID)).willReturn(storageRoom);
@@ -81,7 +81,7 @@ class StorageRoomControllerTest {
             //Then
             result.andExpect(status().isOk())
                     .andExpect(jsonPath("$.uuid").value(STORAGE_ROOM_UUID))
-                    .andExpect(jsonPath("$.storageSize").value(StorageSize.GARDEN_SHED.toString()))
+                    .andExpect(jsonPath("$.storageSize").value(StorageSize.LARGE_GARDEN_SHED.toString()))
                     .andExpect(jsonPath("$.status").value(StorageRoomStatus.AVAILABLE.toString()));
         }
     }

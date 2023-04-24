@@ -54,7 +54,7 @@ class WarehouseControllerTest {
     @Nested
     class CreateTest {
         @Test
-        void itShouldCreateANewUser() throws Exception {
+        void itShouldCreateANewWarehouse() throws Exception {
             //Given
             CreateWarehouseRequest createWarehouseRequest = new CreateWarehouseRequest();
             createWarehouseRequest.setName(NAME);
@@ -169,7 +169,7 @@ class WarehouseControllerTest {
             given(storageRoomService.getAvailableByWarehouseUuid(eq(WAREHOUSE_UUID), any()))
                     .willReturn(new PageImpl<>(List.of(room1, room2)));
             //When
-            ResultActions result = mockMvc.perform(get("/warehouses//{uuid}/available-rooms", WAREHOUSE_UUID)
+            ResultActions result = mockMvc.perform(get("/warehouses/{uuid}/available-rooms", WAREHOUSE_UUID)
                     .contentType(MediaType.APPLICATION_JSON));
             //Then
             result.andExpect(status().isOk())

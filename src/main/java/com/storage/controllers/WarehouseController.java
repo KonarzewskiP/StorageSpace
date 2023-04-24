@@ -2,11 +2,11 @@ package com.storage.controllers;
 
 import com.storage.models.dto.StorageRoomDto;
 import com.storage.models.dto.WarehouseDto;
-import com.storage.models.mapper.ModelMapper;
 import com.storage.models.requests.CreateWarehouseRequest;
 import com.storage.service.StorageRoomService;
 import com.storage.service.WarehouseService;
 import com.storage.utils.annotation.ApiPageable;
+import com.storage.utils.mapper.ModelMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 
@@ -44,7 +43,7 @@ public class WarehouseController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<WarehouseDto>> getAll(@ApiIgnore Pageable pageable) {
+    public ResponseEntity<Page<WarehouseDto>> getAll(Pageable pageable) {
         log.info("Enter WarehouseController -> getAllWarehouses()");
         Page<WarehouseDto> allWarehouses = warehouseService.getAll(pageable);
         return new ResponseEntity<>(allWarehouses, HttpStatus.OK);
@@ -67,7 +66,7 @@ public class WarehouseController {
     @ApiPageable
     @GetMapping("/{uuid}/available-rooms")
     public ResponseEntity<Page<StorageRoomDto>> getAvailableByWarehouseUuid(@PathVariable String uuid,
-                                                                            @ApiIgnore Pageable pageable) {
+                                                                            Pageable pageable) {
         log.info("Find all available storage rooms for Warehouse with UUID:[{}]", uuid);
         Page<StorageRoomDto> availableRooms = storageRoomService.getAvailableByWarehouseUuid(uuid, pageable);
         return new ResponseEntity<>(availableRooms, HttpStatus.OK);
