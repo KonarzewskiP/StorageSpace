@@ -34,7 +34,7 @@ public class StorageRoomController {
     @Transactional
     @PutMapping("/{uuid}")
     public ResponseEntity<StorageRoomDto> updateByUuid(@PathVariable String uuid, @RequestBody StorageUpdateRequest request) {
-        StorageRoom storage = storageRoomService.updateStorageRoom(uuid, request);
+        StorageRoom storage = storageRoomService.update(uuid, request);
         StorageRoomDto storageDto = fromStorageRoomToStorageRoomDto(storage);
         return new ResponseEntity<>(storageDto, HttpStatus.OK);
     }

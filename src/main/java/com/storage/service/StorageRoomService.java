@@ -26,9 +26,9 @@ public class StorageRoomService extends AbstractService<StorageRoom> {
         this.warehouseService = warehouseService;
     }
 
-    public StorageRoom updateStorageRoom(String uuid, StorageUpdateRequest request) {
+    public StorageRoom update(String uuid, StorageUpdateRequest request) {
         log.info("Updating warehouse with uuid [{}] ", request);
-        var storage = findByUuidForUpdate(uuid);
+        StorageRoom storage = findByUuidForUpdate(uuid);
 
         if (request.getStatus() != storage.getStatus())
             storage.setStatus(request.getStatus());
@@ -38,7 +38,7 @@ public class StorageRoomService extends AbstractService<StorageRoom> {
 
         storage = storageRoomRepository.save(storage);
 
-        log.info("Updated warehouse with uuid: [{}]", storage.getUuid());
+        log.info("Updated warehouse with uuid: [{}]", uuid);
         return storage;
     }
 
