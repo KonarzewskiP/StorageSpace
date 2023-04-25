@@ -48,7 +48,7 @@ class StorageRoomControllerTest {
                     .storageSize(StorageSize.LARGE_GARDEN_SHED)
                     .status(StorageRoomStatus.AVAILABLE)
                     .build();
-            given(storageRoomService.updateStorageRoom(STORAGE_ROOM_UUID, request)).willReturn(storageRoom);
+            given(storageRoomService.update(STORAGE_ROOM_UUID, request)).willReturn(storageRoom);
 
             //When
             ResultActions result = mockMvc.perform(put("/storage-rooms/{uuid}", STORAGE_ROOM_UUID)
