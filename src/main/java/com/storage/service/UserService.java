@@ -1,7 +1,6 @@
 package com.storage.service;
 
 import com.storage.exceptions.BadRequestException;
-import com.storage.exceptions.UserServiceException;
 import com.storage.models.User;
 import com.storage.models.requests.CreateUserRequest;
 import com.storage.models.requests.QuoteEstimateRequest;
@@ -13,15 +12,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.stream.Collectors;
-
-import static com.storage.utils.mapper.ModelMapper.fromUserDtoToUser;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @Slf4j
 @Service
 public class UserService extends AbstractService<User> {
-
     private final UserRepository userRepository;
 
     @Autowired
@@ -38,14 +33,23 @@ public class UserService extends AbstractService<User> {
      *
      * @author Pawel Konarzewski
      */
-    public User createUser(CreateUserRequest request) {
+    public User create(CreateUserRequest request) {
         log.info("Creating new user with req: {} ", request);
-        isRequestValid(request);
+        UserDtoValidator.validate(request);
 
-        if (isEmailTaken(request.getEmail()))
-            throw new BadRequestException(String.format("Email [%s] is already taken!", request.getEmail()));
+        if (isEmailTaken(request.email()))
+            throw new BadRequestException(String.format("Email [%s] is already taken!", request.email()));
 
-        var newUser = userRepository.save(fromUserDtoToUser(request));
+        User user = User.builder()
+                .uuid(UuidGenerator.next())
+                .firstName(request.firstName())
+                .lastName(request.lastName())
+                .email(request.email())
+                .role(request.role())
+                .gender(request.gender())
+                .build();
+
+        User newUser = userRepository.save(user);
         log.info("Created new user with UUID [{}] and name: [{}]", newUser.getUuid(), getFullName(newUser));
         return newUser;
     }
@@ -65,7 +69,6 @@ public class UserService extends AbstractService<User> {
         return userRepository.existsByEmail(email);
     }
 
-
     public String getFullName(User user) {
         if (user == null)
             throw new BadRequestException("User can not be null!");
@@ -81,28 +84,6 @@ public class UserService extends AbstractService<User> {
             return firstName;
         return firstName + " " + lastName;
     }
-
-    /**
-     * The method that validates userDto
-     * <p>
-     * Params: UserDto.
-     * Throws: UserServiceException if userDto is not valid
-     *
-     * @author Pawel Konarzewski
-     */
-
-    private void isRequestValid(CreateUserRequest createUserRequest) {
-        var validator = new UserDtoValidator();
-        var errors = validator.validate(createUserRequest);
-        if (!errors.isEmpty()) {
-            throw new UserServiceException("Invalid UserDto!, errors: " + errors
-                    .entrySet()
-                    .stream()
-                    .map(err -> err.getKey() + " -> " + err.getValue())
-                    .collect(Collectors.joining(", ")));
-        }
-    }
-
 
     @Transactional
     public User saveNewCustomer(QuoteEstimateRequest request) {

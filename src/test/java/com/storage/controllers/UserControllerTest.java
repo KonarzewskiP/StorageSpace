@@ -44,7 +44,7 @@ class UserControllerTest {
         @Test
         void itShouldCreateANewUser() throws Exception {
             //Given
-            CreateUserRequest createUserRequest = new CreateUserRequest();
+            CreateUserRequest createUserRequest = CreateUserRequest.builder().build();
             //... return new user
             User user = User.builder()
                     .firstName(FIRST_NAME)
@@ -53,7 +53,7 @@ class UserControllerTest {
                     .role(CUSTOMER)
                     .gender(MALE)
                     .build();
-            given(userService.createUser(createUserRequest)).willReturn(user);
+            given(userService.create(createUserRequest)).willReturn(user);
             //When
             ResultActions result = mockMvc.perform(post("/users")
                     .contentType(MediaType.APPLICATION_JSON_VALUE)

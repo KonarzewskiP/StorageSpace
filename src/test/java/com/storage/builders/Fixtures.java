@@ -8,10 +8,8 @@ import com.storage.models.dto.StorageRoomDto;
 import com.storage.models.dto.WarehouseDto;
 import com.storage.models.dto.postcode.PostcodeValidateDTO;
 import com.storage.models.enums.Gender;
-import com.storage.models.enums.Role;
 import com.storage.models.enums.StorageDuration;
 import com.storage.models.enums.StorageSize;
-import com.storage.models.requests.CreateUserRequest;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -35,16 +33,6 @@ public class Fixtures {
                 .firstName("Veronica")
                 .lastName("Jobs")
                 .gender(Gender.FEMALE)
-                .build();
-    }
-
-    public static CreateUserRequest createUserDto() {
-        return CreateUserRequest.builder()
-                .firstName("John")
-                .lastName("Orange")
-                .email("storageRooms@fakeEmail.com")
-                .role(Role.CUSTOMER)
-                .gender(Gender.MALE)
                 .build();
     }
 

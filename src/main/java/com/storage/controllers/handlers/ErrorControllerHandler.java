@@ -63,6 +63,12 @@ public class ErrorControllerHandler {
         log.error("Enter ErrorControllerHandler -> handleValidationException() AddressException with: " + e);
         return createCustomErrorResponse(e.getMessage(), HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value());
     }
+    @ExceptionHandler(value = ObjectValidationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public CustomErrorResponseDto handleValidationException(ObjectValidationException e) {
+        log.error("Enter ErrorControllerHandler -> handleValidationException() ObjectValidationException with: " + e);
+        return createCustomErrorResponse(e.getMessage(), HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value());
+    }
 
 
     /**

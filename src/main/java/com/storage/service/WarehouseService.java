@@ -56,6 +56,7 @@ public class WarehouseService extends AbstractService<Warehouse> {
         //TODO call postcode service and get coordinates of the postcode
         // Coordinates coordinates = postcodeService.getCoordinates(warehouseRequest.getPostcode());
         var warehouse = createNew(warehouseRequest);
+        //TODO do we need to create storage rooms?
         var list = createStorageRoomsList();
         storageRoomRepository.saveAll(list);
 //        warehouse.setStorageRooms(list);
