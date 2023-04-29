@@ -2,14 +2,14 @@ package com.storage.service;
 
 import com.storage.client.PostcodeClient;
 import com.storage.exceptions.BadRequestException;
-import com.storage.models.dto.postcode.PostcodeDTO;
-import com.storage.models.dto.postcode.PostcodeDetails;
 import com.storage.models.dto.postcode.PostcodeValidateDTO;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -18,6 +18,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
 public class PostcodeServiceTest {
@@ -73,26 +75,17 @@ public class PostcodeServiceTest {
     class GetDetailsTest {
 
         @ParameterizedTest
-        @ValueSource(strings = {"SW1W 0NY", "PO16 7GZ", "GU167HF", "L1 8JQ", "L1      8JQ", " L 1 8 J Q "})
-        void itShouldPassPostcodeValidationAndReturnDTO(String postcode) {
+        @CsvSource({"SW1W 0NY,SW1W0NY", "PO16 7GZ,PO167GZ", "GU167HF,GU167HF", "l1 8jq,L18JQ", "L1      8JQ,L18JQ", " L 1 8 J Q ,L18JQ"})
+        void itShouldSuccessfullyFormatAndValidatePostcode(String postcode, String expectedPostcode) {
             //Given
-            float lat = 51.4627f;
-            float lng = -0.169f;
-            // ... service successfully return postcode details
-            PostcodeDTO postcodeDTO = PostcodeDTO.builder()
-                    .status(200)
-                    .result(PostcodeDetails.builder()
-                            .postcode(postcode)
-                            .lat(lat)
-                            .lng(lng)
-                            .build())
-                    .build();
-            given(postcodeClient.getDetails(anyString())).willReturn(postcodeDTO);
             //When
-            PostcodeDTO result = underTest.getDetails(postcode);
+            underTest.getDetails(postcode);
             //Then
-            assertThat(result).isNotNull();
-            assertThat(result).usingRecursiveComparison().isEqualTo(postcodeDTO);
+            ArgumentCaptor<String> postcodeArgumentCaptor = ArgumentCaptor.forClass(String.class);
+            then(postcodeClient).should(times(1)).getDetails(postcodeArgumentCaptor.capture());
+
+            String validPostcode = postcodeArgumentCaptor.getValue();
+            assertThat(validPostcode).isEqualTo(expectedPostcode);
         }
     }
 }

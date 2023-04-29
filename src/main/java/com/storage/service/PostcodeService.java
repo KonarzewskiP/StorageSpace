@@ -44,9 +44,12 @@ public class PostcodeService {
 
     public PostcodeValidateDTO isValid(String postcode) {
         log.info("Validating postcode: {}", postcode);
-        postcode = formatAndValidate(postcode);
+        String formattedPostcode = format(postcode);
 
-        return postcodeClient.isValid(postcode);
+        if (validate(formattedPostcode))
+            throw new BadRequestException(String.format("Postcode format is invalid! Invalid postcode: [%s]. Only UK postcodes can be validate!", postcode));
+
+        return postcodeClient.isValid(formattedPostcode);
     }
 
     /**
@@ -60,28 +63,29 @@ public class PostcodeService {
 
     public PostcodeDTO getDetails(String postcode) {
         log.info("Getting details of postcode: {}", postcode);
-        formatAndValidate(postcode);
+        String formattedPostcode = format(postcode);
 
-        return postcodeClient.getDetails(postcode);
-    }
-
-    /**
-     * Helper method to validate if postcode is in valid format
-     * <p>
-     * NOTE: Only postcodes from the UK can be verified.
-     */
-    private String formatAndValidate(String postcode) {
-        if (isBlank(postcode))
-            throw new BadRequestException("Postcode can not be empty or null");
-        String formattedPostcode = postcode.replaceAll(" ", "");
-
-        Pattern pattern = Pattern.compile("^[A-Z]{1,2}[0-9R][0-9A-Z]?[0-9][ABD-HJLNP-UW-Z]{2}$", Pattern.CASE_INSENSITIVE);
-        Matcher matcher = pattern.matcher(formattedPostcode);
-
-        if (!matcher.find())
+        if (validate(formattedPostcode))
             throw new BadRequestException(String.format("Postcode format is invalid! Invalid postcode: [%s]. Only UK postcodes can be validate!", postcode));
 
-        return formattedPostcode;
+        return postcodeClient.getDetails(formattedPostcode);
     }
+
+    private String format(String postcode) {
+        if (isBlank(postcode))
+            throw new BadRequestException("Postcode can not be empty or null");
+        return postcode.replaceAll(" ", "").toUpperCase();
+    }
+
+    private boolean validate(String postcode) {
+        if (isBlank(postcode))
+            throw new BadRequestException("Postcode can not be empty or null");
+
+        Pattern pattern = Pattern.compile("^[A-Z]{1,2}[0-9R][0-9A-Z]?[0-9][ABD-HJLNP-UW-Z]{2}$");
+        Matcher matcher = pattern.matcher(postcode);
+
+        return !matcher.find();
+    }
+
 }
 
