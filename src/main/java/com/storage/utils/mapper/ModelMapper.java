@@ -6,7 +6,6 @@ import com.storage.models.Warehouse;
 import com.storage.models.dto.StorageRoomDto;
 import com.storage.models.dto.UserDTO;
 import com.storage.models.dto.WarehouseDto;
-import com.storage.models.requests.CreateUserRequest;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,15 +23,6 @@ public interface ModelMapper {
                 .build();
     }
 
-    static User fromUserDtoToUser(CreateUserRequest createUserRequest) {
-        return createUserRequest == null ? null : User.builder()
-                .firstName(createUserRequest.getFirstName())
-                .lastName(createUserRequest.getLastName())
-                .email(createUserRequest.getEmail())
-                .gender(createUserRequest.getGender())
-                .role(createUserRequest.getRole())
-                .build();
-    }
 
     static WarehouseDto fromWarehouseToWarehouseDto(Warehouse warehouse) {
         return warehouse == null ? null : WarehouseDto.builder()

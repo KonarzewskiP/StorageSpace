@@ -1,5 +1,6 @@
 package com.storage.models.requests;
 
+import com.storage.exceptions.EmailException;
 import com.storage.models.enums.ExtraServices;
 import com.storage.models.enums.StorageDuration;
 import com.storage.models.enums.StorageSize;
@@ -35,6 +36,7 @@ public class QuoteEstimateRequest {
     Set<ExtraServices> extraServices;
 
     public void isValid() {
-        isEmailFormatValid(email);
+        if (!isEmailFormatValid(email))
+            throw new EmailException(String.format("Email [%s] has invalid format!", email));
     }
 }

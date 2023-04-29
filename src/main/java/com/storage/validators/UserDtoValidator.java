@@ -1,82 +1,47 @@
 package com.storage.validators;
 
+import com.storage.exceptions.ObjectValidationException;
 import com.storage.models.requests.CreateUserRequest;
-import com.storage.validators.base.Validator;
+import com.storage.utils.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
+import static com.storage.utils.StringUtils.isEmailFormatValid;
 import static java.util.Objects.isNull;
 
-public class UserDtoValidator implements Validator<CreateUserRequest> {
-
-    @Override
-    public Map<String, String> validate(CreateUserRequest user) {
+public class UserDtoValidator {
+    public static void validate(CreateUserRequest user) {
         Map<String, String> errors = new HashMap<>();
 
-        if (isNull(user)) {
-            errors.put("Create request", "Can not be null");
-            return errors;
-        }
-        if (isNull(user.getFirstName())) {
-            errors.put("FirstName", "Can not be null");
-            return errors;
-        }
-        if (isNull(user.getLastName())) {
-            errors.put("LastName", "Can not be null");
-            return errors;
-        }
-        if (isNull(user.getEmail())) {
-            errors.put("Email", "Can not be null");
-            return errors;
-        }
-        if (isNull(user.getRole())) {
+        if (isNull(user))
+            throw new ObjectValidationException("CreateUserRequest can not be null");
+
+        if (StringUtils.isBlank(user.firstName()))
+            errors.put("FirstName", "Can not be null or empty");
+        if (StringUtils.isBlank(user.lastName()))
+            errors.put("LastName", "Can not be null or empty");
+        if (StringUtils.isBlank(user.email()))
+            errors.put("Email", "Can not be null or empty");
+        if (isNull(user.role()))
             errors.put("Role", "Can not be null");
-            return errors;
-        }
-        if (isNull(user.getGender())) {
+        if (isNull(user.gender()))
             errors.put("Gender", "Can not be null");
-            return errors;
-        }
 
-        if (!isFirstNameEmpty(user)) {
-            errors.put("FirstName", "Can not be empty");
-        }
-
-        if (!isLastNameEmpty(user)) {
-            errors.put("LastName", "Can not be empty");
-        }
-
-        if (!isEmailEmpty(user)) {
-            errors.put("Email", "Can not be empty");
-        } else if (!isEmailFormatValid(user.getEmail())) {
+        if (!isEmailFormatValid(user.email())) {
             errors.put("Email", "Has incorrect format");
         }
-        return errors;
+
+        if (!errors.isEmpty()) {
+            throw new ObjectValidationException("Invalid UserDto!, errors: " + errors
+                    .entrySet()
+                    .stream()
+                    .map(err -> err.getKey() + " -> " + err.getValue())
+                    .collect(Collectors.joining(", ")));
+        }
     }
 
-    @Override
-    public void throwException(Map<String, String> errors) {
 
-    }
-
-    private boolean isFirstNameEmpty(CreateUserRequest createUserRequest) {
-        return !createUserRequest.getFirstName().isBlank();
-    }
-
-    private boolean isLastNameEmpty(CreateUserRequest createUserRequest) {
-        return !createUserRequest.getLastName().isBlank();
-    }
-
-    private boolean isEmailEmpty(CreateUserRequest createUserRequest) {
-        return !createUserRequest.getEmail().isBlank();
-    }
-
-    private boolean isEmailFormatValid(String  email) {
-        var pattern = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
-        var matcher = pattern.matcher(email);
-        return matcher.find();
-    }
 
 }
