@@ -6,13 +6,11 @@ import com.storage.exceptions.BadRequestException;
 import com.storage.exceptions.PostcodeClientException;
 import com.storage.models.dto.postcode.PostcodeDTO;
 import com.storage.models.dto.postcode.PostcodeValidateDTO;
+import com.storage.utils.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
@@ -46,7 +44,7 @@ public class PostcodeService {
         log.info("Validating postcode: {}", postcode);
         String formattedPostcode = format(postcode);
 
-        if (validate(formattedPostcode))
+        if (!StringUtils.isPostcodeFormatValid(formattedPostcode))
             throw new BadRequestException(String.format("Postcode format is invalid! Invalid postcode: [%s]. Only UK postcodes can be validate!", postcode));
 
         return postcodeClient.isValid(formattedPostcode);
@@ -65,7 +63,7 @@ public class PostcodeService {
         log.info("Getting details of postcode: {}", postcode);
         String formattedPostcode = format(postcode);
 
-        if (validate(formattedPostcode))
+        if (!StringUtils.isPostcodeFormatValid(formattedPostcode))
             throw new BadRequestException(String.format("Postcode format is invalid! Invalid postcode: [%s]. Only UK postcodes can be validate!", postcode));
 
         return postcodeClient.getDetails(formattedPostcode);
@@ -77,15 +75,7 @@ public class PostcodeService {
         return postcode.replaceAll(" ", "").toUpperCase();
     }
 
-    private boolean validate(String postcode) {
-        if (isBlank(postcode))
-            throw new BadRequestException("Postcode can not be empty or null");
 
-        Pattern pattern = Pattern.compile("^[A-Z]{1,2}[0-9R][0-9A-Z]?[0-9][ABD-HJLNP-UW-Z]{2}$");
-        Matcher matcher = pattern.matcher(postcode);
-
-        return !matcher.find();
-    }
 
 }
 

@@ -30,7 +30,7 @@ public class WarehouseController {
     @PostMapping
     public ResponseEntity<WarehouseDto> create(@RequestBody @Valid CreateWarehouseRequest warehouseRequest) {
         log.info("Create warehouse with req: [{}] ", warehouseRequest);
-        WarehouseDto warehouseDto = warehouseService.addWarehouse(warehouseRequest);
+        WarehouseDto warehouseDto = warehouseService.create(warehouseRequest);
         return new ResponseEntity<>(warehouseDto, HttpStatus.CREATED);
     }
 
@@ -59,7 +59,7 @@ public class WarehouseController {
     @GetMapping("/{postcode}/ordered-by-distance")
     public ResponseEntity<List<WarehouseDto>> getOrderedByDistanceFromPostcode(@PathVariable String postcode) {
         log.info("Enter PostcodeController -> getNearestWarehouses() with: " + postcode);
-        List<WarehouseDto> orderedByDistanceFromPostcode = warehouseService.getOrderedByDistanceFromPostcode(postcode);
+        List<WarehouseDto> orderedByDistanceFromPostcode = warehouseService.getSortedByDistanceFromPostcode(postcode);
         return new ResponseEntity<>(orderedByDistanceFromPostcode, HttpStatus.OK);
     }
 

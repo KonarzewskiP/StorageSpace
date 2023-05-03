@@ -56,11 +56,7 @@ class WarehouseControllerTest {
         @Test
         void itShouldCreateANewWarehouse() throws Exception {
             //Given
-            CreateWarehouseRequest createWarehouseRequest = new CreateWarehouseRequest();
-            createWarehouseRequest.setName(NAME);
-            createWarehouseRequest.setCity(CITY);
-            createWarehouseRequest.setPostcode(POSTCODE);
-            createWarehouseRequest.setStreet(STREET);
+            CreateWarehouseRequest createWarehouseRequest = new CreateWarehouseRequest(NAME, CITY, POSTCODE, STREET, BigDecimal.TEN);
             //... return new warehouse
             WarehouseDto warehouseDto = WarehouseDto.builder()
                     .uuid(WAREHOUSE_UUID)
@@ -71,7 +67,7 @@ class WarehouseControllerTest {
                     .lat(LAT)
                     .lng(LNG)
                     .build();
-            given(warehouseService.addWarehouse(createWarehouseRequest)).willReturn(warehouseDto);
+            given(warehouseService.create(createWarehouseRequest)).willReturn(warehouseDto);
             //When
             ResultActions result = mockMvc.perform(post("/warehouses")
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -147,7 +143,7 @@ class WarehouseControllerTest {
             //... return all warehouses
             WarehouseDto warehouse1 = new WarehouseDto();
             WarehouseDto warehouse2 = new WarehouseDto();
-            given(warehouseService.getOrderedByDistanceFromPostcode(POSTCODE))
+            given(warehouseService.getSortedByDistanceFromPostcode(POSTCODE))
                     .willReturn(List.of(warehouse1, warehouse2));
             //When
             ResultActions result = mockMvc.perform(get("/warehouses//{postcode}/ordered-by-distance", POSTCODE)
