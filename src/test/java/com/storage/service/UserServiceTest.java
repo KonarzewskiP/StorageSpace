@@ -25,6 +25,9 @@ import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
+
+    public static final Role ROLE = Role.CUSTOMER;
+    public static final Gender GENDER = Gender.MALE;
     @InjectMocks
     private UserService underTest;
     @Mock
@@ -36,16 +39,15 @@ public class UserServiceTest {
     @Nested
     class CreateTest {
 
+        public static final String LAST_NAME = "Ford";
+        public static final String FIRST_NAME = "Tom";
+        public static final String EMAIL = "tom@ford.com";
+
         @Test
         void itShouldSavedNewValidUser() {
             //Given
-            String firstName = "Tom";
-            String lastName = "Ford";
-            String email = "tom@ford.com";
-            Role role = Role.CUSTOMER;
-            Gender gender = Gender.MALE;
 
-            CreateUserRequest request = new CreateUserRequest(firstName, lastName, email, role, gender);
+            CreateUserRequest request = new CreateUserRequest(FIRST_NAME, LAST_NAME, EMAIL, ROLE, GENDER);
             // ... return mocked user to prevent NPE
             User mockedUser = new User();
             given(userRepository.save(any())).willReturn(mockedUser);
@@ -56,11 +58,11 @@ public class UserServiceTest {
             User savedUser = userArgumentCaptor.getValue();
 
             assertAll(
-                    () -> assertThat(savedUser.getFirstName()).isEqualTo(firstName),
-                    () -> assertThat(savedUser.getLastName()).isEqualTo(lastName),
-                    () -> assertThat(savedUser.getEmail()).isEqualTo(email),
-                    () -> assertThat(savedUser.getRole()).isEqualTo(role),
-                    () -> assertThat(savedUser.getGender()).isEqualTo(gender),
+                    () -> assertThat(savedUser.getFirstName()).isEqualTo(FIRST_NAME),
+                    () -> assertThat(savedUser.getLastName()).isEqualTo(LAST_NAME),
+                    () -> assertThat(savedUser.getEmail()).isEqualTo(EMAIL),
+                    () -> assertThat(savedUser.getRole()).isEqualTo(ROLE),
+                    () -> assertThat(savedUser.getGender()).isEqualTo(GENDER),
                     () -> assertThat(savedUser.getUuid()).isNotNull()
             );
         }
@@ -68,15 +70,11 @@ public class UserServiceTest {
         @Test
         void itShouldThrowErrorWhenTryToCreateNewUserButEmailIsAlreadyTaken() {
             //Given
-            String firstName = "Tom";
-            String lastName = "Ford";
-            String email = "tom@ford.com";
-            Role role = Role.CUSTOMER;
-            Gender gender = Gender.MALE;
+            String takenEmail = "tom@ford.com";
 
-            CreateUserRequest request = new CreateUserRequest(firstName, lastName, email, role, gender);
-
-            given(userRepository.existsByEmail(email)).willReturn(true);
+            CreateUserRequest request = new CreateUserRequest(FIRST_NAME, LAST_NAME, takenEmail, ROLE, GENDER);
+            //... return true because email is already taken
+            given(userRepository.existsByEmail(takenEmail)).willReturn(true);
             //When + Then
             assertThatThrownBy(() -> underTest.create(request))
                     .isInstanceOf(BadRequestException.class)
