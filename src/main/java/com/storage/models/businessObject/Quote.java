@@ -19,7 +19,7 @@ import java.util.Set;
 @Data
 public class Quote {
     private String firstName;
-    private String surname;
+    private String lastName;
     private String email;
     private String postcode;
     private String warehouseName;

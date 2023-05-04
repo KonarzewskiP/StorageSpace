@@ -7,7 +7,6 @@ import com.storage.service.StorageRoomService;
 import com.storage.service.WarehouseService;
 import com.storage.utils.annotation.ApiPageable;
 import com.storage.utils.mapper.ModelMapper;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -28,7 +27,7 @@ public class WarehouseController {
     private final StorageRoomService storageRoomService;
 
     @PostMapping
-    public ResponseEntity<WarehouseDto> create(@RequestBody @Valid CreateWarehouseRequest warehouseRequest) {
+    public ResponseEntity<WarehouseDto> create(@RequestBody CreateWarehouseRequest warehouseRequest) {
         log.info("Create warehouse with req: [{}] ", warehouseRequest);
         WarehouseDto warehouseDto = warehouseService.create(warehouseRequest);
         return new ResponseEntity<>(warehouseDto, HttpStatus.CREATED);

@@ -1,105 +1,60 @@
 package com.storage.validators;
 
-import com.storage.models.businessObject.Quote;
-import com.storage.validators.base.Validator;
+import com.storage.exceptions.ObjectValidationException;
+import com.storage.models.requests.QuoteEstimateRequest;
+import com.storage.utils.StringUtils;
 
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 
-public class QuoteValidator implements Validator<Quote> {
+public class QuoteValidator {
 
-    @Override
-    public Map<String, String> validate(Quote quotation) {
+    public static void validate(QuoteEstimateRequest request) {
         Map<String, String> errors = new HashMap<>();
 
-        if (isNull(quotation)) {
-            errors.put("Quotation", "Can not be null");
-            return errors;
-        }
-        if (isNull(quotation.getFirstName())) {
-            errors.put("FirstNme", "Can not be null");
-            return errors;
-        }
-        if (isNull(quotation.getWarehouseName())) {
-            errors.put("Warehouse", "Can not be null");
-            return errors;
-        }
-        if (isNull(quotation.getSurname())) {
-            errors.put("Surname", "Can not be null");
-            return errors;
-        }
-        if (isNull(quotation.getEmail())) {
-            errors.put("Email", "Can not be null");
-            return errors;
-        }
-        if (isNull(quotation.getStorageSize())) {
+        if (isNull(request))
+            throw new ObjectValidationException("QuoteEstimateRequest can not be null");
+
+        if (StringUtils.isBlank(request.warehouseUuid()))
+            errors.put("WarehouseUuid", "Can not be null or empty");
+        if (StringUtils.isBlank(request.lastName()))
+            errors.put("LastName", "Can not be null or empty");
+        if (StringUtils.isBlank(request.firstName()))
+            errors.put("FirstName", "Can not be null or empty");
+        if (StringUtils.isBlank(request.email()))
+            errors.put("Email", "Can not be null or empty");
+
+
+        if (isNull(request.storageSize()))
             errors.put("Size", "Can not be null");
-            return errors;
-        }
-        if (isNull(quotation.getStartDate())) {
+        if (isNull(request.startDate()))
             errors.put("StartDate", "Can not be null");
-            return errors;
-        }
-        if (isNull(quotation.getDuration())) {
+        if (isNull(request.duration()))
             errors.put("Duration", "Can not be null");
-            return errors;
+
+        if (!StringUtils.isEmailFormatValid(request.email()))
+            errors.put("Email", "Has incorrect format. Email: " + request.email());
+
+        if (!isStartDateValid(request.startDate())) {
+            errors.put("StartDate", "Must be after today");
         }
 
-        if (!isFirstNameEmpty(quotation)) {
-            errors.put("FirstNme", "Can not be empty");
+        if (!errors.isEmpty()) {
+            throw new ObjectValidationException("Invalid QuoteEstimateRequest!, errors: " + errors
+                    .entrySet()
+                    .stream()
+                    .map(err -> err.getKey() + " -> " + err.getValue())
+                    .collect(Collectors.joining(", ")));
         }
-        if (!isSurnameEmpty(quotation)) {
-            errors.put("Surname", "Can not be empty");
-        }
-        if (!isWarehouseEmpty(quotation)) {
-            errors.put("Warehouse", "Can not be empty");
-        }
-
-        if (!isEmailEmpty(quotation)) {
-            errors.put("Email", "Can not be empty");
-        } else if (!isEmailFormatValid(quotation)) {
-            errors.put("Email", "Has incorrect format");
-        }
-
-        if (!isStartDateValid(quotation)){
-            errors.put("StartDate","Must be after today");
-        }
-
-        return errors;
     }
 
-    @Override
-    public void throwException(Map<String, String> errors) {
-
+    private static boolean isStartDateValid(LocalDate startDate) {
+        return startDate.isAfter(LocalDate.now());
     }
 
-    private boolean isFirstNameEmpty(Quote quotation) {
-        return !quotation.getFirstName().isBlank();
-    }
 
-    private boolean isSurnameEmpty(Quote quotation) {
-        return !quotation.getSurname().isBlank();
-    }
-
-    private boolean isWarehouseEmpty(Quote quotation) {
-        return !quotation.getWarehouseName().isBlank();
-    }
-
-    private boolean isEmailEmpty(Quote quotation) {
-        return !quotation.getEmail().isBlank();
-    }
-
-    private boolean isStartDateValid(Quote quotation) {
-        return quotation.getStartDate().isAfter(LocalDate.now());
-    }
-
-    private boolean isEmailFormatValid(Quote quotation) {
-        var pattern = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
-        var matcher = pattern.matcher(quotation.getEmail());
-        return matcher.find();
-    }
 }

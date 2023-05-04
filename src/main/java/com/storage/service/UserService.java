@@ -89,9 +89,9 @@ public class UserService extends AbstractService<User> {
     public User saveNewCustomer(QuoteEstimateRequest request) {
         User newUser = User.builder()
                 .uuid(UuidGenerator.next())
-                .firstName(request.getFirstName())
-                .lastName(request.getLastName())
-                .email(request.getEmail())
+                .firstName(request.firstName())
+                .lastName(request.lastName())
+                .email(request.email())
                 .build();
 
         return userRepository.save(newUser);

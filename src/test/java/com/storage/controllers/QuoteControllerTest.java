@@ -2,11 +2,11 @@ package com.storage.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.storage.client.EmailClient;
 import com.storage.models.businessObject.Quote;
 import com.storage.models.enums.StorageDuration;
 import com.storage.models.enums.StorageSize;
 import com.storage.models.requests.QuoteEstimateRequest;
+import com.storage.service.EmailService;
 import com.storage.service.QuoteService;
 import com.storage.service.UserService;
 import org.junit.jupiter.api.Test;
@@ -32,6 +32,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @WebMvcTest(QuoteController.class)
 class QuoteControllerTest {
+    private static final String WAREHOUSE_UUID = "warehouseUuid";
+    private static final LocalDate START_DATE = LocalDate.of(2020, 10, 12);
+    private static final String FIRST_NAME = "Tony";
+    private static final String LAST_NAME = "Hawk";
+    private static final String EMAIL = "tony@hawk.com";
+    private static final StorageSize STORAGE_SIZE = LARGE_GARDEN_SHED;
+    private static final StorageDuration DURATION = PLUS_1_YEAR;
 
     @Autowired
     private MockMvc mockMvc;
@@ -42,15 +49,8 @@ class QuoteControllerTest {
     @MockBean
     private UserService userService;
     @MockBean
-    private EmailClient emailClient;
+    private EmailService emailService;
 
-    private static final String WAREHOUSE_UUID = "warehouseUuid";
-    private static final LocalDate START_DATE = LocalDate.of(2020, 10, 12);
-    private static final String FIRST_NAME = "Tony";
-    private static final String LAST_NAME = "Hawk";
-    private static final String EMAIL = "tony@hawk.com";
-    private static final StorageSize STORAGE_SIZE = LARGE_GARDEN_SHED;
-    private static final StorageDuration DURATION = PLUS_1_YEAR;
 
     @Test
     void itShouldGenerateQuoteAndSaveANewUser() throws Exception {
@@ -60,7 +60,7 @@ class QuoteControllerTest {
 
         // ... return quote
         given(quoteService.estimate(request)).willReturn(quote);
-        given(userService.isEmailTaken(request.getEmail())).willReturn(false);
+        given(userService.isEmailTaken(request.email())).willReturn(false);
 
         //When + Then
         mockMvc.perform(post("/quote/estimation")
@@ -74,7 +74,7 @@ class QuoteControllerTest {
     private Quote createQuote() {
         return Quote.builder()
                 .firstName(FIRST_NAME)
-                .surname(LAST_NAME)
+                .lastName(LAST_NAME)
                 .email(EMAIL)
                 .postcode("123")
                 .warehouseName("PURPLE")
