@@ -146,7 +146,7 @@ class WarehouseControllerTest {
             given(warehouseService.getSortedByDistanceFromPostcode(POSTCODE))
                     .willReturn(List.of(warehouse1, warehouse2));
             //When
-            ResultActions result = mockMvc.perform(get("/warehouses//{postcode}/ordered-by-distance", POSTCODE)
+            ResultActions result = mockMvc.perform(get("/warehouses/ordered-by-distance-from-postcode/{postcode}", POSTCODE)
                     .contentType(MediaType.APPLICATION_JSON_VALUE));
             //Then
             result.andExpect(status().isOk())

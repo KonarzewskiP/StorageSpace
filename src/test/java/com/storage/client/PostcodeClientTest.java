@@ -151,7 +151,7 @@ class PostcodeClientTest {
             //Then
             assertThatThrownBy(() -> underTest.getDetails(POSTCODE))
                     .isInstanceOf(PostcodeClientException.class)
-                    .hasMessageContaining("Postcode Client internal error!");
+                    .hasMessageContaining("Postcode Client error! Message: ");
         }
 
         @Test
