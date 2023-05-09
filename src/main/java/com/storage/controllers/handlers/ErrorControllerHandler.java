@@ -63,6 +63,7 @@ public class ErrorControllerHandler {
         log.error("Enter ErrorControllerHandler -> handleValidationException() AddressException with: " + e);
         return createCustomErrorResponse(e.getMessage(), HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value());
     }
+
     @ExceptionHandler(value = ObjectValidationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public CustomErrorResponseDto handleValidationException(ObjectValidationException e) {
@@ -125,18 +126,12 @@ public class ErrorControllerHandler {
      *
      * @author Pawel Konarzewski
      */
-/*    @ExceptionHandler(value = PostcodeClientException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public CustomErrorResponseDto handleNotFoundException(PostcodeClientException e) throws JsonProcessingException {
+    @ExceptionHandler(value = PostcodeClientException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public CustomErrorResponseDto handleNotFoundException(PostcodeClientException e) {
         log.error("Enter ErrorControllerHandler -> handleNotFoundException() PostcodeException with: " + e);
-
-        var error = objectMapper
-                .readTree(e.getError())
-                .get("error")
-                .asText();
-
-        return createCustomErrorResponse(error, e.getStatusCode().getReasonPhrase(), e.getStatusCode().value());
-    }*/
+        return createCustomErrorResponse(e.getMessage(), HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value());
+    }
 
     /**
      * The method throw custom error object for EnumParsingException

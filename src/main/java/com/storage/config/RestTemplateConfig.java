@@ -1,6 +1,5 @@
 package com.storage.config;
 
-import com.storage.exceptions.RestTemplateErrorHandler;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
@@ -23,7 +22,6 @@ public class RestTemplateConfig {
         RestTemplateBuilder restTemplateBuilder = new RestTemplateBuilder();
 
         return restTemplateBuilder
-                .errorHandler(new RestTemplateErrorHandler())
                 .setConnectTimeout(Duration.ofMillis(connectionTimeout))
                 .setReadTimeout(Duration.ofMillis(readTimeout))
                 .build();

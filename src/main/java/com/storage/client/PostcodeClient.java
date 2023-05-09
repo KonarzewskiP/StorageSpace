@@ -25,7 +25,7 @@ public class PostcodeClient {
         try {
             postcodeValidateDTO = restTemplate.getForObject(url, PostcodeValidateDTO.class);
         } catch (Exception e) {
-            throw new PostcodeClientException("Postcode Client internal error!", e);
+            throw new PostcodeClientException("Postcode Client internal error! Message: " + e.getMessage(), e);
         }
         validate(postcodeValidateDTO);
 
@@ -39,7 +39,7 @@ public class PostcodeClient {
         try {
             postcodeDTO = restTemplate.getForObject(url, PostcodeDTO.class);
         } catch (Exception e) {
-            throw new PostcodeClientException("Postcode Client internal error!", e);
+            throw new PostcodeClientException("Postcode Client error! Message: " + e.getMessage(), e);
         }
         validate(postcodeDTO);
 

@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -55,7 +56,7 @@ public class WarehouseController {
      * @return ResponseEntity with a <code>List<WarehouseDto></code> of ordered warehouses.
      * @author Pawel Konarzewski
      */
-    @GetMapping("/{postcode}/ordered-by-distance")
+    @GetMapping("/ordered-by-distance-from-postcode/{postcode}")
     public ResponseEntity<List<WarehouseDto>> getOrderedByDistanceFromPostcode(@PathVariable String postcode) {
         log.info("Enter PostcodeController -> getNearestWarehouses() with: " + postcode);
         List<WarehouseDto> orderedByDistanceFromPostcode = warehouseService.getSortedByDistanceFromPostcode(postcode);
@@ -69,6 +70,22 @@ public class WarehouseController {
         log.info("Find all available storage rooms for Warehouse with UUID:[{}]", uuid);
         Page<StorageRoomDto> availableRooms = storageRoomService.getAvailableByWarehouseUuid(uuid, pageable);
         return new ResponseEntity<>(availableRooms, HttpStatus.OK);
+    }
+
+    @ApiPageable
+    @GetMapping("/{uuid}/storage-rooms")
+    public ResponseEntity<Page<StorageRoomDto>> getAllRoomsByWarehouseUuid(@PathVariable String uuid,
+                                                                            Pageable pageable) {
+        log.info("Get all storage rooms for Warehouse with UUID:[{}]", uuid);
+        Page<StorageRoomDto> availableRooms = storageRoomService.getAllByWarehouseUuid(uuid, pageable);
+        return new ResponseEntity<>(availableRooms, HttpStatus.OK);
+    }
+
+    @Transactional
+    @DeleteMapping("/{uuid}/storage-rooms")
+    public ResponseEntity<Integer> deleteByWarehouseUuid(@PathVariable("uuid") String warehouseUuid) {
+        int numberOfDeletedRooms = storageRoomService.deleteAllByWarehouseUuid(warehouseUuid);
+        return new ResponseEntity<>(numberOfDeletedRooms, HttpStatus.OK);
     }
 
 }
