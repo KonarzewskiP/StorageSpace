@@ -14,6 +14,7 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -26,12 +27,14 @@ import static org.mockito.Mockito.times;
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
 
-    public static final Role ROLE = Role.CUSTOMER;
+    public static final Role ROLE = Role.ROLE_USER;
     public static final Gender GENDER = Gender.MALE;
     @InjectMocks
     private UserService underTest;
     @Mock
     private UserRepository userRepository;
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
     @Captor
     ArgumentCaptor<User> userArgumentCaptor;
@@ -42,12 +45,13 @@ public class UserServiceTest {
         public static final String LAST_NAME = "Ford";
         public static final String FIRST_NAME = "Tom";
         public static final String EMAIL = "tom@ford.com";
+        public static final String PASSWORD = "pswd";
 
         @Test
         void itShouldSavedNewValidUser() {
             //Given
 
-            CreateUserRequest request = new CreateUserRequest(FIRST_NAME, LAST_NAME, EMAIL, ROLE, GENDER);
+            CreateUserRequest request = new CreateUserRequest(FIRST_NAME, LAST_NAME, EMAIL, PASSWORD, ROLE, GENDER);
             // ... return mocked user to prevent NPE
             User mockedUser = new User();
             given(userRepository.save(any())).willReturn(mockedUser);
@@ -72,7 +76,7 @@ public class UserServiceTest {
             //Given
             String takenEmail = "tom@ford.com";
 
-            CreateUserRequest request = new CreateUserRequest(FIRST_NAME, LAST_NAME, takenEmail, ROLE, GENDER);
+            CreateUserRequest request = new CreateUserRequest(FIRST_NAME, LAST_NAME, takenEmail, PASSWORD, ROLE, GENDER);
             //... return true because email is already taken
             given(userRepository.existsByEmail(takenEmail)).willReturn(true);
             //When + Then

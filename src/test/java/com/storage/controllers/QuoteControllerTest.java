@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -53,6 +54,7 @@ class QuoteControllerTest {
 
 
     @Test
+    @WithMockUser
     void itShouldGenerateQuoteAndSaveANewUser() throws Exception {
         //Given
         QuoteEstimateRequest request = createQuoteEstimateRequest();
@@ -63,7 +65,7 @@ class QuoteControllerTest {
         given(userService.isEmailTaken(request.email())).willReturn(false);
 
         //When + Then
-        mockMvc.perform(post("/quote/estimation")
+        mockMvc.perform(post("/api/v1/quote/estimation")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(toJson(request)))
                 .andExpect(status().isCreated());

@@ -15,6 +15,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -54,6 +55,7 @@ class WarehouseControllerTest {
     @Nested
     class CreateTest {
         @Test
+        @WithMockUser
         void itShouldCreateANewWarehouse() throws Exception {
             //Given
             CreateWarehouseRequest createWarehouseRequest = new CreateWarehouseRequest(NAME, CITY, POSTCODE, STREET, BigDecimal.TEN);
@@ -69,7 +71,7 @@ class WarehouseControllerTest {
                     .build();
             given(warehouseService.create(createWarehouseRequest)).willReturn(warehouseDto);
             //When
-            ResultActions result = mockMvc.perform(post("/warehouses")
+            ResultActions result = mockMvc.perform(post("/api/v1/warehouses")
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .content(toJson(createWarehouseRequest)));
             //Then
@@ -87,6 +89,7 @@ class WarehouseControllerTest {
     @Nested
     class GetByUuidTest {
         @Test
+        @WithMockUser
         void itShouldGetByUuid() throws Exception {
             //Given
             //... return warehouse by UUID
@@ -102,7 +105,7 @@ class WarehouseControllerTest {
                     .build();
             given(warehouseService.findByUuid(WAREHOUSE_UUID)).willReturn(warehouse);
             //When
-            ResultActions result = mockMvc.perform(get("/warehouses/{uuid}", WAREHOUSE_UUID)
+            ResultActions result = mockMvc.perform(get("/api/v1/warehouses/{uuid}", WAREHOUSE_UUID)
                     .contentType(MediaType.APPLICATION_JSON_VALUE));
             //Then
             result.andExpect(status().isOk())
@@ -119,6 +122,7 @@ class WarehouseControllerTest {
     @Nested
     class GetAllTest {
         @Test
+        @WithMockUser
         void itShouldGetAll() throws Exception {
             //Given
             //... return all warehouses
@@ -127,7 +131,7 @@ class WarehouseControllerTest {
             given(warehouseService.getAll(any()))
                     .willReturn(new PageImpl<>(List.of(warehouse1, warehouse2)));
             //When
-            ResultActions result = mockMvc.perform(get("/warehouses")
+            ResultActions result = mockMvc.perform(get("/api/v1/warehouses")
                     .contentType(MediaType.APPLICATION_JSON_VALUE));
             //Then
             result.andExpect(status().isOk())
@@ -138,6 +142,7 @@ class WarehouseControllerTest {
     @Nested
     class GetOrderedByDistanceFromPostcodeTest {
         @Test
+        @WithMockUser
         void itShouldReturnWarehouses() throws Exception {
             //Given
             //... return all warehouses
@@ -146,7 +151,7 @@ class WarehouseControllerTest {
             given(warehouseService.getSortedByDistanceFromPostcode(POSTCODE))
                     .willReturn(List.of(warehouse1, warehouse2));
             //When
-            ResultActions result = mockMvc.perform(get("/warehouses/ordered-by-distance-from-postcode/{postcode}", POSTCODE)
+            ResultActions result = mockMvc.perform(get("/api/v1/warehouses/ordered-by-distance-from-postcode/{postcode}", POSTCODE)
                     .contentType(MediaType.APPLICATION_JSON_VALUE));
             //Then
             result.andExpect(status().isOk())
@@ -157,6 +162,7 @@ class WarehouseControllerTest {
     @Nested
     class GetAvailableByWarehouseUuidTest {
         @Test
+        @WithMockUser
         void itShouldReturnedAvailableRoomsByWarehouseUUID() throws Exception {
             //Given
             // ... return two rooms
@@ -165,7 +171,7 @@ class WarehouseControllerTest {
             given(storageRoomService.getAvailableByWarehouseUuid(eq(WAREHOUSE_UUID), any()))
                     .willReturn(new PageImpl<>(List.of(room1, room2)));
             //When
-            ResultActions result = mockMvc.perform(get("/warehouses/{uuid}/available-rooms", WAREHOUSE_UUID)
+            ResultActions result = mockMvc.perform(get("/api/v1/warehouses/{uuid}/available-rooms", WAREHOUSE_UUID)
                     .contentType(MediaType.APPLICATION_JSON));
             //Then
             result.andExpect(status().isOk())

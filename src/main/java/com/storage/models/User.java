@@ -25,4 +25,6 @@ public class User extends AbstractObject {
     private Role role;
     @Enumerated(EnumType.STRING)
     private Gender gender;
+    private String password;
+    private boolean enabled;
 }

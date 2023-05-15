@@ -23,10 +23,11 @@ class CreateUserRequestTest {
         String firstName = "Tom";
         String lastName = "Ford";
         String email = "tom@ford.com";
-        Role role = Role.CUSTOMER;
+        String password = "pswd";
+        Role role = Role.ROLE_USER;
         Gender gender = Gender.MALE;
 
-        CreateUserRequest request = new CreateUserRequest(firstName, lastName, email, role, gender);
+        CreateUserRequest request = new CreateUserRequest(firstName, lastName, email, password, role, gender);
         //When
         Set<ConstraintViolation<CreateUserRequest>> violation = validator.validate(request);
         //Then
