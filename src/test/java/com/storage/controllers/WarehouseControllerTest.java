@@ -6,6 +6,9 @@ import com.storage.models.Warehouse;
 import com.storage.models.dto.StorageRoomDto;
 import com.storage.models.dto.WarehouseDto;
 import com.storage.models.requests.CreateWarehouseRequest;
+import com.storage.repositories.UserRepository;
+import com.storage.security.config.SecurityConfig;
+import com.storage.security.tokens.TokensService;
 import com.storage.service.StorageRoomService;
 import com.storage.service.WarehouseService;
 import org.junit.jupiter.api.Nested;
@@ -13,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -33,6 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ActiveProfiles("test")
 @WebMvcTest(WarehouseController.class)
+@Import(value = {SecurityConfig.class, TokensService.class})
 class WarehouseControllerTest {
 
     @Autowired
@@ -43,6 +48,8 @@ class WarehouseControllerTest {
     private StorageRoomService storageRoomService;
     @MockBean
     private WarehouseService warehouseService;
+    @MockBean
+    private UserRepository userRepository;
 
     private static final String WAREHOUSE_UUID = "warehouse-uuid";
     private static final String NAME = "Orange";

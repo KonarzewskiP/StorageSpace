@@ -8,6 +8,9 @@ import com.storage.models.enums.StorageSize;
 import com.storage.models.requests.CreateStorageRoomsRequest;
 import com.storage.models.requests.SingleStorageRoomRequest;
 import com.storage.models.requests.StorageUpdateRequest;
+import com.storage.repositories.UserRepository;
+import com.storage.security.config.SecurityConfig;
+import com.storage.security.tokens.TokensService;
 import com.storage.service.StorageRoomService;
 import com.storage.utils.mapper.StorageRoomMapper;
 import org.junit.jupiter.api.Nested;
@@ -16,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
@@ -31,6 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ActiveProfiles("test")
 @WebMvcTest(StorageRoomController.class)
+@Import(value = {SecurityConfig.class, TokensService.class})
 class StorageRoomControllerTest {
 
     @Autowired
@@ -39,6 +44,8 @@ class StorageRoomControllerTest {
     private ObjectMapper objectMapper;
     @MockBean
     private StorageRoomService storageRoomService;
+    @MockBean
+    private UserRepository userRepository;
     @SpyBean
     private StorageRoomMapper storageRoomMapper;
 

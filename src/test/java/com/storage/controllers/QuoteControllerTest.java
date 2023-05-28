@@ -6,6 +6,9 @@ import com.storage.models.businessObject.Quote;
 import com.storage.models.enums.StorageDuration;
 import com.storage.models.enums.StorageSize;
 import com.storage.models.requests.QuoteEstimateRequest;
+import com.storage.repositories.UserRepository;
+import com.storage.security.config.SecurityConfig;
+import com.storage.security.tokens.TokensService;
 import com.storage.service.EmailService;
 import com.storage.service.QuoteService;
 import com.storage.service.UserService;
@@ -13,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
@@ -32,6 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ActiveProfiles("test")
 @WebMvcTest(QuoteController.class)
+@Import(value = {SecurityConfig.class, TokensService.class})
 class QuoteControllerTest {
     private static final String WAREHOUSE_UUID = "warehouseUuid";
     private static final LocalDate START_DATE = LocalDate.of(2020, 10, 12);
@@ -50,6 +55,8 @@ class QuoteControllerTest {
     @MockBean
     private UserService userService;
     @MockBean
+    private UserRepository userRepository;
+    @MockBean
     private EmailService emailService;
 
 
@@ -60,8 +67,9 @@ class QuoteControllerTest {
         QuoteEstimateRequest request = createQuoteEstimateRequest();
         Quote quote = createQuote();
 
-        // ... return quote
+        // ... generate valid quote
         given(quoteService.estimate(request)).willReturn(quote);
+        // ... will pass validation fot unique email in DB
         given(userService.isEmailTaken(request.email())).willReturn(false);
 
         //When + Then
@@ -71,6 +79,7 @@ class QuoteControllerTest {
                 .andExpect(status().isCreated());
 
         then(userService).should(times(1)).saveNewCustomer(any());
+        then(emailService).should(times(1)).sendQuoteConfirmation(any(), any(), any());
     }
 
     private Quote createQuote() {

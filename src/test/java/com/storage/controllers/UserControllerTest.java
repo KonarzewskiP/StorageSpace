@@ -5,12 +5,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.storage.models.User;
 import com.storage.models.requests.CreateUserRequest;
 import com.storage.repositories.UserRepository;
+import com.storage.security.config.SecurityConfig;
+import com.storage.security.tokens.TokensService;
 import com.storage.service.UserService;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
@@ -27,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ActiveProfiles("test")
 @WebMvcTest(UserController.class)
-//@Import({SecurityConfig.class, TokensService.class})
+@Import(value = {SecurityConfig.class, TokensService.class})
 class UserControllerTest {
 
     @Autowired
@@ -48,7 +51,7 @@ class UserControllerTest {
     @Nested
     class CreateTest {
         @Test
-        @WithMockUser
+//        @WithMockUser
         void itShouldCreateANewUser() throws Exception {
             //Given
             CreateUserRequest createUserRequest = CreateUserRequest.builder().build();
@@ -63,7 +66,7 @@ class UserControllerTest {
                     .build();
             given(userService.create(createUserRequest)).willReturn(user);
             //When
-            ResultActions result = mockMvc.perform(post("/api/v1/users")
+            ResultActions result = mockMvc.perform(post("/api/v1/users/register")
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .content(toJson(createUserRequest)));
             //Then
