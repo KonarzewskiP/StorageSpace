@@ -10,7 +10,6 @@ import com.storage.utils.mapper.ModelMapper;
 import com.storage.utils.mapper.StorageRoomMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,10 +18,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/storage-rooms")
+@RequestMapping("/api/v1/storage-rooms")
 public class StorageRoomController {
 
     private final StorageRoomService storageRoomService;

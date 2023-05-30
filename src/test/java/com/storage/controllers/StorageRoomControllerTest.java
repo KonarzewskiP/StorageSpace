@@ -8,6 +8,9 @@ import com.storage.models.enums.StorageSize;
 import com.storage.models.requests.CreateStorageRoomsRequest;
 import com.storage.models.requests.SingleStorageRoomRequest;
 import com.storage.models.requests.StorageUpdateRequest;
+import com.storage.repositories.UserRepository;
+import com.storage.security.config.SecurityConfig;
+import com.storage.security.tokens.TokensService;
 import com.storage.service.StorageRoomService;
 import com.storage.utils.mapper.StorageRoomMapper;
 import org.junit.jupiter.api.Nested;
@@ -16,7 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -30,6 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ActiveProfiles("test")
 @WebMvcTest(StorageRoomController.class)
+@Import(value = {SecurityConfig.class, TokensService.class})
 class StorageRoomControllerTest {
 
     @Autowired
@@ -38,6 +44,8 @@ class StorageRoomControllerTest {
     private ObjectMapper objectMapper;
     @MockBean
     private StorageRoomService storageRoomService;
+    @MockBean
+    private UserRepository userRepository;
     @SpyBean
     private StorageRoomMapper storageRoomMapper;
 
@@ -46,6 +54,7 @@ class StorageRoomControllerTest {
     @Nested
     class UpdateTest {
         @Test
+        @WithMockUser
         void itShouldUpdateByUuid() throws Exception {
             //Given
             StorageUpdateRequest request = StorageUpdateRequest.builder()
@@ -56,7 +65,7 @@ class StorageRoomControllerTest {
             StorageRoom storageRoom = StorageRoom.builder().build();
             given(storageRoomService.update(STORAGE_ROOM_UUID, request)).willReturn(storageRoom);
             //When
-            ResultActions result = mockMvc.perform(put("/storage-rooms/{uuid}", STORAGE_ROOM_UUID)
+            ResultActions result = mockMvc.perform(put("/api/v1/storage-rooms/{uuid}", STORAGE_ROOM_UUID)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(toJson(request)));
             //Then
@@ -67,6 +76,7 @@ class StorageRoomControllerTest {
     @Nested
     class FindByUuidTest {
         @Test
+        @WithMockUser
         void itShouldReturnStorageRoomByUuid() throws Exception {
             //Given
             // ... returned room
@@ -78,7 +88,7 @@ class StorageRoomControllerTest {
             given(storageRoomService.findByUuid(STORAGE_ROOM_UUID)).willReturn(storageRoom);
 
             //When
-            ResultActions result = mockMvc.perform(get("/storage-rooms/{uuid}", STORAGE_ROOM_UUID)
+            ResultActions result = mockMvc.perform(get("/api/v1/storage-rooms/{uuid}", STORAGE_ROOM_UUID)
                     .contentType(MediaType.APPLICATION_JSON));
             //Then
             result.andExpect(status().isOk())
@@ -91,6 +101,7 @@ class StorageRoomControllerTest {
     @Nested
     class CreateTest {
         @Test
+        @WithMockUser
         void itShouldCreate() throws Exception {
             //Given
             String warehouseUuid = "warehouse-uuid";
@@ -106,7 +117,7 @@ class StorageRoomControllerTest {
             // after successfully created request storageRoomService return new rooms
             given(storageRoomService.create(request)).willReturn(List.of());
             //When
-            ResultActions result = mockMvc.perform(post("/storage-rooms")
+            ResultActions result = mockMvc.perform(post("/api/v1/storage-rooms")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(toJson(request)));
             //Then

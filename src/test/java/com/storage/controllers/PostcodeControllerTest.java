@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -28,6 +29,7 @@ class PostcodeControllerTest {
     private PostcodeService postcodeService;
 
     @Test
+    @WithMockUser
     void itShouldValidatePostcode() throws Exception {
         //Given
         String postcode = "SW13PL";
@@ -37,13 +39,14 @@ class PostcodeControllerTest {
         given(postcodeService.isValid(postcode)).willReturn(postcodeValidateDTO);
         //When
         //Then
-        mockMvc.perform(get("/postcodes/{postcode}/valid", postcode)
+        mockMvc.perform(get("/api/v1/postcodes/{postcode}/valid", postcode)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.result").value(Boolean.TRUE));
     }
 
     @Test
+    @WithMockUser
     void itShouldReturnPostcodeDetails() throws Exception {
         //Given
         String postcode = "SW13PL";
@@ -61,7 +64,7 @@ class PostcodeControllerTest {
         given(postcodeService.getDetails(postcode)).willReturn(postcodeDTO);
         //When
         //Then
-        mockMvc.perform(get("/postcodes/{postcode}/details", postcode)
+        mockMvc.perform(get("/api/v1/postcodes/{postcode}/details", postcode)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value(200))

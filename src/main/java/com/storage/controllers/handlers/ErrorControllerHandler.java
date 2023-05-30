@@ -3,6 +3,8 @@ package com.storage.controllers.handlers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.storage.exceptions.*;
 import com.storage.models.dto.CustomErrorResponseDto;
+import com.storage.security.exceptions.AppSecurityException;
+import com.storage.security.tokens.exception.AppTokensServiceException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -69,6 +71,20 @@ public class ErrorControllerHandler {
     public CustomErrorResponseDto handleValidationException(ObjectValidationException e) {
         log.error("Enter ErrorControllerHandler -> handleValidationException() ObjectValidationException with: " + e);
         return createCustomErrorResponse(e.getMessage(), HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value());
+    }
+
+    @ExceptionHandler(value = AppSecurityException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public CustomErrorResponseDto handleValidationException(AppSecurityException e) {
+        log.error("Enter ErrorControllerHandler -> handleValidationException() AppSecurityException with: " + e);
+        return createCustomErrorResponse(e.getMessage(), HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.UNAUTHORIZED.value());
+    }
+
+    @ExceptionHandler(value = AppTokensServiceException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public CustomErrorResponseDto handleValidationException(AppTokensServiceException e) {
+        log.error("Enter ErrorControllerHandler -> handleValidationException() AppTokensServiceException with: " + e);
+        return createCustomErrorResponse(e.getMessage(), HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.UNAUTHORIZED.value());
     }
 
 

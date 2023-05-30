@@ -1,7 +1,7 @@
-INSERT INTO USERS (uuid, created_at, updated_at, first_name, last_name, email, role, gender)
-VALUES ('U1000', NOW(), NOW(), 'Rick', 'Sanchez', 'rick@sanchez.com', 'ADMIN', 'MALE'),
-       ('U1001', NOW(), NOW(), 'Morty', 'Smith', 'morty@smith.com', 'CUSTOMER', 'MALE'),
-       ('U1002', NOW(), NOW(), 'Summer', 'Smith', 'summer@smith.com', 'CUSTOMER', 'FEMALE');
+INSERT INTO USERS (uuid, created_at, updated_at, first_name, last_name, email, role, gender, enabled)
+VALUES ('U1000', NOW(), NOW(), 'Rick', 'Sanchez', 'rick@sanchez.com', 'ADMIN', 'MALE', true),
+       ('U1001', NOW(), NOW(), 'Morty', 'Smith', 'morty@smith.com', 'CUSTOMER', 'MALE', true),
+       ('U1002', NOW(), NOW(), 'Summer', 'Smith', 'summer@smith.com', 'CUSTOMER', 'FEMALE', true);
 
 INSERT INTO warehouses (id, uuid, created_at, updated_at, name, city, postcode, street, lat, lng,
                         total_rental_area_in_m2)

@@ -6,6 +6,9 @@ import com.storage.models.Warehouse;
 import com.storage.models.dto.StorageRoomDto;
 import com.storage.models.dto.WarehouseDto;
 import com.storage.models.requests.CreateWarehouseRequest;
+import com.storage.repositories.UserRepository;
+import com.storage.security.config.SecurityConfig;
+import com.storage.security.tokens.TokensService;
 import com.storage.service.StorageRoomService;
 import com.storage.service.WarehouseService;
 import org.junit.jupiter.api.Nested;
@@ -13,8 +16,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -32,6 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ActiveProfiles("test")
 @WebMvcTest(WarehouseController.class)
+@Import(value = {SecurityConfig.class, TokensService.class})
 class WarehouseControllerTest {
 
     @Autowired
@@ -42,6 +48,8 @@ class WarehouseControllerTest {
     private StorageRoomService storageRoomService;
     @MockBean
     private WarehouseService warehouseService;
+    @MockBean
+    private UserRepository userRepository;
 
     private static final String WAREHOUSE_UUID = "warehouse-uuid";
     private static final String NAME = "Orange";
@@ -54,6 +62,7 @@ class WarehouseControllerTest {
     @Nested
     class CreateTest {
         @Test
+        @WithMockUser
         void itShouldCreateANewWarehouse() throws Exception {
             //Given
             CreateWarehouseRequest createWarehouseRequest = new CreateWarehouseRequest(NAME, CITY, POSTCODE, STREET, BigDecimal.TEN);
@@ -69,7 +78,7 @@ class WarehouseControllerTest {
                     .build();
             given(warehouseService.create(createWarehouseRequest)).willReturn(warehouseDto);
             //When
-            ResultActions result = mockMvc.perform(post("/warehouses")
+            ResultActions result = mockMvc.perform(post("/api/v1/warehouses")
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .content(toJson(createWarehouseRequest)));
             //Then
@@ -87,6 +96,7 @@ class WarehouseControllerTest {
     @Nested
     class GetByUuidTest {
         @Test
+        @WithMockUser
         void itShouldGetByUuid() throws Exception {
             //Given
             //... return warehouse by UUID
@@ -102,7 +112,7 @@ class WarehouseControllerTest {
                     .build();
             given(warehouseService.findByUuid(WAREHOUSE_UUID)).willReturn(warehouse);
             //When
-            ResultActions result = mockMvc.perform(get("/warehouses/{uuid}", WAREHOUSE_UUID)
+            ResultActions result = mockMvc.perform(get("/api/v1/warehouses/{uuid}", WAREHOUSE_UUID)
                     .contentType(MediaType.APPLICATION_JSON_VALUE));
             //Then
             result.andExpect(status().isOk())
@@ -119,6 +129,7 @@ class WarehouseControllerTest {
     @Nested
     class GetAllTest {
         @Test
+        @WithMockUser
         void itShouldGetAll() throws Exception {
             //Given
             //... return all warehouses
@@ -127,7 +138,7 @@ class WarehouseControllerTest {
             given(warehouseService.getAll(any()))
                     .willReturn(new PageImpl<>(List.of(warehouse1, warehouse2)));
             //When
-            ResultActions result = mockMvc.perform(get("/warehouses")
+            ResultActions result = mockMvc.perform(get("/api/v1/warehouses")
                     .contentType(MediaType.APPLICATION_JSON_VALUE));
             //Then
             result.andExpect(status().isOk())
@@ -138,6 +149,7 @@ class WarehouseControllerTest {
     @Nested
     class GetOrderedByDistanceFromPostcodeTest {
         @Test
+        @WithMockUser
         void itShouldReturnWarehouses() throws Exception {
             //Given
             //... return all warehouses
@@ -146,7 +158,7 @@ class WarehouseControllerTest {
             given(warehouseService.getSortedByDistanceFromPostcode(POSTCODE))
                     .willReturn(List.of(warehouse1, warehouse2));
             //When
-            ResultActions result = mockMvc.perform(get("/warehouses/ordered-by-distance-from-postcode/{postcode}", POSTCODE)
+            ResultActions result = mockMvc.perform(get("/api/v1/warehouses/ordered-by-distance-from-postcode/{postcode}", POSTCODE)
                     .contentType(MediaType.APPLICATION_JSON_VALUE));
             //Then
             result.andExpect(status().isOk())
@@ -157,6 +169,7 @@ class WarehouseControllerTest {
     @Nested
     class GetAvailableByWarehouseUuidTest {
         @Test
+        @WithMockUser
         void itShouldReturnedAvailableRoomsByWarehouseUUID() throws Exception {
             //Given
             // ... return two rooms
@@ -165,7 +178,7 @@ class WarehouseControllerTest {
             given(storageRoomService.getAvailableByWarehouseUuid(eq(WAREHOUSE_UUID), any()))
                     .willReturn(new PageImpl<>(List.of(room1, room2)));
             //When
-            ResultActions result = mockMvc.perform(get("/warehouses/{uuid}/available-rooms", WAREHOUSE_UUID)
+            ResultActions result = mockMvc.perform(get("/api/v1/warehouses/{uuid}/available-rooms", WAREHOUSE_UUID)
                     .contentType(MediaType.APPLICATION_JSON));
             //Then
             result.andExpect(status().isOk())

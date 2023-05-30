@@ -10,6 +10,7 @@ import com.storage.validators.UserDtoValidator;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -18,11 +19,14 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 @Service
 public class UserService extends AbstractService<User> {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository,
+                       PasswordEncoder passwordEncoder) {
         super(User.class, userRepository);
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     /**
@@ -40,6 +44,7 @@ public class UserService extends AbstractService<User> {
         if (isEmailTaken(request.email()))
             throw new BadRequestException(String.format("Email [%s] is already taken!", request.email()));
 
+
         User user = User.builder()
                 .uuid(UuidGenerator.next())
                 .firstName(request.firstName())
@@ -47,6 +52,7 @@ public class UserService extends AbstractService<User> {
                 .email(request.email())
                 .role(request.role())
                 .gender(request.gender())
+                .password(passwordEncoder.encode(request.password()))
                 .build();
 
         User newUser = userRepository.save(user);
