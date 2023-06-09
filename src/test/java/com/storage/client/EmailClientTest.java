@@ -3,7 +3,7 @@ package com.storage.client;
 import com.sendgrid.Response;
 import com.sendgrid.SendGrid;
 import com.storage.exceptions.SendGridException;
-import com.storage.models.EmailRequest;
+import com.storage.models.requests.EmailRequest;
 import org.apache.http.ConnectionClosedException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

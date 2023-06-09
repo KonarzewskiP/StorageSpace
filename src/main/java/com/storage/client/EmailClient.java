@@ -8,7 +8,7 @@ import com.sendgrid.helpers.mail.Mail;
 import com.sendgrid.helpers.mail.objects.*;
 import com.storage.exceptions.EmailException;
 import com.storage.exceptions.SendGridException;
-import com.storage.models.EmailRequest;
+import com.storage.models.requests.EmailRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

@@ -1,4 +1,4 @@
-package com.storage.models;
+package com.storage.models.requests;
 
 
 public record EmailRequest(String to, String recipientName, String subject,

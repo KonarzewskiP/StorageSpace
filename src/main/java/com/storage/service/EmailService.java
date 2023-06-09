@@ -1,7 +1,7 @@
 package com.storage.service;
 
 import com.storage.client.EmailClient;
-import com.storage.models.EmailRequest;
+import com.storage.models.requests.EmailRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
