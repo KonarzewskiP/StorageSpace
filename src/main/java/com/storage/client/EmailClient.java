@@ -42,7 +42,7 @@ public class EmailClient {
         Email from = new Email(fromEmail);
 
         Content content = new Content();
-        content.setType("text/plain");
+        content.setType("text/html");
         content.setValue(request.content());
 
         Mail mail = new Mail();

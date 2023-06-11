@@ -36,6 +36,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize ->
                         authorize.requestMatchers(
                                         "/api/v1/users/register",
+                                        "/api/v1/users/activate-email-account/**",
                                         "/api/v1/auth/refresh-token"
                                 )
                                 .permitAll()

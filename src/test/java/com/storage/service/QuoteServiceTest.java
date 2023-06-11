@@ -2,7 +2,7 @@ package com.storage.service;
 
 import com.storage.exceptions.ObjectValidationException;
 import com.storage.models.Warehouse;
-import com.storage.models.businessObject.Quote;
+import com.storage.models.dto.QuoteDTO;
 import com.storage.models.enums.StorageDuration;
 import com.storage.models.enums.StorageSize;
 import com.storage.models.requests.QuoteEstimateRequest;
@@ -86,7 +86,7 @@ public class QuoteServiceTest {
             BigDecimal price = BigDecimal.TEN;
             given(priceService.calculatePrice(STORAGE_SIZE, DURATION, warehouseId)).willReturn(price);
             //When
-            Quote result = underTest.estimate(request);
+            QuoteDTO result = underTest.estimate(request);
             //Then
 
             assertThat(result).isNotNull();

@@ -1,4 +1,4 @@
-package com.storage.models.businessObject;
+package com.storage.models.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.storage.models.enums.ExtraServices;
@@ -17,7 +17,7 @@ import java.util.Set;
  */
 @Builder
 @Data
-public class Quote {
+public class QuoteDTO {
     private String firstName;
     private String lastName;
     private String email;

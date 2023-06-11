@@ -1,10 +1,14 @@
 package com.storage.service;
 
 import com.storage.exceptions.BadRequestException;
+import com.storage.exceptions.NotFoundException;
 import com.storage.models.User;
+import com.storage.models.dto.ActivationEmailDTO;
 import com.storage.models.requests.CreateUserRequest;
 import com.storage.models.requests.QuoteEstimateRequest;
 import com.storage.repositories.UserRepository;
+import com.storage.repositories.VerificationTokenRepository;
+import com.storage.utils.StringUtils;
 import com.storage.utils.UuidGenerator;
 import com.storage.validators.UserDtoValidator;
 import jakarta.transaction.Transactional;
@@ -20,13 +24,16 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 public class UserService extends AbstractService<User> {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final VerificationTokenRepository verificationTokenRepository;
 
     @Autowired
     public UserService(UserRepository userRepository,
-                       PasswordEncoder passwordEncoder) {
+                       PasswordEncoder passwordEncoder,
+                       VerificationTokenRepository verificationTokenRepository) {
         super(User.class, userRepository);
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.verificationTokenRepository = verificationTokenRepository;
     }
 
     /**
@@ -101,6 +108,27 @@ public class UserService extends AbstractService<User> {
                 .build();
 
         return userRepository.save(newUser);
+    }
+
+    public User findByEmail(String email) {
+        if (StringUtils.isBlank(email)) {
+            throw new BadRequestException("Email can not be empty or null");
+        }
+
+        return userRepository.findByEmailIgnoreCase(email)
+                .orElseThrow(() -> new NotFoundException("User not found by email: " + email));
+    }
+
+    public ActivationEmailDTO activateEmailAccount(final String token) {
+        if (StringUtils.isBlank(token)) {
+            throw new BadRequestException("Activation token is invalid");
+        }
+
+        Long userId = verificationTokenRepository.findUserIdByToken(token)
+                .orElseThrow(() -> new NotFoundException("User not found by verification token: " + token));
+
+        userRepository.activateAccount(userId);
+        return new ActivationEmailDTO(true);
     }
 }
 
