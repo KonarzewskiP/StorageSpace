@@ -2,6 +2,7 @@ package com.storage.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.storage.events.publishers.EmailPublisher;
 import com.storage.models.User;
 import com.storage.models.requests.CreateUserRequest;
 import com.storage.repositories.UserRepository;
@@ -41,6 +42,8 @@ class UserControllerTest {
     private UserService userService;
     @MockBean
     private UserRepository userRepository;
+    @MockBean
+    private EmailPublisher emailPublisher;
 
     private static final String FIRST_NAME = "Slow";
     private static final String LAST_NAME = "Fast";
