@@ -1,7 +1,7 @@
 package com.storage.service;
 
 import com.storage.models.Warehouse;
-import com.storage.models.businessObject.Quote;
+import com.storage.models.dto.QuoteDTO;
 import com.storage.models.requests.QuoteEstimateRequest;
 import com.storage.validators.QuoteValidator;
 import lombok.RequiredArgsConstructor;
@@ -35,20 +35,20 @@ public class QuoteService {
      * @since 02/03/2021
      */
 
-    public Quote estimate(QuoteEstimateRequest request) {
+    public QuoteDTO estimate(QuoteEstimateRequest request) {
         log.info("Start quote estimation with request: [{}]", request);
         QuoteValidator.validate(request);
         Warehouse warehouse = warehouseService.findByUuid(request.warehouseUuid());
         return generateQuote(request, warehouse);
     }
 
-    private Quote generateQuote(QuoteEstimateRequest request, Warehouse warehouse) {
+    private QuoteDTO generateQuote(QuoteEstimateRequest request, Warehouse warehouse) {
         BigDecimal price = priceService.calculatePrice(
                 request.storageSize(),
                 request.duration(),
                 warehouse.getId());
 
-        return Quote.builder()
+        return QuoteDTO.builder()
                 .firstName(request.firstName())
                 .lastName(request.lastName())
                 .email(request.email())

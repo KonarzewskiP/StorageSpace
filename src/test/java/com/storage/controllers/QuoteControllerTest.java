@@ -2,7 +2,8 @@ package com.storage.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.storage.models.businessObject.Quote;
+import com.storage.events.publishers.EmailPublisher;
+import com.storage.models.dto.QuoteDTO;
 import com.storage.models.enums.StorageDuration;
 import com.storage.models.enums.StorageSize;
 import com.storage.models.requests.QuoteEstimateRequest;
@@ -58,6 +59,8 @@ class QuoteControllerTest {
     private UserRepository userRepository;
     @MockBean
     private EmailService emailService;
+    @MockBean
+    private EmailPublisher emailPublisher;
 
 
     @Test
@@ -65,10 +68,10 @@ class QuoteControllerTest {
     void itShouldGenerateQuoteAndSaveANewUser() throws Exception {
         //Given
         QuoteEstimateRequest request = createQuoteEstimateRequest();
-        Quote quote = createQuote();
+        QuoteDTO quoteDTO = createQuote();
 
         // ... generate valid quote
-        given(quoteService.estimate(request)).willReturn(quote);
+        given(quoteService.estimate(request)).willReturn(quoteDTO);
         // ... will pass validation fot unique email in DB
         given(userService.isEmailTaken(request.email())).willReturn(false);
 
@@ -79,11 +82,11 @@ class QuoteControllerTest {
                 .andExpect(status().isCreated());
 
         then(userService).should(times(1)).saveNewCustomer(any());
-        then(emailService).should(times(1)).sendQuoteConfirmation(any(), any(), any());
+        then(emailPublisher).should(times(1)).publishQuoteConfirmationEvent(any());
     }
 
-    private Quote createQuote() {
-        return Quote.builder()
+    private QuoteDTO createQuote() {
+        return QuoteDTO.builder()
                 .firstName(FIRST_NAME)
                 .lastName(LAST_NAME)
                 .email(EMAIL)

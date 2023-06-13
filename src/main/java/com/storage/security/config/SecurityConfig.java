@@ -25,7 +25,6 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
     private final TokensService tokensService;
     private final AuthenticationConfiguration authenticationConfiguration;
-
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
@@ -60,3 +59,5 @@ public class SecurityConfig {
     }
 
 }
+
+

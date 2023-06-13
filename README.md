@@ -87,7 +87,7 @@ The app defines following CRUD APIs.
 
 | Method | Url | Description | Sample Valid Request Body |
 | ------ | --- | ----------- | ------------------------- |
-| POST    | /quote | Send quotation for user | [JSON](#quotepost)|
+| POST    | /quoteDTO | Send quotation for user | [JSON](#quotepost)|
 
 ### Postcode
 
@@ -127,7 +127,7 @@ The app defines following CRUD APIs.
   "startDate": "2023-03-03"
 }
 ```
-##### <a id="quotepost">Send quotation-> /quote</a>
+##### <a id="quotepost">Send quotation-> /quoteDTO</a>
 ```json
 {
   "duration": "LESS_THAN_2_WEEKS",

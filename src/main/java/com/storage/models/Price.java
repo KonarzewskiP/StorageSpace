@@ -1,19 +1,15 @@
 package com.storage.models;
 
 import com.storage.models.enums.TimeUnit;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.math.BigDecimal;
 
 @Entity
 @Data
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @Builder
 @Table(name = "prices")
@@ -22,6 +18,7 @@ public class Price extends AbstractObject {
     @Column(name = "warehouse_id", nullable = false)
     protected Long warehouseId;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "time_unit", nullable = false)
     private TimeUnit timeUnit;
 

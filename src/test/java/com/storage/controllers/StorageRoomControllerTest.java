@@ -54,7 +54,7 @@ class StorageRoomControllerTest {
     @Nested
     class UpdateTest {
         @Test
-        @WithMockUser
+        @WithMockUser(roles = {"ADMIN"})
         void itShouldUpdateByUuid() throws Exception {
             //Given
             StorageUpdateRequest request = StorageUpdateRequest.builder()
@@ -101,7 +101,7 @@ class StorageRoomControllerTest {
     @Nested
     class CreateTest {
         @Test
-        @WithMockUser
+        @WithMockUser(roles = {"ADMIN"})
         void itShouldCreate() throws Exception {
             //Given
             String warehouseUuid = "warehouse-uuid";

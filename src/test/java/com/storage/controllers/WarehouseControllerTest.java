@@ -62,7 +62,7 @@ class WarehouseControllerTest {
     @Nested
     class CreateTest {
         @Test
-        @WithMockUser
+        @WithMockUser(roles = {"ADMIN"})
         void itShouldCreateANewWarehouse() throws Exception {
             //Given
             CreateWarehouseRequest createWarehouseRequest = new CreateWarehouseRequest(NAME, CITY, POSTCODE, STREET, BigDecimal.TEN);
