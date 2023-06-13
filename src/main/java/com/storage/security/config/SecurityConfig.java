@@ -6,6 +6,7 @@ import com.storage.security.tokens.TokensService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -24,6 +25,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
     private final TokensService tokensService;
     private final AuthenticationConfiguration authenticationConfiguration;
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
@@ -36,9 +38,16 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize ->
                         authorize.requestMatchers(
                                         "/api/v1/users/register",
-                                        "/api/v1/auth/refresh-token"
-                                )
-                                .permitAll()
+                                        "/api/v1/users/activate-email-account/**",
+                                        "/api/v1/quote/estimation",
+                                        "/api/v1/auth/refresh-token")
+                                .permitAll())
+                .authorizeHttpRequests(authorize ->
+                        authorize.requestMatchers(HttpMethod.POST, "/api/v1/warehouses").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.DELETE, "/api/v1/warehouses/**").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.PUT, "/api/v1/storage-rooms/**").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.POST, "/api/v1/storage-rooms").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.DELETE, "/api/v1/storage-rooms/**").hasRole("ADMIN")
                                 .anyRequest()
                                 .authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -51,5 +60,3 @@ public class SecurityConfig {
     }
 
 }
-
-
