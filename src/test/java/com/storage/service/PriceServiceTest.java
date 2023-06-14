@@ -186,6 +186,7 @@ class PriceServiceTest {
 
             assertThat(savedPrice).isNotNull();
             assertAll(
+                    () -> assertThat(savedPrice.getUuid()).isNotBlank(),
                     () -> assertThat(savedPrice.getWarehouseId()).isEqualTo(WAREHOUSE_ID),
                     () -> assertThat(savedPrice.getTimeUnit()).isEqualTo(TimeUnit.WEEK),
                     () -> assertThat(savedPrice.getTelephoneBoxBasePrice()).isEqualTo(TELEPHONE_BOX_BASE_PRICE),
