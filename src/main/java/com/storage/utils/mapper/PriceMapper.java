@@ -19,6 +19,7 @@ public class PriceMapper {
         String warehouseUuid = warehouseService.findUuidById(price.getWarehouseId());
 
         return new PriceDTO(
+                price.getUuid(),
                 warehouseUuid,
                 price.getTimeUnit(),
                 price.getTelephoneBoxBasePrice(),
