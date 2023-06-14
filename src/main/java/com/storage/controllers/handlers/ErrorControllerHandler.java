@@ -74,18 +74,33 @@ public class ErrorControllerHandler {
     }
 
     @ExceptionHandler(value = AppSecurityException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public CustomErrorResponseDto handleValidationException(AppSecurityException e) {
         log.error("Enter ErrorControllerHandler -> handleValidationException() AppSecurityException with: " + e);
-        return createCustomErrorResponse(e.getMessage(), HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.UNAUTHORIZED.value());
+        return createCustomErrorResponse(e.getMessage(), HttpStatus.UNAUTHORIZED.getReasonPhrase(), HttpStatus.UNAUTHORIZED.value());
     }
 
     @ExceptionHandler(value = AppTokensServiceException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public CustomErrorResponseDto handleValidationException(AppTokensServiceException e) {
         log.error("Enter ErrorControllerHandler -> handleValidationException() AppTokensServiceException with: " + e);
-        return createCustomErrorResponse(e.getMessage(), HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.UNAUTHORIZED.value());
+        return createCustomErrorResponse(e.getMessage(), HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value());
     }
+
+    @ExceptionHandler(value = BadRequestException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public CustomErrorResponseDto handleValidationException(BadRequestException e) {
+        log.error("Enter ErrorControllerHandler -> handleValidationException() BadRequestException with: " + e);
+        return createCustomErrorResponse(e.getMessage(), HttpStatus.BAD_REQUEST.getReasonPhrase(), HttpStatus.BAD_REQUEST.value());
+    }
+
+    @ExceptionHandler({Exception.class})
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public CustomErrorResponseDto handleUnknownException(Exception e) {
+        log.error("Enter ErrorControllerHandler -> handleValidationException() Exception with: " + e);
+        return createCustomErrorResponse(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), HttpStatus.INTERNAL_SERVER_ERROR.value());
+    }
+
 
 
     /**

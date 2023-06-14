@@ -2,20 +2,22 @@ package com.storage.models;
 
 import com.storage.models.enums.TimeUnit;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
 
 @Entity
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 @Table(name = "prices")
 public class Price extends AbstractObject {
 
-    @Column(name = "warehouse_id", nullable = false)
+    @Column(name = "warehouse_id", nullable = false, unique = true)
     protected Long warehouseId;
 
     @Enumerated(EnumType.STRING)
