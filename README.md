@@ -1,148 +1,48 @@
 # StorageSpace
+## Introduction
 
-Storage Space is a REST application for renting storage space in different warehouses.
-It is built with Java, Spring Boot, and Spring Framework. 
-It enables to reserve a storage room at the specific warehouse and receive a quotation for a chosen room.
+Storage Space is a REST application for managing storage space in multiple warehouses.
 
-Storage space is a fun project. The goal is to create a simple copy of Big Yellow Storage.
-
-
-## Features of the application at the moment:
-
-1. Find your nearest store in London
-2. Select specific storage for your needs
-3. Reserve a storage room
-4. Get a storage price for specific room size
-5. Get confirmation email with details of reservation
-
-## Technologies Used in the application:
-
-* Java
-* Spring
-* Maven
-* Hibernate
-* MySQL
-* jUnit 5
-* Mockito
-* Lombok  
-* Swagger
+## Technology used
+- Java version 17
+- Spring Framework: The project utilizes the Spring Framework for building enterprise-level applications efficiently.
+  - Spring Security: Enables you to secure your application by providing authentication and authorization features.
+  - Spring Events: Allows you to implement event-driven architectures by leveraging the publish-subscribe pattern.
+  - Spring MVC: Provides a powerful model-view-controller architecture for building web applications.
 
 ## The future of the project
-* Creating a frontend
-* Add Spring Security
+* Implement front-end
 
-## Steps to Setup
+## To run the application, follow these steps:
 
-**1. Clone the application**
+**1. Install Docker on your system if you haven't already.**
 
+**2. Clone this repository to your local machine.**
 ```bash
 git clone https://github.com/KonarzewskiP/StorageSpace.git
 ```
 
-**2. Create Mysql database**
+**3. Open a terminal or command prompt.**
+
+**4. Navigate to the project's root directory.**
+
+**5. Run the following command to start MySql Docker container:**
 ```bash
-create database storage_management_system_db
+docker-compose up -d --build
 ```
 
-**3. Change mysql username and password as per your installation**
-
-+ open `src/main/resources/application.properties`
-+ change `spring.datasource.username` and `spring.datasource.password` as per your mysql installation
-
-**4. Run the app using maven**
+**6. Run the following command to run application:**
 
 ```bash
 mvn spring-boot:run
 ```
-The app will start running at <http://localhost:8080>. You can test it in Postman or Swagger at <http://localhost:8080/swagger-ui.html>
 
-## Explore Rest APIs
-
-The app defines following CRUD APIs.
-
-### Warehouse
-
-| Method | Url | Description | Sample Valid Request Body |
-| ------ | --- | ----------- | ------------------------- |
-| POST    | /warehouses | Add warehouse | [JSON](#warehousecreate)|
-| GET    | /warehouses/{id} | Get warehouse by id | |
-| GET   | /warehouses | Get all warehouses | |
-| GET    | /warehouses/{id}/available | Get not reserved storage rooms in the specific warehouse by warehouse id | |
-
-### User
-
-| Method | Url | Description | Sample Valid Request Body |
-| ------ | --- | ----------- | ------------------------- |
-| POST    | /users | Add user | [JSON](#usercreate)|
-| GET    | /users/{id} | Get user by id | |
-
-### StorageRoom
-
-| Method | Url | Description | Sample Valid Request Body |
-| ------ | --- | ----------- | ------------------------- |
-| PUT    | /storages | Update storage room | [JSON](#updateStorageRoom)|
-| GET    | /storages/{id} | Get storage room by id | |
-
-### Quote
-
-| Method | Url | Description | Sample Valid Request Body |
-| ------ | --- | ----------- | ------------------------- |
-| POST    | /quoteDTO | Send quotation for user | [JSON](#quotepost)|
-
-### Postcode
-
-| Method | Url | Description | Sample Valid Request Body |
-| ------ | --- | ----------- | ------------------------- |
-| GET    | /postcodes/{postcode} | Check if postcode is valid ||
-| GET    | /postcodes/{postcode}/nearest | Get ordered warehouses by distance from the postcode | |
+**7. Once the application starts, you can access it by navigating to http://localhost:8080 in your web browser.**
 
 
-## Sample Valid JSON Requests
+### POSTMAN Documentation:
+https://documenter.getpostman.com/view/11183041/2s93z3e4yN#435dad39-9d3f-48e9-953f-c422c6b99cd7
 
-##### <a id="warehousecreate">Add warehouse -> /warehouses</a>
-```json
-{
-  "city": "London",
-  "name": "Blue Box",
-  "postCode": "SW8 3NS",
-  "street": "Ingate Place"
-}
-```
-##### <a id="usercreate">Add user -> /users</a>
-```json
-{
-  "email": "test@email.com",
-  "firstName": "Joe",
-  "gender": "MALE",
-  "lastName": "Smith",
-  "role": "CUSTOMER"
-}
-```
-##### <a id="updateStorageRoom">Update storage room -> /storages</a>
-```json
-{
-  "endDate": "2023-04-03",
-  "id": 2,
-  "reserved": true,
-  "startDate": "2023-03-03"
-}
-```
-##### <a id="quotepost">Send quotation-> /quoteDTO</a>
-```json
-{
-  "duration": "LESS_THAN_2_WEEKS",
-  "email": "steveKaczka@gmail.com",
-  "extraServices": [
-    "EXTENDED_HOURS",
-    "FORKLIFTING",
-    "ACCEPTING_DELIVERIES"
-  ],
-  "firstName": "James",
-  "postcode": "E2 6HN",
-  "size": "TELEPHONE_BOX",
-  "startDate": "2022-10-12",
-  "surname": "Cook",
-  "type": "BUSINESS",
-  "warehouseName": "Wapping"
-}
-```
+#### To interact with API
+1. register a new user with role ADMIN 
+2. login by using your email (username) and password
