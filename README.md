@@ -45,4 +45,5 @@ https://documenter.getpostman.com/view/11183041/2s93z3e4yN#435dad39-9d3f-48e9-95
 
 #### To interact with API
 1. register a new user with role ADMIN 
-2. login by using your email (username) and password
+2. click the activation link from an email in your mail box. 
+3. login by using your email (username) and password
