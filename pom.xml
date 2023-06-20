@@ -9,8 +9,8 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.storage</groupId>
-    <artifactId>storage-space</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <artifactId>storage-space-app</artifactId>
+    <version>0.1</version>
     <name>Big Storage</name>
     <description>Storage Space Management System</description>
 
@@ -153,6 +153,7 @@
     </dependencies>
 
     <build>
+        <finalName>${artifactId}</finalName>
         <pluginManagement>
             <plugins>
                 <plugin>
